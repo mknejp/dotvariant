@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IsExternalInit" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.0.0" PrivateAssets="all" />
+    <PackageReference Include="Scriban" Version="3.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="System.Interactive" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Not required at runtime, but we want access to type names -->
+    <ProjectReference Include="..\dotVariant\dotVariant.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);dotVariant-GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="templates/*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="templates/*" />
+  </ItemGroup>
+
+  <Target Name="dotVariant-GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Interactive)\lib\netstandard2.0\System.Interactive.dll" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
+
+</Project>

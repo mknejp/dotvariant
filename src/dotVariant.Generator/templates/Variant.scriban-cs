@@ -1,0 +1,627 @@
+#nullable enable
+{{~ ##
+Inputs:
+- namespace: Namespace of the variant type, or null if in the global namespace
+- name: Name of the variant type
+- full_name: The fully qualified name of the type (without global:: alias)
+- keyword: The keyword used to declare the type ("class", "struct", ...)
+- in: Contains the "in" keyword if this is a readonly struct, otherwise empty ""
+- nullable: The name of the type with appended nullability annotation
+- mismatch_exception: The fully qualified type name of the mismatch exception
+- types: Array of variant types, each an object with these properties:
+  - name: The fully qualified name of the type
+  - short_name: A shorter type name (without global:: qualifier)
+  - hint: The user-provided parameter name in VariantOf
+  - dummies: The number of "object" dummy fields required for this type
+  - index: The 1-based index of the type within the variant
+  - is_object: True if this is an object type
+  - nullable: The name of the type with appended nullability annotation
+  - coalesce: Contains the null-coalescing "?" for member access if this value may be null
+  - emit_implcit_cast: true to create an implicit cast from this type to the variant
+## ~}}
+{{~
+$format_func = do; ret "global::System.Func<" + $0.name + ", TResult> " + $0.hint; end
+$format_action = do; ret "global::System.Action<" + $0.name + "> " + $0.hint; end
+$func_params = types | array.each @$format_func | array.join ", "
+$action_params = types | array.each @$format_action | array.join ", "
+$is_class = keyword == "class"
+$is_struct = keyword == "struct"
+$readonly = $is_struct ? "readonly" : ""
+
+readonly $func_params
+readonly $action_params
+readonly $is_class
+readonly $is_struct
+readonly $readonly
+~}}
+{{~ if namespace ~}}
+namespace {{ namespace }}
+{
+    {{~ end ~}}
+    [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
+    [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    partial {{ keyword }} {{ name }} : global::System.IEquatable<{{ name }}>
+    {
+        [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+        private readonly _VariantStorage _variant;
+
+        private sealed class _VariantTypeProxy
+        {
+            public object? Value { get; }
+            public _VariantTypeProxy({{ name }} v)
+            {
+                Value = v._variant.AsObject;
+            }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct _VariantStorage
+        {
+            private readonly int _n;
+            private readonly Union _x;
+            {{~ ##
+            Variant tries to use as little space as possible by using an Explicit layout
+            for its possible option types. Because Variant is a sum type there can only
+            ever be a single "active" field, i.e. holding real data.
+
+            This means we can use explicit layout and overlap those types onto the same
+            area of memory. There is only one restriction that we must adhere to:
+
+                A unmanaged field and a reference field cannot occupiy the same space.
+
+            To ensure this the CLR switches the layout of structs containing reference
+            fields from the default "Sequential" to "Auto" and seems to move all reference
+            fields to the beginning of the structure. Let's look at this with a concrete
+            example:
+
+            struct A { public IntPtr i; public IntPtr j; }
+            struct B { public IntPtr i; public object o; }
+
+            Have a look at the memory layout of
+
+            [StructLayout(LayoutKind.Explicit)]
+            class Variant { [FieldOffset(0)] public A a; [FieldOffset(0)] public B b; }
+
+            +--------+-----------------+
+            | offset | Variant         |
+            +--------+-----------------+
+            |        | +-----+ +-----+ |
+            |      0 | | A.i | | B.o | | <- ERROR
+            |        | +-----+ +-----+ |
+            |      8 | | A.j | | B.i | |
+            |        | +-----+ +-----+ |
+            +--------+-----------------+
+
+            The line marked above shows how an object reference (B.o) is now sharing
+            space with an unmanaged type (A.i). Trying to load this type will trigger a
+            TypeLoadException saying Variant "contains an object field at offset 0
+            that is incorrectly aligned or overlapped by a non-object field".
+
+            The way we fix this is by wrapping A in a new struct and adding an object reference
+            to it:
+
+            struct WrapA { public A a; public object o; }
+
+            [StructLayout(LayoutKind.Explicit)]
+            class Variant { [FieldOffset(0)] private WrapA a; [FieldOffset(0)] private B b; }
+
+            Leading to this layout:
+
+            +--------+---------------------------+
+            | offset | Variant                   |
+            +--------+---------------------------+
+            |        | +---------------+ +-----+ |
+            |      0 | | WrapA.o       | | B.o | | <- OK
+            |        | +---------------+ |     | |
+            |        | | +-----------+ | +-----+ |
+            |      8 | | | WrapA.a.i | | | B.i | |
+            |        | | +-----------+ | +-----+ |
+            |     16 | | | WrapA.a.j | |         |
+            |        | | +-----------+ |         |
+            |        | +---------------+         |
+            +------------------------------------+
+
+            This layout no longer causes exceptions and can be loaded but at the cost
+            of extra memory consumption and unused "dummy" fields.
+
+            We still have one issue though: where do we put the discriminator (the
+            integer telling us which value is "active" in the Variant)? It needs to
+            always be at the same memory location regardless of the currently active
+            type. We also cannot force it to offset 0 because that's where the managed
+            types will go. The solution here is an extra level of indirection:
+
+                Put all the WrapX types inside a new struct with the explicit layout
+                and leave the discriminator integer outside:
+
+            [StructLayout(LayoutKind.Explicit)]
+            struct Values
+            {
+                [FieldOffset(0)] public WrapA a;
+                [FieldOffset(0)] public WrapB b;
+                ...
+                [FieldOffset(0)] public WrapN n;
+            }
+
+            class Variant { private int discriminator; private Values values; }
+
+            +--------+-------------------------------------+
+            | offset | Variant                             |
+            +--------+-------------------------------------+
+            |      0 | discriminator                       |
+            +--------+-------------------------------------+
+            |        | values                              |
+            |        | +---------------------------------+ |
+            |        | | +---------------+ +-----------+ | |
+            |      8 | | | WrapA.o       | | WrapB.b.o | | |
+            |        | | +---------------+ |           | | |
+            |        | | | +-----------+ | +-----------+ | |
+            |     16 | | | | WrapA.a.i | | | WrapB.b.i | | |
+            |        | | | +-----------+ | +-----------+ | |
+            |     24 | | | | WrapA.a.j | |               | |
+            |        | | | +-----------+ |               | |
+            |        | | +---------------+               | |
+            |        | +---------------------------------+ |
+            +--------+-------------------------------------+
+
+            While this results in some overhead, as the Variant's size is
+            the sum of max(object fields) + max(non-object fields) for all
+            possible values it can hold, it allows for the elision of boxing
+            for value types and has zero space overhead if it only stores
+            unmanaged value types.
+            ## ~}}
+
+            {{~ ## STORAGE CONSTRUCTORS ## ~}}
+            {{~ for $t in types ~}}
+            public _VariantStorage({{ $t.name }} {{ $t.hint }})
+            {
+                _n = {{ $t.index }};
+                _x = new Union({{ $t.hint }});
+                {{ ## Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." }}
+                VariantOf({{ $f = do; ret "default!"; end; 1..types.size | array.join ", " @$f }});
+            }
+            {{~ end ~}}
+
+            {{~ ## UNION TYPE ## ~}}
+            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+            [global::System.Diagnostics.DebuggerNonUserCode]
+            private readonly struct Union
+            {
+                {{~ ## UNION MEMBERS ## ~}}
+                {{~ for $t in types ~}}
+                [global::System.Runtime.InteropServices.FieldOffset(0)]
+                public readonly Union{{ $t.index }} _{{ $t.index }};
+                {{~ end ~}}
+
+                {{~ ## UNION CONSTRUCTORS ## ~}}
+                {{~ for $t in types ~}}
+                public Union({{ $t.name }} value)
+                {
+                    {{~ for $other in types | array.remove_at ($t.index - 1) ~}}
+                    _{{ $other.index }} = default;
+                    {{~ end ~}}
+                    _{{ $t.index }} = new Union{{ $t.index }}(value);
+                }
+                {{~ end ~}}
+
+                {{~ ## PER-TYPE WRAPPERS WITH DUMMIES ## ~}}
+                {{~ for $t in types ~}}
+                [global::System.Diagnostics.DebuggerNonUserCode]
+                public readonly struct Union{{ $t.index }}
+                {
+                    public readonly {{ $t.name }} Value;
+                    {{~ for $dummy in (1..$t.dummies) limit:$t.dummies ~}}
+                    public readonly object? _dummy{{ $dummy }};
+                    {{~ end ~}}
+
+                    public Union{{ $t.index }}({{ $t.name }} value)
+                    {
+                        {{~ for $dummy in (1..$t.dummies) limit:$t.dummies ~}}
+                        _dummy{{ $dummy }} = default;
+                        {{~ end ~}}
+                        Value = value;
+                    }
+                }
+                {{~ end ~}}
+            }
+
+            {{~ ## UNION IsEmpty ## ~}}
+            public bool IsEmpty=> _n == 0;
+
+            {{~ ## UNION TypeString ## ~}}
+            public string TypeString
+            {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0: return "<empty>";
+                        {{~ for $t in types ~}}
+                        case {{ $t.index }}: return "{{ $t.short_name }}";
+                        {{~ end ~}}
+                        default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    }
+                }
+            }
+
+            {{~ ## UNION ValueString ## ~}}
+            public string ValueString
+            {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0: return "<empty>";
+                        {{~ for $t in types ~}}
+                        case {{ $t.index }}: return _x._{{ $t.index }}.Value{{ $t.coalesce }}.ToString(){{ $t.is_object ? ' ?? "null"' : "" }};
+                        {{~ end ~}}
+                        default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    }
+                }
+            }
+
+            {{~ ## UNION AsObject ## ~}}
+            public object? AsObject
+            {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0: return null;
+                        {{~ for $t in types ~}}
+                        case {{ $t.index }}: return _x._{{ $t.index }}.Value;
+                        {{~ end ~}}
+                        default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    }
+                }
+            }
+
+            {{~ ## UNION Equals ## ~}}
+            public bool Equals(in _VariantStorage other)
+            {
+                if (_n != other._n)
+                {
+                    return false;
+                }
+                switch (_n)
+                {
+                    case 0: return true;
+                    {{~ for $t in types ~}}
+                    {{~ $i = $t.index ~}}
+                    case {{ $i }}: return global::System.Collections.Generic.EqualityComparer<{{ $t.name }}>.Default.Equals(_x._{{ $i }}.Value, other._x._{{ $i }}.Value);
+                    {{~ end ~}}
+                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                }
+            }
+
+            {{~ ## UNION GetHashCode ## ~}}
+            public readonly override int GetHashCode()
+            {
+                switch (_n)
+                {
+                    case 0: return 0;
+                    {{~ for $t in types ~}}
+                    {{~ $i = $t.index ~}}
+                    case {{ $i }}: return {{ $t.index }} + global::System.Collections.Generic.EqualityComparer<{{ $t.name }}>.Default.GetHashCode(_x._{{ $i }}.Value);
+                    {{~ end ~}}
+                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                }
+            }
+
+            {{~ ## UNION TryMatch ## ~}}
+            {{~ for $t in types ~}}
+            public bool TryMatch(out {{ $t.nullable }} {{ $t.hint }})
+            {
+                {{ $t.hint }} = _n == {{ $t.index }} ? _x._{{ $t.index }}.Value : default;
+                return _n == {{ $t.index }};
+            }
+            {{~ end ~}}
+
+            {{~ ## UNION Match(Action) ## ~}}
+            public void Match({{ $action_params }}, global::System.Action _)
+            {
+                switch (_n)
+                {
+                    case 0: _(); break;
+                    {{~ for $t in types ~}}
+                    case {{ $t.index }}: {{ $t.hint }}(_x._{{ $t.index }}.Value); break;
+                    {{~ end ~}}
+                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                }
+            }
+
+            {{~ ## UNION Match(Action) ## ~}}
+            public void Match({{ $action_params }})
+            {
+                switch (_n)
+                {
+                    case 0: throw new global::System.InvalidOperationException("{{ name }} is empty.");
+                    {{~ for $t in types ~}}
+                    case {{ $t.index }}: {{ $t.hint }}(_x._{{ $t.index }}.Value); break;
+                    {{~ end ~}}
+                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                }
+            }
+
+            {{~ ## UNION Match(Func) ## ~}}
+            public TResult Match<TResult>({{ $func_params }}, global::System.Func<TResult> _)
+            {
+                switch (_n)
+                {
+                    case 0: return _();
+                    {{~ for $t in types ~}}
+                    case {{ $t.index }}: return {{ $t.hint }}(_x._{{ $t.index }}.Value);
+                    {{~ end ~}}
+                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                }
+            }
+
+            {{~ ## UNION Match(Func) ## ~}}
+            public TResult Match<TResult>({{ $func_params }})
+            {
+                switch (_n)
+                {
+                    case 0: throw new global::System.InvalidOperationException("{{ name }} is empty.");
+                    {{~ for $t in types ~}}
+                    case {{ $t.index }}: return {{ $t.hint }}(_x._{{ $t.index }}.Value);
+                    {{~ end ~}}
+                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                }
+            }
+        }
+
+        {{~ ## VARIANT CONSTRUCTORS ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Create a variant with a value of type <see cref="{{ $t.name }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The value to initlaize the variant with.</param>
+        public {{ name }}({{ $t.name }} {{ $t.hint }}) => _variant = new _VariantStorage({{ $t.hint }});
+        {{~ end ~}}
+
+        {{~ ## IMPLICIT CONVERSIONS ## ~}}
+        {{~ for $t in types ~}}
+        {{~ if $t.emit_implicit_cast ~}}
+        /// <summary>
+        /// Create a variant with a value of type <see cref="{{ $t.name }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The value to initlaize the variant with.</param>
+        public static implicit operator {{ name }}({{ $t.name }} {{ $t.hint }}) => new {{ name }}({{ $t.hint }});
+        {{~ end ~}}
+        {{~ end ~}}
+
+        {{~ # STATIC CREATE FACTORIES ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Create a variant with a value of type <see cref="{{ $t.name }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The value to initlaize the variant with.</param>
+        public static {{ name }} Create({{ $t.name }} {{ $t.hint }}) => new {{ name }}({{ $t.hint }});
+        {{~ end ~}}
+
+        {{~ ## VARIANT IsEmpty ## ~}}
+        /// <summary>
+        /// <see langword="true"/> if {{ name }} was constructed without a value.
+        /// </summary>
+        {{~ if $is_struct ~}}
+        /// <remarks>
+        /// Because {{ name }} is a value type, its default constructor cannot be disabled.
+        /// A default-constructed {{ name }} will always have a <see cref="IsEmpty"/> value of <see langword"true"/>
+        /// and never satisfy any matching attempts.
+        /// </remarks>
+        {{~ end ~}}
+        public {{ $readonly }} bool IsEmpty => _variant.IsEmpty;
+
+        {{~ ## VARIANT Equals ## ~}}
+        public {{ $readonly }} override bool Equals(object? other) => other is {{ name }} v && Equals(v);
+        public {{ $readonly }} bool Equals({{ name; if $is_class; "?"; end }} other) =>
+            {{ if $is_class; "other != null &&"; end }}
+            _variant.Equals(other._variant);
+
+        public static bool operator ==({{ in }} {{ nullable }} lhs, {{ in }} {{ nullable }} rhs)
+            {{~ if $is_class ~}}
+            => lhs?.Equals(rhs) ?? (rhs is null);
+            {{~ else ~}}
+            => lhs.Equals(rhs);
+            {{~ end ~}}
+
+        public static bool operator !=({{ in }} {{ nullable }} lhs, {{ in }} {{ nullable }} rhs)
+            => !(lhs == rhs);
+
+        {{~ ## VARIANT GetHashCode ## ~}}
+        public {{ $readonly }} override int GetHashCode() => _variant.GetHashCode();
+
+        {{~ ## VARIANT ToString ## ~}}
+        public {{ $readonly }} override string ToString() => _variant.ValueString;
+
+        {{~ ## VARIANT Match(T) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Retrieve the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>,
+        /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">Receives the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
+        public {{ $readonly }} void Match(out {{ $t.name }} {{ $t.hint }})
+        {
+            if(!_variant.TryMatch(out {{ $t.hint }}{{ if $t.is_object; "!"; end}}))
+            {
+                throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
+            }
+        }
+        {{~ end ~}}
+
+        {{~ ## VARIANT TryMatch(T) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Retrieve the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">Receives the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ name }} contained a value of type <see cref="{{ $t.name }}"/>.</returns>
+        public {{ $readonly }} bool TryMatch(out {{ $t.nullable }} {{ $t.hint }})
+            => _variant.TryMatch(out {{ $t.hint }});
+        {{~ end ~}}
+
+        {{~ ## VARIANT TryMatch(Action<T>) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ name }} contained a value of type <see cref="{{ $t.name }}"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
+        public {{ $readonly }} bool TryMatch(global::System.Action<{{ $t.name }}> {{ $t.hint }})
+        {
+            var result = _variant.TryMatch(out {{ $t.nullable }} _value);
+            if(result)
+            {
+                {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
+            }
+            return result;
+        }
+        {{~ end ~}}
+
+        {{~ ## VARIANT Match(Action<T>) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>,
+        /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
+        public {{ $readonly }} void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }})
+        {
+            if(_variant.TryMatch(out {{ $t.nullable }} _value))
+            {
+                {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
+            }
+            else
+            {
+                throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
+            }
+        }
+        {{~ end ~}}
+
+        {{~ ## VARIANT Match(Action<T>) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>,
+        /// otherwise invoke an alternative delegate.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="_"> is rethrown.</exception>
+        public {{ $readonly }} void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }}, global::System.Action _)
+        {
+            if(_variant.TryMatch(out {{ $t.nullable }} _value))
+            {
+                {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
+            }
+            else
+            {
+                _();
+            }
+        }
+        {{~ end ~}}
+
+        {{~ ## VARIANT Match(Func<T, R>) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/> and return the result,
+        /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <returns>The value returned from invoking <paramref name="{{ $t.hint }}"/>.</returns>
+        /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
+        public {{ $readonly }} TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }})
+            => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
+        {{~ end ~}}
+
+        {{~ ## VARIANT Match(Func<T, R>, R) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/> and return the result,
+        /// otherwise return a provided value.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <param name="_">The value to return if the stored value is of a different type.</param>
+        /// <returns>The value returned from invoking <paramref name="{{ $t.hint }}"/>, or <paramref name="default"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="other"> is rethrown.</exception>
+        public {{ $readonly }} TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, TResult _)
+            => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : _;
+        {{~ end ~}}
+
+        {{~ ## VARIANT Match(Func<T, R>, Func<R>) ## ~}}
+        {{~ for $t in types ~}}
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/> and return the result,
+        /// otherwise invoke an alternative delegate and return its result.
+        /// </summary>
+        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="_"> is rethrown.</exception>
+        public {{ $readonly }} TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, global::System.Func<TResult> _)
+            => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : _();
+        {{~ end ~}}
+
+        {{~ ## VARIANT Match(Action<A>, Action<B>, ...) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ name }},
+        /// and throw an exception if {{ name }} is empty.
+        /// </summary>
+        {{~ for $t in types ~}}
+        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ end ~}}
+        /// <exception cref="global::System.InvalidOperationException">{{ name }} is empty.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        public {{ $readonly }} void Match({{ $action_params }})
+            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }});
+
+        {{~ ## VARIANT Match(Action<A>, Action<B>, ..., empty) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ name }},
+        /// and invoke a special delegate if {{ name }} is empty.
+        /// </summary>
+        {{~ for $t in types ~}}
+        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ end ~}}
+        /// <param name="_">The delegate to invoke if {{ name }} is empty.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        public {{ $readonly }} void Match({{ $action_params }}, global::System.Action _)
+            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }}, _);
+
+        {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ name }} and return the result,
+        /// and throw an exception if {{ name }} is empty.
+        /// </summary>
+        {{~ for $t in types ~}}
+        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ end ~}}
+        /// <exception cref="global::System.InvalidOperationException">{{ name }} is empty.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        public {{ $readonly }} TResult Match<TResult>({{ $func_params }})
+            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }});
+
+        {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ name }} and return the result,
+        /// and invoke a special delegate if {{ name }} is empty and return its result.
+        /// </summary>
+        {{~ for $t in types ~}}
+        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ end ~}}
+        /// <param name="_">The delegate to invoke if {{ name }} is empty.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        public {{ $readonly }} TResult Match<TResult>({{ $func_params }}, global::System.Func<TResult> _)
+            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }}, _);
+
+        {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
+    }
+{{~ if namespace ~}}
+}
+{{~ end ~}}
