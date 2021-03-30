@@ -29,7 +29,7 @@
       Embed the support sources so we don't have a dependency on the runtime library
       (which might contain generated code and fail to build while generator tests are failing)
     -->
-    <EmbeddedResource Include="../dotVariant/*.cs">
+    <EmbeddedResource Include="../dotVariant.Runtime/*.cs">
       <Link>samples/%(RecursiveDir)%(Filename)%(Extension)</Link>
       <LogicalName>dotVariant.Generator.Test.samples.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>

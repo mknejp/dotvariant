@@ -1,7 +1,33 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratorOutputPath>../dotVariant.Generator/bin/$(Configuration)/netstandard2.0</GeneratorOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../dotVariant.Generator/dotVariant.Generator.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
+    <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Visible="false" />
+  </ItemGroup>
+
+  <Target Name="dotVariant-GatherGeneratorDependencies" AfterTargets="Build">
+    <MSBuild Projects="../dotVariant.Generator/dotVariant.Generator.csproj" Targets="GetTargetPath">
+      <Output TaskParameter="TargetOutputs" ItemName="GeneratorOutputs"/>
+    </MSBuild>
+    <!--<Message Importance="high" Text="%(GeneratorOutputs.Identity)" />-->
+    <ItemGroup>
+      <None Include="@(GeneratorOutputs)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+  </Target>
 
 </Project>

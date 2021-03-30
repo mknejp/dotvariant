@@ -10,18 +10,15 @@
     <PackageReference Include="IsExternalInit" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.0.0" PrivateAssets="all" />
+    <!-- Transitive closure of generator runtime dependencies -->
     <PackageReference Include="Scriban" Version="3.6.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="System.Interactive" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" GeneratePathProperty="true" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Not required at runtime, but we want access to type names -->
-    <ProjectReference Include="..\dotVariant\dotVariant.csproj" />
+    <ProjectReference Include="..\dotVariant.Runtime\dotVariant.Runtime.csproj" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);dotVariant-GetDependencyTargetPaths</GetTargetPathDependsOn>
-  </PropertyGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="templates/*" />
@@ -31,10 +28,15 @@
     <None Remove="templates/*" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);dotVariant-GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
   <Target Name="dotVariant-GetDependencyTargetPaths">
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Interactive)\lib\netstandard2.0\System.Interactive.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Threading_Tasks_Extensions)\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 

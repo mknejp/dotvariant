@@ -1,3 +1,9 @@
+//
+// Copyright Miro Knejp 2021.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+//
+
 #nullable enable
 namespace Foo
 {
@@ -28,21 +34,21 @@ namespace Foo
             {
                 _n = 1;
                 _x = new Union(i);
-
+                
                 VariantOf(default!, default!, default!);
             }
             public _VariantStorage(float f)
             {
                 _n = 2;
                 _x = new Union(f);
-
+                
                 VariantOf(default!, default!, default!);
             }
             public _VariantStorage(string s)
             {
                 _n = 3;
                 _x = new Union(s);
-
+                
                 VariantOf(default!, default!, default!);
             }
 

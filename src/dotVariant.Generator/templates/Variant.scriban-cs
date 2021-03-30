@@ -1,4 +1,8 @@
-#nullable enable
+{{~
+# Copyright Miro Knejp 2021.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+~}}
 {{~ ##
 Inputs:
 - namespace: Namespace of the variant type, or null if in the global namespace
@@ -35,6 +39,7 @@ readonly $is_struct
 readonly $readonly
 ~}}
 {{~ if namespace ~}}
+#nullable enable
 namespace {{ namespace }}
 {
     {{~ end ~}}

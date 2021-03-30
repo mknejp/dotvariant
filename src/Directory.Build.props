@@ -1,0 +1,21 @@
+<Project>
+
+  <PropertyGroup>
+    <Author>Miro Knejp</Author>
+    <Authors>$(Author)</Authors>
+    <Copyright>Copyright © Miro Knejp $([System.DateTime]::Now.Year)</Copyright>
+    <PackageDescription>A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)</PackageDescription>
+    <PackageLicenseExpression>BSL-1.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>variant;sumtype;functional;union;algebraic</PackageTags>
+    <RepositoryUrl>https://github.com/mknejp/dotvariant</RepositoryUrl>
+    <Version>0.1.0</Version>
+
+    <EnableNETAnalyzer>true</EnableNETAnalyzer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.9.0" />
+  </ItemGroup>
+
+</Project>

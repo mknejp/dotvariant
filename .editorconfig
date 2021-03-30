@@ -29,6 +29,11 @@ indent_size = 2
 [*.{ps1,cmd,bat}]
 indent_size = 2
 
+# Copyright headers (https://www.boost.org/users/license.html#FAQ)
+[*.cs]
+file_header_template = \nCopyright Miro Knejp 2021.\nDistributed under the Boost Software License, Version 1.0.\n(See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)\n
+dotnet_diagnostic.IDE0073.severity = error
+
 [*.cs]
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/
 

@@ -1,3 +1,9 @@
+//
+// Copyright Miro Knejp 2021.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+//
+
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -38,7 +44,7 @@ namespace dotVariant.Generator.Test
             var outputs = GetGeneratedOutput<SourceGenerator>(sources);
             var file = $"{typeof(SourceGenerator).Assembly.GetName().Name}\\{typeof(SourceGenerator).FullName}\\{typeName}.cs";
             var output = outputs[file];
-            if (output != expected)
+            if (output != StripCopyrightHeader(expected))
             {
                 // TODO: create diff
                 Assert.That(output, Is.EqualTo(expected));
@@ -57,6 +63,24 @@ namespace dotVariant.Generator.Test
                         LoadSample($"{test.FileName}.in.cs"),
                         LoadSample($"{test.FileName}.out.cs"))
                     .SetName($"{nameof(Translation)}({test.FileName})"));
+
+        private static string StripCopyrightHeader(string expected)
+        {
+            // The test file saved on disk contains a copyright header that is not
+            // produced by the generator. Remove it from the expected output,
+            // i.e. everything before the first non-empty non-comment line.
+
+            using var reader = new StringReader(expected);
+            var line = reader.ReadLine();
+            for (; line is not null; line = reader.ReadLine())
+            {
+                if (line.Length > 0 && line[0] != '/')
+                {
+                    return line + Environment.NewLine + reader.ReadToEnd();
+                }
+            }
+            return expected;
+        }
 
         [TestCaseSource(nameof(DiagnosticsCases))]
         public static void Diagnostics(string input)
