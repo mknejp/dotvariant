@@ -34,21 +34,18 @@ namespace Foo
             {
                 _n = 1;
                 _x = new Union(l);
-                
                 VariantOf(default!, default!, default!);
             }
             public _VariantStorage(double d)
             {
                 _n = 2;
                 _x = new Union(d);
-                
                 VariantOf(default!, default!, default!);
             }
             public _VariantStorage(object o)
             {
                 _n = 3;
                 _x = new Union(o);
-                
                 VariantOf(default!, default!, default!);
             }
 
@@ -118,7 +115,7 @@ namespace Foo
                 }
             }
 
-            public bool IsEmpty=> _n == 0;
+            public bool IsEmpty => _n == 0;
 
             public string TypeString
             {
@@ -312,14 +309,13 @@ namespace Foo
         public readonly bool IsEmpty => _variant.IsEmpty;
 
         public readonly override bool Equals(object? other) => other is Variant_struct v && Equals(v);
-        public readonly bool Equals(Variant_struct other) =>
-            
-            _variant.Equals(other._variant);
+        public readonly bool Equals(Variant_struct other)
+            => _variant.Equals(other._variant);
 
-        public static bool operator ==( Variant_struct lhs,  Variant_struct rhs)
+        public static bool operator ==(Variant_struct lhs, Variant_struct rhs)
             => lhs.Equals(rhs);
 
-        public static bool operator !=( Variant_struct lhs,  Variant_struct rhs)
+        public static bool operator !=(Variant_struct lhs, Variant_struct rhs)
             => !(lhs == rhs);
 
         public readonly override int GetHashCode() => _variant.GetHashCode();
@@ -334,7 +330,7 @@ namespace Foo
         /// <exception cref="dotVariant.TypeMismatchException">Variant_struct does not contain a value of type <see cref="long"/></exception>
         public readonly void Match(out long l)
         {
-            if(!_variant.TryMatch(out l))
+            if (!_variant.TryMatch(out l))
             {
                 throw new dotVariant.TypeMismatchException(expected: "long", actual: _variant.TypeString);
             }
@@ -347,7 +343,7 @@ namespace Foo
         /// <exception cref="dotVariant.TypeMismatchException">Variant_struct does not contain a value of type <see cref="double"/></exception>
         public readonly void Match(out double d)
         {
-            if(!_variant.TryMatch(out d))
+            if (!_variant.TryMatch(out d))
             {
                 throw new dotVariant.TypeMismatchException(expected: "double", actual: _variant.TypeString);
             }
@@ -360,7 +356,7 @@ namespace Foo
         /// <exception cref="dotVariant.TypeMismatchException">Variant_struct does not contain a value of type <see cref="object"/></exception>
         public readonly void Match(out object o)
         {
-            if(!_variant.TryMatch(out o!))
+            if (!_variant.TryMatch(out o!))
             {
                 throw new dotVariant.TypeMismatchException(expected: "object", actual: _variant.TypeString);
             }
@@ -397,7 +393,7 @@ namespace Foo
         public readonly bool TryMatch(global::System.Action<long> l)
         {
             var result = _variant.TryMatch(out long _value);
-            if(result)
+            if (result)
             {
                 l(_value);
             }
@@ -412,7 +408,7 @@ namespace Foo
         public readonly bool TryMatch(global::System.Action<double> d)
         {
             var result = _variant.TryMatch(out double _value);
-            if(result)
+            if (result)
             {
                 d(_value);
             }
@@ -427,7 +423,7 @@ namespace Foo
         public readonly bool TryMatch(global::System.Action<object> o)
         {
             var result = _variant.TryMatch(out object? _value);
-            if(result)
+            if (result)
             {
                 o(_value!);
             }
@@ -443,7 +439,7 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public readonly void Match(global::System.Action<long> l)
         {
-            if(_variant.TryMatch(out long _value))
+            if (_variant.TryMatch(out long _value))
             {
                 l(_value);
             }
@@ -461,7 +457,7 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public readonly void Match(global::System.Action<double> d)
         {
-            if(_variant.TryMatch(out double _value))
+            if (_variant.TryMatch(out double _value))
             {
                 d(_value);
             }
@@ -479,7 +475,7 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public readonly void Match(global::System.Action<object> o)
         {
-            if(_variant.TryMatch(out object? _value))
+            if (_variant.TryMatch(out object? _value))
             {
                 o(_value!);
             }
@@ -498,7 +494,7 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="_"> is rethrown.</exception>
         public readonly void Match(global::System.Action<long> l, global::System.Action _)
         {
-            if(_variant.TryMatch(out long _value))
+            if (_variant.TryMatch(out long _value))
             {
                 l(_value);
             }
@@ -516,7 +512,7 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="_"> is rethrown.</exception>
         public readonly void Match(global::System.Action<double> d, global::System.Action _)
         {
-            if(_variant.TryMatch(out double _value))
+            if (_variant.TryMatch(out double _value))
             {
                 d(_value);
             }
@@ -534,7 +530,7 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="_"> is rethrown.</exception>
         public readonly void Match(global::System.Action<object> o, global::System.Action _)
         {
-            if(_variant.TryMatch(out object? _value))
+            if (_variant.TryMatch(out object? _value))
             {
                 o(_value!);
             }

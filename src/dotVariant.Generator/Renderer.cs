@@ -61,7 +61,7 @@ namespace dotVariant.Generator
             var type = desc.Type;
             return new ScriptObject
             {
-                { "in", (type.TypeKind == TypeKind.Struct && Inspect.IsReadonly(type, context.CancellationToken)) ? "in" : "" },
+                { "in", (type.TypeKind == TypeKind.Struct && Inspect.IsReadonly(type, context.CancellationToken)) ? "in " : "" },
                 { "keyword", type.TypeKind == TypeKind.Class ? "class" : "struct" },
                 { "mismatch_exception", exception!.ToDisplayString() },
                 { "name", type.Name },

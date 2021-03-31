@@ -30,7 +30,7 @@ $func_params = types | array.each @$format_func | array.join ", "
 $action_params = types | array.each @$format_action | array.join ", "
 $is_class = keyword == "class"
 $is_struct = keyword == "struct"
-$readonly = $is_struct ? "readonly" : ""
+$readonly = $is_struct ? "readonly " : ""
 
 readonly $func_params
 readonly $action_params
@@ -182,7 +182,7 @@ namespace {{ namespace }}
             {
                 _n = {{ $t.index }};
                 _x = new Union({{ $t.hint }});
-                {{ ## Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." }}
+                {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
                 VariantOf({{ $f = do; ret "default!"; end; 1..types.size | array.join ", " @$f }});
             }
             {{~ end ~}}
@@ -231,7 +231,7 @@ namespace {{ namespace }}
             }
 
             {{~ ## UNION IsEmpty ## ~}}
-            public bool IsEmpty=> _n == 0;
+            public bool IsEmpty => _n == 0;
 
             {{~ ## UNION TypeString ## ~}}
             public string TypeString
@@ -415,29 +415,28 @@ namespace {{ namespace }}
         /// and never satisfy any matching attempts.
         /// </remarks>
         {{~ end ~}}
-        public {{ $readonly }} bool IsEmpty => _variant.IsEmpty;
+        public {{ $readonly }}bool IsEmpty => _variant.IsEmpty;
 
         {{~ ## VARIANT Equals ## ~}}
-        public {{ $readonly }} override bool Equals(object? other) => other is {{ name }} v && Equals(v);
-        public {{ $readonly }} bool Equals({{ name; if $is_class; "?"; end }} other) =>
-            {{ if $is_class; "other != null &&"; end }}
-            _variant.Equals(other._variant);
+        public {{ $readonly }}override bool Equals(object? other) => other is {{ name }} v && Equals(v);
+        public {{ $readonly }}bool Equals({{ name; if $is_class; "?"; end }} other)
+            => {{ if $is_class; "other != null && "; end }}_variant.Equals(other._variant);
 
-        public static bool operator ==({{ in }} {{ nullable }} lhs, {{ in }} {{ nullable }} rhs)
+        public static bool operator ==({{ in; nullable }} lhs, {{ in; nullable }} rhs)
             {{~ if $is_class ~}}
             => lhs?.Equals(rhs) ?? (rhs is null);
             {{~ else ~}}
             => lhs.Equals(rhs);
             {{~ end ~}}
 
-        public static bool operator !=({{ in }} {{ nullable }} lhs, {{ in }} {{ nullable }} rhs)
+        public static bool operator !=({{ in; nullable }} lhs, {{ in; nullable }} rhs)
             => !(lhs == rhs);
 
         {{~ ## VARIANT GetHashCode ## ~}}
-        public {{ $readonly }} override int GetHashCode() => _variant.GetHashCode();
+        public {{ $readonly }}override int GetHashCode() => _variant.GetHashCode();
 
         {{~ ## VARIANT ToString ## ~}}
-        public {{ $readonly }} override string ToString() => _variant.ValueString;
+        public {{ $readonly }}override string ToString() => _variant.ValueString;
 
         {{~ ## VARIANT Match(T) ## ~}}
         {{~ for $t in types ~}}
@@ -447,9 +446,9 @@ namespace {{ namespace }}
         /// </summary>
         /// <param name="{{ $t.hint }}">Receives the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
         /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
-        public {{ $readonly }} void Match(out {{ $t.name }} {{ $t.hint }})
+        public {{ $readonly }}void Match(out {{ $t.name }} {{ $t.hint }})
         {
-            if(!_variant.TryMatch(out {{ $t.hint }}{{ if $t.is_object; "!"; end}}))
+            if (!_variant.TryMatch(out {{ $t.hint }}{{ if $t.is_object; "!"; end}}))
             {
                 throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
             }
@@ -463,7 +462,7 @@ namespace {{ namespace }}
         /// </summary>
         /// <param name="{{ $t.hint }}">Receives the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
         /// <returns><see langword="true"/> if {{ name }} contained a value of type <see cref="{{ $t.name }}"/>.</returns>
-        public {{ $readonly }} bool TryMatch(out {{ $t.nullable }} {{ $t.hint }})
+        public {{ $readonly }}bool TryMatch(out {{ $t.nullable }} {{ $t.hint }})
             => _variant.TryMatch(out {{ $t.hint }});
         {{~ end ~}}
 
@@ -475,10 +474,10 @@ namespace {{ namespace }}
         /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
         /// <returns><see langword="true"/> if {{ name }} contained a value of type <see cref="{{ $t.name }}"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
-        public {{ $readonly }} bool TryMatch(global::System.Action<{{ $t.name }}> {{ $t.hint }})
+        public {{ $readonly }}bool TryMatch(global::System.Action<{{ $t.name }}> {{ $t.hint }})
         {
             var result = _variant.TryMatch(out {{ $t.nullable }} _value);
-            if(result)
+            if (result)
             {
                 {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
             }
@@ -495,9 +494,9 @@ namespace {{ namespace }}
         /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
         /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
-        public {{ $readonly }} void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }})
+        public {{ $readonly }}void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }})
         {
-            if(_variant.TryMatch(out {{ $t.nullable }} _value))
+            if (_variant.TryMatch(out {{ $t.nullable }} _value))
             {
                 {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
             }
@@ -517,9 +516,9 @@ namespace {{ namespace }}
         /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="_"> is rethrown.</exception>
-        public {{ $readonly }} void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }}, global::System.Action _)
+        public {{ $readonly }}void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }}, global::System.Action _)
         {
-            if(_variant.TryMatch(out {{ $t.nullable }} _value))
+            if (_variant.TryMatch(out {{ $t.nullable }} _value))
             {
                 {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
             }
@@ -540,7 +539,7 @@ namespace {{ namespace }}
         /// <returns>The value returned from invoking <paramref name="{{ $t.hint }}"/>.</returns>
         /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
-        public {{ $readonly }} TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }})
+        public {{ $readonly }}TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }})
             => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
         {{~ end ~}}
 
@@ -554,7 +553,7 @@ namespace {{ namespace }}
         /// <param name="_">The value to return if the stored value is of a different type.</param>
         /// <returns>The value returned from invoking <paramref name="{{ $t.hint }}"/>, or <paramref name="default"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="other"> is rethrown.</exception>
-        public {{ $readonly }} TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, TResult _)
+        public {{ $readonly }}TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, TResult _)
             => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : _;
         {{~ end ~}}
 
@@ -567,7 +566,7 @@ namespace {{ namespace }}
         /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="_"> is rethrown.</exception>
-        public {{ $readonly }} TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, global::System.Func<TResult> _)
+        public {{ $readonly }}TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, global::System.Func<TResult> _)
             => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : _();
         {{~ end ~}}
 
@@ -581,7 +580,7 @@ namespace {{ namespace }}
         {{~ end ~}}
         /// <exception cref="global::System.InvalidOperationException">{{ name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public {{ $readonly }} void Match({{ $action_params }})
+        public {{ $readonly }}void Match({{ $action_params }})
             => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }});
 
         {{~ ## VARIANT Match(Action<A>, Action<B>, ..., empty) ## ~}}
@@ -594,7 +593,7 @@ namespace {{ namespace }}
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if {{ name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public {{ $readonly }} void Match({{ $action_params }}, global::System.Action _)
+        public {{ $readonly }}void Match({{ $action_params }}, global::System.Action _)
             => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }}, _);
 
         {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
@@ -608,7 +607,7 @@ namespace {{ namespace }}
         /// <exception cref="global::System.InvalidOperationException">{{ name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public {{ $readonly }} TResult Match<TResult>({{ $func_params }})
+        public {{ $readonly }}TResult Match<TResult>({{ $func_params }})
             => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }});
 
         {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
@@ -622,7 +621,7 @@ namespace {{ namespace }}
         /// <param name="_">The delegate to invoke if {{ name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public {{ $readonly }} TResult Match<TResult>({{ $func_params }}, global::System.Func<TResult> _)
+        public {{ $readonly }}TResult Match<TResult>({{ $func_params }}, global::System.Func<TResult> _)
             => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }}, _);
 
         {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}

@@ -91,7 +91,7 @@ namespace dotVariant.Generator.Test
 
         public static IEnumerable<(int Line, int Column, string Id)> ExtractExpectations(string input)
         {
-            input = input.Replace( "\r\n", "\n").Replace("\r", "\n");
+            input = input.Replace("\r\n", "\n").Replace("\r", "\n");
             return
                 Regex.Matches(input, @"// (expected-error)(?::(\d+))? (.+)$", RegexOptions.Multiline | RegexOptions.ECMAScript)
                 .Select(m => (Line(m.Index), m.Groups[2].Success ? int.Parse(m.Groups[2].Value) : -1, m.Groups[3].Value));

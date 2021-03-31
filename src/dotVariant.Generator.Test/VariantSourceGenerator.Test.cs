@@ -8,8 +8,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -44,7 +42,8 @@ namespace dotVariant.Generator.Test
             var outputs = GetGeneratedOutput<SourceGenerator>(sources);
             var file = $"{typeof(SourceGenerator).Assembly.GetName().Name}\\{typeof(SourceGenerator).FullName}\\{typeName}.cs";
             var output = outputs[file];
-            if (output != StripCopyrightHeader(expected))
+            output = GetCopyrightHeader(input).ToString() + output;
+            if (output != expected)
             {
                 // TODO: create diff
                 Assert.That(output, Is.EqualTo(expected));
@@ -64,22 +63,28 @@ namespace dotVariant.Generator.Test
                         LoadSample($"{test.FileName}.out.cs"))
                     .SetName($"{nameof(Translation)}({test.FileName})"));
 
-        private static string StripCopyrightHeader(string expected)
+        private static ReadOnlySpan<char> GetCopyrightHeader(ReadOnlySpan<char> input)
         {
             // The test file saved on disk contains a copyright header that is not
-            // produced by the generator. Remove it from the expected output,
-            // i.e. everything before the first non-empty non-comment line.
+            // produced by the generator. Extract it from the input so we can
+            // prepend it to the output for test comparison.
 
-            using var reader = new StringReader(expected);
-            var line = reader.ReadLine();
-            for (; line is not null; line = reader.ReadLine())
+            var start = input;
+            var header = 0;
+            var eol = 0;
+            do
             {
-                if (line.Length > 0 && line[0] != '/')
+                eol = input.IndexOf(Environment.NewLine.AsSpan());
+                if (eol > 0 && input[0] != '/')
                 {
-                    return line + Environment.NewLine + reader.ReadToEnd();
+                    break;
                 }
+                var line = eol + Environment.NewLine.Length;
+                header += line;
+                input = input[line..];
             }
-            return expected;
+            while (eol != -1);
+            return start.Slice(0, header);
         }
 
         [TestCaseSource(nameof(DiagnosticsCases))]

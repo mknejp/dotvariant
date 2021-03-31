@@ -34,21 +34,18 @@ namespace Foo
             {
                 _n = 1;
                 _x = new Union(i);
-                
                 VariantOf(default!, default!, default!);
             }
             public _VariantStorage(float f)
             {
                 _n = 2;
                 _x = new Union(f);
-                
                 VariantOf(default!, default!, default!);
             }
             public _VariantStorage(string s)
             {
                 _n = 3;
                 _x = new Union(s);
-                
                 VariantOf(default!, default!, default!);
             }
 
@@ -118,7 +115,7 @@ namespace Foo
                 }
             }
 
-            public bool IsEmpty=> _n == 0;
+            public bool IsEmpty => _n == 0;
 
             public string TypeString
             {
@@ -309,22 +306,21 @@ namespace Foo
         /// <summary>
         /// <see langword="true"/> if Variant_class was constructed without a value.
         /// </summary>
-        public  bool IsEmpty => _variant.IsEmpty;
+        public bool IsEmpty => _variant.IsEmpty;
 
-        public  override bool Equals(object? other) => other is Variant_class v && Equals(v);
-        public  bool Equals(Variant_class? other) =>
-            other != null &&
-            _variant.Equals(other._variant);
+        public override bool Equals(object? other) => other is Variant_class v && Equals(v);
+        public bool Equals(Variant_class? other)
+            => other != null && _variant.Equals(other._variant);
 
-        public static bool operator ==( Variant_class? lhs,  Variant_class? rhs)
+        public static bool operator ==(Variant_class? lhs, Variant_class? rhs)
             => lhs?.Equals(rhs) ?? (rhs is null);
 
-        public static bool operator !=( Variant_class? lhs,  Variant_class? rhs)
+        public static bool operator !=(Variant_class? lhs, Variant_class? rhs)
             => !(lhs == rhs);
 
-        public  override int GetHashCode() => _variant.GetHashCode();
+        public override int GetHashCode() => _variant.GetHashCode();
 
-        public  override string ToString() => _variant.ValueString;
+        public override string ToString() => _variant.ValueString;
 
         /// <summary>
         /// Retrieve the value stored within Variant_class if it is of type <see cref="int"/>,
@@ -332,9 +328,9 @@ namespace Foo
         /// </summary>
         /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="int"/></exception>
-        public  void Match(out int i)
+        public void Match(out int i)
         {
-            if(!_variant.TryMatch(out i))
+            if (!_variant.TryMatch(out i))
             {
                 throw new dotVariant.TypeMismatchException(expected: "int", actual: _variant.TypeString);
             }
@@ -345,9 +341,9 @@ namespace Foo
         /// </summary>
         /// <param name="f">Receives the stored value if it is of type <see cref="float"/>.</param>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="float"/></exception>
-        public  void Match(out float f)
+        public void Match(out float f)
         {
-            if(!_variant.TryMatch(out f))
+            if (!_variant.TryMatch(out f))
             {
                 throw new dotVariant.TypeMismatchException(expected: "float", actual: _variant.TypeString);
             }
@@ -358,9 +354,9 @@ namespace Foo
         /// </summary>
         /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="string"/></exception>
-        public  void Match(out string s)
+        public void Match(out string s)
         {
-            if(!_variant.TryMatch(out s!))
+            if (!_variant.TryMatch(out s!))
             {
                 throw new dotVariant.TypeMismatchException(expected: "string", actual: _variant.TypeString);
             }
@@ -371,21 +367,21 @@ namespace Foo
         /// </summary>
         /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
         /// <returns><see langword="true"/> if Variant_class contained a value of type <see cref="int"/>.</returns>
-        public  bool TryMatch(out int i)
+        public bool TryMatch(out int i)
             => _variant.TryMatch(out i);
         /// <summary>
         /// Retrieve the value stored within Variant_class if it is of type <see cref="float"/>.
         /// </summary>
         /// <param name="f">Receives the stored value if it is of type <see cref="float"/>.</param>
         /// <returns><see langword="true"/> if Variant_class contained a value of type <see cref="float"/>.</returns>
-        public  bool TryMatch(out float f)
+        public bool TryMatch(out float f)
             => _variant.TryMatch(out f);
         /// <summary>
         /// Retrieve the value stored within Variant_class if it is of type <see cref="string"/>.
         /// </summary>
         /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
         /// <returns><see langword="true"/> if Variant_class contained a value of type <see cref="string"/>.</returns>
-        public  bool TryMatch(out string? s)
+        public bool TryMatch(out string? s)
             => _variant.TryMatch(out s);
 
         /// <summary>
@@ -394,10 +390,10 @@ namespace Foo
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
         /// <returns><see langword="true"/> if Variant_class contained a value of type <see cref="int"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
-        public  bool TryMatch(global::System.Action<int> i)
+        public bool TryMatch(global::System.Action<int> i)
         {
             var result = _variant.TryMatch(out int _value);
-            if(result)
+            if (result)
             {
                 i(_value);
             }
@@ -409,10 +405,10 @@ namespace Foo
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="float"/>.</param>
         /// <returns><see langword="true"/> if Variant_class contained a value of type <see cref="float"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
-        public  bool TryMatch(global::System.Action<float> f)
+        public bool TryMatch(global::System.Action<float> f)
         {
             var result = _variant.TryMatch(out float _value);
-            if(result)
+            if (result)
             {
                 f(_value);
             }
@@ -424,10 +420,10 @@ namespace Foo
         /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
         /// <returns><see langword="true"/> if Variant_class contained a value of type <see cref="string"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
-        public  bool TryMatch(global::System.Action<string> s)
+        public bool TryMatch(global::System.Action<string> s)
         {
             var result = _variant.TryMatch(out string? _value);
-            if(result)
+            if (result)
             {
                 s(_value!);
             }
@@ -441,9 +437,9 @@ namespace Foo
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="int"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
-        public  void Match(global::System.Action<int> i)
+        public void Match(global::System.Action<int> i)
         {
-            if(_variant.TryMatch(out int _value))
+            if (_variant.TryMatch(out int _value))
             {
                 i(_value);
             }
@@ -459,9 +455,9 @@ namespace Foo
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="float"/>.</param>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="float"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
-        public  void Match(global::System.Action<float> f)
+        public void Match(global::System.Action<float> f)
         {
-            if(_variant.TryMatch(out float _value))
+            if (_variant.TryMatch(out float _value))
             {
                 f(_value);
             }
@@ -477,9 +473,9 @@ namespace Foo
         /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="string"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
-        public  void Match(global::System.Action<string> s)
+        public void Match(global::System.Action<string> s)
         {
-            if(_variant.TryMatch(out string? _value))
+            if (_variant.TryMatch(out string? _value))
             {
                 s(_value!);
             }
@@ -496,9 +492,9 @@ namespace Foo
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
-        public  void Match(global::System.Action<int> i, global::System.Action _)
+        public void Match(global::System.Action<int> i, global::System.Action _)
         {
-            if(_variant.TryMatch(out int _value))
+            if (_variant.TryMatch(out int _value))
             {
                 i(_value);
             }
@@ -514,9 +510,9 @@ namespace Foo
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="float"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> or <paramref name="_"> is rethrown.</exception>
-        public  void Match(global::System.Action<float> f, global::System.Action _)
+        public void Match(global::System.Action<float> f, global::System.Action _)
         {
-            if(_variant.TryMatch(out float _value))
+            if (_variant.TryMatch(out float _value))
             {
                 f(_value);
             }
@@ -532,9 +528,9 @@ namespace Foo
         /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
-        public  void Match(global::System.Action<string> s, global::System.Action _)
+        public void Match(global::System.Action<string> s, global::System.Action _)
         {
-            if(_variant.TryMatch(out string? _value))
+            if (_variant.TryMatch(out string? _value))
             {
                 s(_value!);
             }
@@ -552,7 +548,7 @@ namespace Foo
         /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="int"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<int, TResult> i)
+        public TResult Match<TResult>(global::System.Func<int, TResult> i)
             => _variant.TryMatch(out int _value) ? i(_value) : throw new dotVariant.TypeMismatchException(expected: "int", actual: _variant.TypeString);
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class if it is of type <see cref="float"/> and return the result,
@@ -562,7 +558,7 @@ namespace Foo
         /// <returns>The value returned from invoking <paramref name="f"/>.</returns>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="float"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<float, TResult> f)
+        public TResult Match<TResult>(global::System.Func<float, TResult> f)
             => _variant.TryMatch(out float _value) ? f(_value) : throw new dotVariant.TypeMismatchException(expected: "float", actual: _variant.TypeString);
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class if it is of type <see cref="string"/> and return the result,
@@ -572,7 +568,7 @@ namespace Foo
         /// <returns>The value returned from invoking <paramref name="s"/>.</returns>
         /// <exception cref="dotVariant.TypeMismatchException">Variant_class does not contain a value of type <see cref="string"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<string, TResult> s)
+        public TResult Match<TResult>(global::System.Func<string, TResult> s)
             => _variant.TryMatch(out string? _value) ? s(_value!) : throw new dotVariant.TypeMismatchException(expected: "string", actual: _variant.TypeString);
 
         /// <summary>
@@ -583,7 +579,7 @@ namespace Foo
         /// <param name="_">The value to return if the stored value is of a different type.</param>
         /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
+        public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
             => _variant.TryMatch(out int _value) ? i(_value) : _;
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class if it is of type <see cref="float"/> and return the result,
@@ -593,7 +589,7 @@ namespace Foo
         /// <param name="_">The value to return if the stored value is of a different type.</param>
         /// <returns>The value returned from invoking <paramref name="f"/>, or <paramref name="default"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> or <paramref name="other"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<float, TResult> f, TResult _)
+        public TResult Match<TResult>(global::System.Func<float, TResult> f, TResult _)
             => _variant.TryMatch(out float _value) ? f(_value) : _;
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class if it is of type <see cref="string"/> and return the result,
@@ -603,7 +599,7 @@ namespace Foo
         /// <param name="_">The value to return if the stored value is of a different type.</param>
         /// <returns>The value returned from invoking <paramref name="s"/>, or <paramref name="default"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="other"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
+        public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
             => _variant.TryMatch(out string? _value) ? s(_value!) : _;
 
         /// <summary>
@@ -613,7 +609,7 @@ namespace Foo
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
+        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
             => _variant.TryMatch(out int _value) ? i(_value) : _();
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class if it is of type <see cref="float"/> and return the result,
@@ -622,7 +618,7 @@ namespace Foo
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="float"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> or <paramref name="_"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<float, TResult> f, global::System.Func<TResult> _)
+        public TResult Match<TResult>(global::System.Func<float, TResult> f, global::System.Func<TResult> _)
             => _variant.TryMatch(out float _value) ? f(_value) : _();
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class if it is of type <see cref="string"/> and return the result,
@@ -631,7 +627,7 @@ namespace Foo
         /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
-        public  TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+        public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
             => _variant.TryMatch(out string? _value) ? s(_value!) : _();
 
         /// <summary>
@@ -643,7 +639,7 @@ namespace Foo
         /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
         /// <exception cref="global::System.InvalidOperationException">Variant_class is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public  void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
+        public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
             => _variant.Match(i, f, s);
 
         /// <summary>
@@ -655,7 +651,7 @@ namespace Foo
         /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
         /// <param name="_">The delegate to invoke if Variant_class is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public  void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
+        public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
             => _variant.Match(i, f, s, _);
 
         /// <summary>
@@ -668,7 +664,7 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public  TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
+        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
             => _variant.Match(i, f, s);
 
         /// <summary>
@@ -681,7 +677,7 @@ namespace Foo
         /// <param name="_">The delegate to invoke if Variant_class is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public  TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
             => _variant.Match(i, f, s, _);
 
     }
