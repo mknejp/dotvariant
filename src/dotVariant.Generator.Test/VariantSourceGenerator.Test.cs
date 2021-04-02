@@ -40,7 +40,11 @@ namespace dotVariant.Generator.Test
                 ["input"] = input
             };
             var outputs = GetGeneratedOutput<SourceGenerator>(sources);
-            var file = $"{typeof(SourceGenerator).Assembly.GetName().Name}\\{typeof(SourceGenerator).FullName}\\{typeName}.cs";
+            var file =
+                Path.Combine(
+                    $"{typeof(SourceGenerator).Assembly.GetName().Name}",
+                    $"{typeof(SourceGenerator).FullName}",
+                    $"{typeName}.cs");
             var output = outputs[file];
             output = GetCopyrightHeader(input).ToString() + output;
             if (output != expected)

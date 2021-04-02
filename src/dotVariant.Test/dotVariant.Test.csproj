@@ -12,9 +12,13 @@
     <PackageReference Include="System.Interactive" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="!$(PackageSelfTest)">
     <ProjectReference Include="..\dotVariant.Runtime\dotVariant.Runtime.csproj" />
     <ProjectReference Include="..\dotVariant.Generator\dotVariant.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(PackageSelfTest)">
+    <PackageReference Include="dotVariant" Version="$(Version)" />
   </ItemGroup>
 
 </Project>
