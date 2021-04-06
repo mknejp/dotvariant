@@ -42,5 +42,19 @@ namespace dotVariant.Generator
         public static ImmutableArray<IParameterSymbol> GetOptions(ITypeSymbol type)
             => VariantOfMethod(type)?.Parameters
             ?? ImmutableArray<IParameterSymbol>.Empty;
+
+        public static bool IsAncestorOf(ITypeSymbol ancestor, ITypeSymbol type)
+        {
+            var current = (ITypeSymbol?)type;
+            while (current is not null)
+            {
+                if (SymbolEqualityComparer.Default.Equals(ancestor, current))
+                {
+                    return true;
+                }
+                current = current.BaseType;
+            }
+            return false;
+        }
     }
 }

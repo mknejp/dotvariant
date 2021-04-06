@@ -35,9 +35,9 @@ partial class Variant4
 }
 
 [dotVariant.Variant]
-partial class Variant5
+partial struct Variant5
 {
     // Multiple methods with same name
     static partial void VariantOf(int a, string b); // expected-error:25 dotVariant.HasVariantOf
-    static partial void VariantOf(int a, object b);
+    static partial void VariantOf(int a, float b);
 }

@@ -89,18 +89,23 @@ namespace dotVariant.Generator.Test
             return new StreamReader(stream!).ReadToEnd();
         }
 
-        public static IEnumerable<(int Line, int Column, string Id)> ExtractExpectations(string input)
+        public static IEnumerable<DiagnosticExpectation> ExtractExpectations(string input)
         {
             input = input.Replace("\r\n", "\n").Replace("\r", "\n");
             return
-                Regex.Matches(input, @"// (expected-error)(?::(\d+))? (.+)$", RegexOptions.Multiline | RegexOptions.ECMAScript)
-                .Select(m => (Line(m.Index), m.Groups[2].Success ? int.Parse(m.Groups[2].Value) : -1, m.Groups[3].Value));
+                Regex.Matches(input, @"// (?:expected-(error|warning))(?::(\d+))? (.+)$", RegexOptions.Multiline | RegexOptions.ECMAScript)
+                .Select(ToExpectation);
 
-            int Line(int position) => input[..position].Count(ch => ch == '\n') + 1;
+            DiagnosticExpectation ToExpectation(Match m)
+                => new(
+                    Line: input[..m.Index].Count(ch => ch == '\n') + 1,
+                    Column: m.Groups[2].Success ? int.Parse(m.Groups[2].Value) : -1,
+                    Id: m.Groups[3].Value,
+                    Severity: m.Groups[1].Value == "error" ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning);
         }
 
         [TestCaseSource(nameof(ExtractExpectationsTest_cases))]
-        public static void ExtractExpectationsTest(string input, (int Line, int Column, string Id)[] expected)
+        public static void ExtractExpectationsTest(string input, DiagnosticExpectation[] expected)
         {
             Assert.That(ExtractExpectations(input), Is.EquivalentTo(expected));
         }
@@ -108,29 +113,36 @@ namespace dotVariant.Generator.Test
         public static IEnumerable<TestCaseData> ExtractExpectationsTest_cases()
         {
             return
-                new (string Input, (int Line, int Column, string Id)[] Expectations)[]
+                new (string Input, DiagnosticExpectation[] Expectations)[]
                 {
                     (
                         "// expected-error Foo",
-                        new[]
+                        new DiagnosticExpectation[]
                         {
-                            (1, -1, "Foo"),
+                            new(1, -1, "Foo", DiagnosticSeverity.Error),
+                        }
+                    ),
+                    (
+                        "// expected-warning Foo",
+                        new DiagnosticExpectation[]
+                        {
+                            new(1, -1, "Foo", DiagnosticSeverity.Warning),
                         }
                     ),
                     (
                         "// expected-error:51 Foo",
-                        new[]
+                        new DiagnosticExpectation[]
                         {
-                            (1, 51, "Foo"),
+                            new(1, 51, "Foo", DiagnosticSeverity.Error),
                         }
                     ),
                     (
                         @"line 1
                         line 2
                         line 3 // expected-error Foo",
-                        new[]
+                        new DiagnosticExpectation[]
                         {
-                            (3, -1, "Foo"),
+                            new(3, -1, "Foo", DiagnosticSeverity.Error),
                         }
                     ),
                     (
@@ -139,10 +151,10 @@ namespace dotVariant.Generator.Test
                         line 3
                         line 4 // expected-error:14 Bar
                         line 5",
-                        new[]
+                        new DiagnosticExpectation[]
                         {
-                            (2, -1, "Foo"),
-                            (4, 14, "Bar"),
+                            new(2, -1, "Foo", DiagnosticSeverity.Error),
+                            new(4, 14, "Bar", DiagnosticSeverity.Error),
                         }
                     ),
                 }
@@ -151,5 +163,14 @@ namespace dotVariant.Generator.Test
                     .SetName($"{nameof(ExtractExpectationsTest)}({i})"));
         }
 
+    }
+
+    public record DiagnosticExpectation(int Line, int Column, string Id, DiagnosticSeverity Severity)
+    {
+        public static implicit operator DiagnosticExpectation(Diagnostic diag)
+        {
+            var position = diag.Location.GetMappedLineSpan().StartLinePosition;
+            return new(Line: position.Line + 1, Column: position.Character + 1, diag.Id, Severity: diag.Severity);
+        }
     }
 }

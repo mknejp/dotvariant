@@ -52,7 +52,7 @@ namespace dotVariant.Generator
                     IsObject = p.Type.IsReferenceType,
                     Nullable = p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) + (p.Type.IsReferenceType ? "?" : ""),
                     Coalesce = p.Type.NullableAnnotation == NullableAnnotation.Annotated ? "?" : "",
-                    EmitImplicitCast = !IsAncestorOf(p.Type, desc.Type)
+                    EmitImplicitCast = !Inspect.IsAncestorOf(p.Type, desc.Type)
                 });
 
             var exception = context.Compilation.GetTypeByMetadataName("dotVariant.TypeMismatchException");
@@ -71,20 +71,6 @@ namespace dotVariant.Generator
                 { "readonly", type.TypeKind == TypeKind.Struct ? "readonly" : "" },
                 { "types", typeDescriptors.ToArray() },
             };
-        }
-
-        private static bool IsAncestorOf(ITypeSymbol ancestor, ITypeSymbol type)
-        {
-            var current = (ITypeSymbol?)type;
-            while (current is not null)
-            {
-                if (SymbolEqualityComparer.Default.Equals(ancestor, current))
-                {
-                    return true;
-                }
-                current = current.BaseType;
-            }
-            return false;
         }
 
         private static int NumReferenceFields(IParameterSymbol param)

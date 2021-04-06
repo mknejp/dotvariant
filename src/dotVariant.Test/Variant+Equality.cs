@@ -6,7 +6,6 @@
 
 using dotVariant.Test.Variants;
 using NUnit.Framework;
-using System;
 
 namespace dotVariant.Test
 {
@@ -175,8 +174,8 @@ namespace dotVariant.Test
             [Test]
             public static void Variants_with_inequal_objects_are_inequal()
             {
-                var a = new Class_int_float_object(new object());
-                var b = new Class_int_float_object(new object());
+                var a = new Class_int_float_object(new NeverEqual());
+                var b = new Class_int_float_object(new NeverEqual());
 
                 Assert.Multiple(() =>
                 {
@@ -231,11 +230,6 @@ namespace dotVariant.Test
             //    });
             //}
 
-            private sealed class AlwaysEqual
-            {
-                public override bool Equals(object? obj) => obj is AlwaysEqual;
-                public override int GetHashCode() => throw new NotImplementedException();
-            }
         }
     }
 }

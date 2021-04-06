@@ -50,6 +50,8 @@ namespace dotVariant.Generator
                     CheckThat.HasAtLeastTwoOptions,
                     CheckThat.HasNoDuplicateOptions,
                     CheckThat.HasNoReservedName,
+                    CheckThat.NoImplicitConversionForBaseClasses,
+                    CheckThat.NoImplicitConversionForInterfaces,
                 }
                 .SelectMany(f => f(type, methodSyntax!, variantOf, options, token));
         }
@@ -189,16 +191,62 @@ namespace dotVariant.Generator
                 }
             }
 
+            public static IEnumerable<Diagnostic> NoImplicitConversionForBaseClasses(
+                ITypeSymbol type,
+                MethodDeclarationSyntax syntax,
+                IMethodSymbol variantOf,
+                ImmutableArray<IParameterSymbol> options,
+                CancellationToken token)
+            {
+                foreach (var p in options)
+                {
+                    if (Inspect.IsAncestorOf(p.Type, type))
+                    {
+                        yield return MakeWarning(
+                            nameof(NoImplicitConversionForBaseClasses),
+                            "No implicit conversion for base class option.",
+                            $"Option '{p.Name}' has type '{p.Type.ToDisplayString()}', which is a base class of {type.Name} and thus no implicit conversion from '{p.Type.ToDisplayString()}' to '{type.Name}' will be created.",
+                            p.Locations[0]);
+                    }
+                }
+            }
+
+            public static IEnumerable<Diagnostic> NoImplicitConversionForInterfaces(
+                ITypeSymbol type,
+                MethodDeclarationSyntax syntax,
+                IMethodSymbol variantOf,
+                ImmutableArray<IParameterSymbol> options,
+                CancellationToken token)
+            {
+                foreach (var p in options)
+                {
+                    if (p.Type.TypeKind == TypeKind.Interface)
+                    {
+                        yield return MakeWarning(
+                            nameof(NoImplicitConversionForInterfaces),
+                            "No implicit conversion for interface option.",
+                            $"Option '{p.Name}' has type '{p.Type.ToDisplayString()}', which is an interface and thus no implicit conversion from '{p.Type.ToDisplayString()}' to '{type.Name}' will be created.",
+                            p.Locations[0]);
+                    }
+                }
+            }
+
             private static Diagnostic MakeError(string id, string title, string message, Location location)
+                => MakeDiagnostic(id, title, message, location, DiagnosticSeverity.Error, WellKnownDiagnosticTags.NotConfigurable);
+
+            private static Diagnostic MakeWarning(string id, string title, string message, Location location)
+                => MakeDiagnostic(id, title, message, location, DiagnosticSeverity.Warning);
+
+            private static Diagnostic MakeDiagnostic(string id, string title, string message, Location location, DiagnosticSeverity severity, params string[] customTags)
                 => Diagnostic.Create(
                     new DiagnosticDescriptor(
                         $"{nameof(dotVariant)}.{id}",
                         title,
                         message,
                         "dotVariant",
-                        DiagnosticSeverity.Error,
+                        severity,
                         true,
-                        customTags: WellKnownDiagnosticTags.NotConfigurable),
+                        customTags: customTags),
                     location);
 
             private static Location LocationOfFirstToken(SyntaxNode syntax, params SyntaxKind[] kind)

@@ -101,11 +101,7 @@ namespace dotVariant.Generator.Test
             var expectations = ExtractExpectations(input);
             var diags =
                 GetGeneratorDiagnostics<SourceGenerator>(sources)
-                .Select(diag =>
-                {
-                    var position = diag.Location.GetMappedLineSpan().StartLinePosition;
-                    return (Line: position.Line + 1, Column: position.Character + 1, diag.Id);
-                });
+                .Select(diag => (DiagnosticExpectation)diag);
 
             var unfulfilledExpectations =
                 expectations
@@ -123,7 +119,7 @@ namespace dotVariant.Generator.Test
                     Assert.Fail(
                         string.Join(
                             Environment.NewLine,
-                            unfulfilledExpectations.Select(ex => $"    {ex.Line}:{ex.Column}: {ex.Id}")
+                            unfulfilledExpectations.Select(ex => $"    {ex.Severity} {ex.Line}:{ex.Column}: {ex.Id}")
                             .Prepend("Unfilfilled diagnostic expectations:")));
                 }
                 if (unexpectedDiagnostics.Any())
@@ -131,14 +127,18 @@ namespace dotVariant.Generator.Test
                     Assert.Fail(
                         string.Join(
                             Environment.NewLine,
-                            unexpectedDiagnostics.Select(ex => $"    {ex.Line}:{ex.Column}: {ex.Id}")
+                            unexpectedDiagnostics.Select(ex => $"    {ex.Severity} {ex.Line}:{ex.Column}: {ex.Id}")
                             .Prepend("Unexpected diagnostics:")));
                 }
             });
         }
 
-        private static bool CompareDiagnostics((int Line, int Column, string Id) lhs, (int Line, int Column, string Id) rhs)
+        private static bool CompareDiagnostics(DiagnosticExpectation lhs, DiagnosticExpectation rhs)
         {
+            if (lhs.Severity != rhs.Severity)
+            {
+                return false;
+            }
             if (lhs.Line != rhs.Line || lhs.Id != rhs.Id)
             {
                 return false;
