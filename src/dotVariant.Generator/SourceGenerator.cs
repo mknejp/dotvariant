@@ -21,7 +21,7 @@ namespace dotVariant.Generator
             var decls =
                 receiver
                 .VariantDecls
-                .Select(decl => (decl.Symbol, decl.Syntax, Diags: Diagnose.Variant(decl.Symbol, decl.Syntax, context.CancellationToken)))
+                .Select(decl => (decl.Symbol, decl.Syntax, decl.Nullable, Diags: Diagnose.Variant(decl.Symbol, decl.Syntax, context.CancellationToken)))
                 .Memoize();
 
             decls
@@ -30,7 +30,7 @@ namespace dotVariant.Generator
 
             decls
                 .Where(decl => !decl.Diags.Any(d => d.Severity == DiagnosticSeverity.Error))
-                .Select(decl => Descriptor.FromDeclaration(context, decl.Symbol, decl.Syntax))
+                .Select(decl => Descriptor.FromDeclaration(context, decl.Symbol, decl.Syntax, decl.Nullable))
                 .ForEach(desc => context.AddSource(desc.Type.ToDisplayString(), Renderer.Render(context, desc)));
         }
 
@@ -41,7 +41,7 @@ namespace dotVariant.Generator
 
         private sealed class SyntaxReceiver : ISyntaxContextReceiver
         {
-            public List<(ITypeSymbol Symbol, TypeDeclarationSyntax Syntax)> VariantDecls { get; } = new();
+            public List<(ITypeSymbol Symbol, TypeDeclarationSyntax Syntax, NullableContext Nullable)> VariantDecls { get; } = new();
 
             public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
             {
@@ -60,7 +60,7 @@ namespace dotVariant.Generator
                 const string attributeName = nameof(dotVariant) + "." + nameof(VariantAttribute);
                 if (symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName))
                 {
-                    VariantDecls.Add((symbol, tds));
+                    VariantDecls.Add((symbol, tds, sema.GetNullableContext(context.Node.GetLocation().SourceSpan.Start)));
                 }
             }
         }

@@ -4,12 +4,12 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-using dotVariant;
+#nullable enable
 namespace Foo
 {
-    [Variant]
-    public partial class Variant_class
+    [dotVariant.Variant]
+    public partial class Variant_class_nullable_enable
     {
-        static partial void VariantOf(int i, float f, string s);
+        static partial void VariantOf(int i, float f, string s, System.Array? a);
     }
 }

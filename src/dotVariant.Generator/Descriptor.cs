@@ -12,7 +12,9 @@ namespace dotVariant.Generator
 {
     internal sealed record Descriptor(
         ITypeSymbol Type,
-        ImmutableArray<IParameterSymbol> Options
+        TypeDeclarationSyntax Syntax,
+        ImmutableArray<IParameterSymbol> Options,
+        NullableContext NullableContext
         // TODO: disposable types
         // TODO: nullability
         // TODO: emptiness possible?
@@ -24,11 +26,14 @@ namespace dotVariant.Generator
         // TODO: nested class
         )
     {
-        public static Descriptor FromDeclaration(GeneratorExecutionContext context, ITypeSymbol type, TypeDeclarationSyntax syntax)
+        public static Descriptor FromDeclaration(
+            GeneratorExecutionContext context,
+            ITypeSymbol type,
+            TypeDeclarationSyntax syntax,
+            NullableContext nullability)
         {
             var options = Inspect.GetOptions(type);
-            return new(type, options);
+            return new(type, syntax, options, nullability);
         }
     }
-
 }

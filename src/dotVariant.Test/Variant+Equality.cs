@@ -190,46 +190,51 @@ namespace dotVariant.Test
                 });
             }
 
-            // TODO: handle nullability correctly
-            //[Test]
-            //public static void Null_reference_types()
-            //{
-            //    var s = default(string);
-            //    var a = new Variant_int_float_string(s);
-            //    var b = Variant_int_float_string.Create(s);
-            //    var c = (Variant_int_float_string)s;
+            [Test]
+            public static void Variants_with_null_objects_are_equal()
+            {
+                var a = new Class_int_float_nullable(default(Helper?));
+                var b = new Class_int_float_nullable(default(Helper?));
 
-            //    Assert.Multiple(() =>
-            //    {
-            //        Assert.That(a.Equals(b), Is.True);
-            //        Assert.That(b.Equals(a), Is.True);
-            //        Assert.That(a.Equals((object)b), Is.True);
-            //        Assert.That(b.Equals((object)a), Is.True);
-            //        Assert.That(a == b, Is.True);
-            //        Assert.That(b == a, Is.True);
-            //        Assert.That(a != b, Is.False);
-            //        Assert.That(b != a, Is.False);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(a.Equals(b), Is.True);
+                    Assert.That(b.Equals(a), Is.True);
+                    Assert.That(a.Equals((object)b), Is.True);
+                    Assert.That(b.Equals((object)a), Is.True);
+                    Assert.That(a == b, Is.True);
+                    Assert.That(b == a, Is.True);
+                    Assert.That(a != b, Is.False);
+                    Assert.That(b != a, Is.False);
+                });
+            }
 
-            //        Assert.That(a.Equals(c), Is.True);
-            //        Assert.That(c.Equals(a), Is.True);
-            //        Assert.That(a.Equals((object)c), Is.True);
-            //        Assert.That(c.Equals((object)a), Is.True);
-            //        Assert.That(a == c, Is.True);
-            //        Assert.That(c == a, Is.True);
-            //        Assert.That(a != c, Is.False);
-            //        Assert.That(c != a, Is.False);
+            [Test]
+            public static void Variants_which_are_empty_have_same_hash_code()
+            {
+                var a = new Class_with_default_ctor();
+                var b = new Class_with_default_ctor();
 
-            //        Assert.That(b.Equals(c), Is.True);
-            //        Assert.That(c.Equals(b), Is.True);
-            //        Assert.That(b.Equals((object)c), Is.True);
-            //        Assert.That(c.Equals((object)b), Is.True);
-            //        Assert.That(b == c, Is.True);
-            //        Assert.That(c == b, Is.True);
-            //        Assert.That(b != c, Is.False);
-            //        Assert.That(c != b, Is.False);
-            //    });
-            //}
+                Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
+            }
 
+            [Test]
+            public static void Variants_with_equal_values_have_equal_hash_codes()
+            {
+                var a = new Class_int_float_nullable(1337);
+                var b = new Class_int_float_nullable(1337);
+
+                Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
+            }
+
+            [Test]
+            public static void Variants_with_equal_objects_have_equal_hash_codes()
+            {
+                var a = new Class_int_float_string("foo");
+                var b = new Class_int_float_string("foo");
+
+                Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
+            }
         }
     }
 }

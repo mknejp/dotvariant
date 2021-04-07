@@ -33,3 +33,23 @@ partial class Variant5
 {
     static partial void VariantOf(int a, int? b);
 }
+
+#nullable enable
+[dotVariant.Variant]
+partial class Variant6
+{
+    static partial void VariantOf(int a, string? b);
+}
+
+[dotVariant.Variant]
+partial class Variant7
+{
+    static partial void VariantOf(int a, string b);
+}
+
+#nullable disable
+[dotVariant.Variant]
+partial class Variant8
+{
+    static partial void VariantOf(int a, string b);
+}

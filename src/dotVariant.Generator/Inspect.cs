@@ -7,6 +7,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -34,10 +35,7 @@ namespace dotVariant.Generator
             => ((TypeDeclarationSyntax)type.DeclaringSyntaxReferences[0].GetSyntax(token)).Keyword.ValueText;
 
         public static IMethodSymbol? VariantOfMethod(ITypeSymbol type)
-            => type
-                .GetMembers()
-                .OfType<IMethodSymbol>()
-                .FirstOrDefault(m => m.IsDefinition && m.MethodKind == MethodKind.Ordinary && m.Name == "VariantOf");
+            => FindMethod(type, m => m.IsDefinition && m.MethodKind == MethodKind.Ordinary && m.Name == "VariantOf");
 
         public static ImmutableArray<IParameterSymbol> GetOptions(ITypeSymbol type)
             => VariantOfMethod(type)?.Parameters
@@ -56,5 +54,14 @@ namespace dotVariant.Generator
             }
             return false;
         }
+
+        public static IMethodSymbol? FindMethod(ITypeSymbol type, Func<IMethodSymbol, bool> pred)
+            => type
+                .GetMembers()
+                .OfType<IMethodSymbol>()
+                .FirstOrDefault(pred);
+
+        public static IMethodSymbol? FindNullaryToString(ITypeSymbol type)
+            => FindMethod(type, m => m.MethodKind == MethodKind.Ordinary && m.Name == "ToString()" && m.Parameters.IsEmpty);
     }
 }

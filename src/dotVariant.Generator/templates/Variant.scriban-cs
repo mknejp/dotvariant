@@ -5,56 +5,148 @@
 ~}}
 {{~ ##
 Inputs:
+- language:
+    - nullable: Either "enable" or "disable".
+    - version: Integer of the form ABB where A=major and BB=minor version of the language (i.e. 703 -> 7.3)
 - namespace: Namespace of the variant type, or null if in the global namespace
-- name: Name of the variant type
-- full_name: The fully qualified name of the type (without global:: alias)
+- name: Name of the variant type within the context of the namespace.
+- diag_name: The fully qualified name of the type (without global:: alias, for diagnostic strings/messages)
 - keyword: The keyword used to declare the type ("class", "struct", ...)
 - in: Contains the "in" keyword if this is a readonly struct, otherwise empty ""
 - nullable: The name of the type with appended nullability annotation
 - mismatch_exception: The fully qualified type name of the mismatch exception
-- types: Array of variant types, each an object with these properties:
-  - name: The fully qualified name of the type
-  - short_name: A shorter type name (without global:: qualifier)
+- params: Array containing all the information about the VariantOf(...) parameters:
+  - name: The fully qualified name of the type. Never contains a nullability annotation.
+  - diag_name: A shorter type name (without global:: qualifier, for diagnostic strings/messages, may contain nullability annotation).
   - hint: The user-provided parameter name in VariantOf
-  - dummies: The number of "object" dummy fields required for this type
-  - index: The 1-based index of the type within the variant
-  - is_object: True if this is an object type
-  - nullable: The name of the type with appended nullability annotation
-  - coalesce: Contains the null-coalescing "?" for member access if this value may be null
-  - emit_implcit_cast: true to create an implicit cast from this type to the variant
+  - object_padding: The number of "object" padding fields required for this type.
+  - index: The 1-based index of the type within the variant.
+  - is_class: true if this is an object type (or generic with class constraint).
+  - nullability: "nonnull" or "nullable".
+    For classes this determines whether the parameter was originally declared as nullable or null oblivious verses not nullable.
+    For value types this determines whether it's a Nullable<T>.
+  - emit_implicit_cast: True if the implicit cast from option to variant should be emitted for this type.
 ## ~}}
 {{~
-$format_func = do; ret "global::System.Func<" + $0.name + ", TResult> " + $0.hint; end
-$format_action = do; ret "global::System.Action<" + $0.name + "> " + $0.hint; end
-$func_params = types | array.each @$format_func | array.join ", "
-$action_params = types | array.each @$format_action | array.join ", "
-$is_class = keyword == "class"
-$is_struct = keyword == "struct"
-$readonly = $is_struct ? "readonly " : ""
+emit_nullability = language.version >= 800 && language.nullable == "enable"
 
-readonly $func_params
-readonly $action_params
-readonly $is_class
-readonly $is_struct
-readonly $readonly
+# The type to use for variables and function parameters
+# Works with both "params" and "variant"
+func value_type(type, name = null)
+    if (name == null)
+        name = type.name
+    end
+    if type.is_class
+        ret emit_nullability && type.nullability == "nullable" ? (name + "?" ): name
+    else
+        ret type.nullability == "nullable" ? (name + "?") : name
+    end
+end
+
+# The type to use for out or ref parameters
+# Works with both "params" and "variant"
+func outref_type(type, name = null)
+    if (name == null)
+        name = type.name
+    end
+    if type.is_class
+        ret emit_nullability ? (name + "?") : name
+    else
+        ret type.nullability == "nullable" ? (name + "?") : name
+    end
+end
+
+func func_type(param, result = "TResult")
+    ret "global::System.Func<" + (value_type param) + ", " + result + ">"
+end
+
+func action_type(param)
+    ret "global::System.Action<" + (value_type param) + ">"
+end
+
+# Conditionally append forgive-operator to an expression
+# Works with both "params" and "variant"
+func forgive(type, expression)
+    if type.is_class
+        ret emit_nullability && type.nullability == "nonnull" ? (expression + "!") : expression
+    else
+        ret expression
+    end
+end
+
+# Conditionally apply a null-caolescing member access with trailing null-expression after the ??
+# Works with both "params" and "variant"
+func coalesce(type, expression, sub_expression, null_expression)
+    if type.nullability == "nullable"
+        ret expression + "?" + sub_expression + " ?? " + null_expression
+    else
+        ret expression + sub_expression
+    end
+end
+
+func coalesce_ToString(type, expression)
+    if type.nullability == "nonnull" && type.to_string_nullability == "nonnull"
+        ret expression + ".ToString()"
+    else
+        ret expression + (type.nullability == "nullable" ? "?" : "") + ".ToString() ?? \"null\""
+    end
+end
+
+func storage(param)
+    ret "_x._" + param.index + ".Value"
+end
+
+func param_hint(param)
+    ret param.hint
+end
+
+func annotate_NotNullWhen(param)
+    if param.is_class && emit_nullability
+        ret param.nullability == "nonnull" ? "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] " : ""
+    else
+        ret ""
+    end
+end
+
+func annotate_NotNull(param)
+    if param.is_class && emit_nullability
+        ret param.nullability == "nonnull" ? "[global::System.Diagnostics.CodeAnalysis.NotNull] " : ""
+    else
+        ret ""
+    end
+end
+
+func_params = params | array.each @(do; ret (func_type $0) + " " + $0.hint; end) | array.join ", "
+action_params = params | array.each @(do; ret (action_type $0) + " " + $0.hint; end) | array.join ", "
+method_modifiers = !variant.is_class ? "readonly " : ""
+param_modifiers = !variant.is_class && variant.is_readonly ? "in " : ""
+global_nullable = emit_nullability ? "?" : ""
+
+readonly func_params
+readonly action_params
+readonly method_modifiers
+readonly param_modifiers
+readonly global_nullable
 ~}}
-{{~ if namespace ~}}
-#nullable enable
-namespace {{ namespace }}
+{{~ if language.version >= 800 ~}}
+#nullable {{ language.nullable }}
+{{~ end ~}}
+{{~ if variant.namespace ~}}
+namespace {{ variant.namespace }}
 {
     {{~ end ~}}
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
     [global::System.Diagnostics.DebuggerNonUserCode]
-    partial {{ keyword }} {{ name }} : global::System.IEquatable<{{ name }}>
+    partial {{ variant.keyword }} {{ variant.name }} : global::System.IEquatable<{{ variant.name }}>
     {
         [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly _VariantStorage _variant;
 
         private sealed class _VariantTypeProxy
         {
-            public object? Value { get; }
-            public _VariantTypeProxy({{ name }} v)
+            public object{{ global_nullable }} Value { get; }
+            public _VariantTypeProxy({{ variant.name }} v)
             {
                 Value = v._variant.AsObject;
             }
@@ -177,13 +269,13 @@ namespace {{ namespace }}
             ## ~}}
 
             {{~ ## STORAGE CONSTRUCTORS ## ~}}
-            {{~ for $t in types ~}}
-            public _VariantStorage({{ $t.name }} {{ $t.hint }})
+            {{~ for $p in params ~}}
+            public _VariantStorage({{ value_type $p }} {{ $p.hint }})
             {
-                _n = {{ $t.index }};
-                _x = new Union({{ $t.hint }});
+                _n = {{ $p.index }};
+                _x = new Union({{ $p.hint }});
                 {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
-                VariantOf({{ $f = do; ret "default!"; end; 1..types.size | array.join ", " @$f }});
+                VariantOf({{ params | array.each @(do; ret forgive $0 "default"; end) | array.join ", " }});
             }
             {{~ end ~}}
 
@@ -193,36 +285,36 @@ namespace {{ namespace }}
             private readonly struct Union
             {
                 {{~ ## UNION MEMBERS ## ~}}
-                {{~ for $t in types ~}}
+                {{~ for $p in params ~}}
                 [global::System.Runtime.InteropServices.FieldOffset(0)]
-                public readonly Union{{ $t.index }} _{{ $t.index }};
+                public readonly Union{{ $p.index }} _{{ $p.index }};
                 {{~ end ~}}
 
                 {{~ ## UNION CONSTRUCTORS ## ~}}
-                {{~ for $t in types ~}}
-                public Union({{ $t.name }} value)
+                {{~ for $p in params ~}}
+                public Union({{ value_type $p }} value)
                 {
-                    {{~ for $other in types | array.remove_at ($t.index - 1) ~}}
+                    {{~ for $other in params | array.remove_at ($p.index - 1) ~}}
                     _{{ $other.index }} = default;
                     {{~ end ~}}
-                    _{{ $t.index }} = new Union{{ $t.index }}(value);
+                    _{{ $p.index }} = new Union{{ $p.index }}(value);
                 }
                 {{~ end ~}}
 
-                {{~ ## PER-TYPE WRAPPERS WITH DUMMIES ## ~}}
-                {{~ for $t in types ~}}
+                {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
+                {{~ for $p in params ~}}
                 [global::System.Diagnostics.DebuggerNonUserCode]
-                public readonly struct Union{{ $t.index }}
+                public readonly struct Union{{ $p.index }}
                 {
-                    public readonly {{ $t.name }} Value;
-                    {{~ for $dummy in (1..$t.dummies) limit:$t.dummies ~}}
-                    public readonly object? _dummy{{ $dummy }};
+                    public readonly {{ value_type $p }} Value;
+                    {{~ for $dummy in (1..$p.object_padding) limit:$p.object_padding ~}}
+                    public readonly object _dummy{{ $dummy }};
                     {{~ end ~}}
 
-                    public Union{{ $t.index }}({{ $t.name }} value)
+                    public Union{{ $p.index }}({{ value_type $p }} value)
                     {
-                        {{~ for $dummy in (1..$t.dummies) limit:$t.dummies ~}}
-                        _dummy{{ $dummy }} = default;
+                        {{~ for $dummy in (1..$p.object_padding) limit:$p.object_padding ~}}
+                        _dummy{{ $dummy }} = null{{ emit_nullability ? "!" : "" }};
                         {{~ end ~}}
                         Value = value;
                     }
@@ -241,10 +333,10 @@ namespace {{ namespace }}
                     switch (_n)
                     {
                         case 0: return "<empty>";
-                        {{~ for $t in types ~}}
-                        case {{ $t.index }}: return "{{ $t.short_name }}";
+                        {{~ for $p in params ~}}
+                        case {{ $p.index }}: return "{{ $p.diag_name }}";
                         {{~ end ~}}
-                        default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                        default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                     }
                 }
             }
@@ -257,26 +349,26 @@ namespace {{ namespace }}
                     switch (_n)
                     {
                         case 0: return "<empty>";
-                        {{~ for $t in types ~}}
-                        case {{ $t.index }}: return _x._{{ $t.index }}.Value{{ $t.coalesce }}.ToString(){{ $t.is_object ? ' ?? "null"' : "" }};
+                        {{~ for $p in params ~}}
+                        case {{ $p.index }}: return {{ coalesce_ToString $p (storage $p) }};
                         {{~ end ~}}
-                        default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                        default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                     }
                 }
             }
 
             {{~ ## UNION AsObject ## ~}}
-            public object? AsObject
+            public object{{ global_nullable }} AsObject
             {
                 get
                 {
                     switch (_n)
                     {
                         case 0: return null;
-                        {{~ for $t in types ~}}
-                        case {{ $t.index }}: return _x._{{ $t.index }}.Value;
+                        {{~ for $p in params ~}}
+                        case {{ $p.index }}: return {{ storage $p }};
                         {{~ end ~}}
-                        default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                        default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                     }
                 }
             }
@@ -291,236 +383,242 @@ namespace {{ namespace }}
                 switch (_n)
                 {
                     case 0: return true;
-                    {{~ for $t in types ~}}
-                    {{~ $i = $t.index ~}}
-                    case {{ $i }}: return global::System.Collections.Generic.EqualityComparer<{{ $t.name }}>.Default.Equals(_x._{{ $i }}.Value, other._x._{{ $i }}.Value);
+                    {{~ for $p in params ~}}
+                    {{~ $i = $p.index ~}}
+                    case {{ $i }}: return global::System.Collections.Generic.EqualityComparer<{{ $p.name }}>.Default.Equals({{ storage $p }}, other.{{ storage $p }});
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
             {{~ ## UNION GetHashCode ## ~}}
             public readonly override int GetHashCode()
             {
-                switch (_n)
+                unchecked
                 {
-                    case 0: return 0;
-                    {{~ for $t in types ~}}
-                    {{~ $i = $t.index ~}}
-                    case {{ $i }}: return {{ $t.index }} + global::System.Collections.Generic.EqualityComparer<{{ $t.name }}>.Default.GetHashCode(_x._{{ $i }}.Value);
-                    {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    switch (_n)
+                    {
+                        case 0:
+                            return 0;
+                        {{~ for $p in params ~}}
+                        {{~ $i = $p.index ~}}
+                        case {{ $i }}:
+                            {{~ if runtime.has_hash_code ~}}
+                            return global::System.HashCode.Combine({{ storage $p }});
+                            {{~ else ~}}
+                            return {{ coalesce $p (storage $p) ".GetHashCode()" "0"}};
+                            {{~ end ~}}
+                        {{~ end ~}}
+                        default:
+                            throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                    }
                 }
             }
 
             {{~ ## UNION TryMatch ## ~}}
-            {{~ for $t in types ~}}
-            public bool TryMatch(out {{ $t.nullable }} {{ $t.hint }})
+            {{~ for $p in params ~}}
+            public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.hint }})
             {
-                {{ $t.hint }} = _n == {{ $t.index }} ? _x._{{ $t.index }}.Value : default;
-                return _n == {{ $t.index }};
+                {{ $p.hint }} = _n == {{ $p.index }} ? {{ storage $p }} : default;
+                return _n == {{ $p.index }};
             }
             {{~ end ~}}
 
             {{~ ## UNION Match(Action) ## ~}}
-            public void Match({{ $action_params }}, global::System.Action _)
+            public void Match({{ action_params }}, global::System.Action _)
             {
                 switch (_n)
                 {
                     case 0: _(); break;
-                    {{~ for $t in types ~}}
-                    case {{ $t.index }}: {{ $t.hint }}(_x._{{ $t.index }}.Value); break;
+                    {{~ for $p in params ~}}
+                    case {{ $p.index }}: {{ $p.hint }}({{ storage $p }}); break;
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
             {{~ ## UNION Match(Action) ## ~}}
-            public void Match({{ $action_params }})
+            public void Match({{ action_params }})
             {
                 switch (_n)
                 {
-                    case 0: throw new global::System.InvalidOperationException("{{ name }} is empty.");
-                    {{~ for $t in types ~}}
-                    case {{ $t.index }}: {{ $t.hint }}(_x._{{ $t.index }}.Value); break;
+                    case 0: throw new global::System.InvalidOperationException("{{ variant.name }} is empty.");
+                    {{~ for $p in params ~}}
+                    case {{ $p.index }}: {{ $p.hint }}({{ storage $p }}); break;
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
             {{~ ## UNION Match(Func) ## ~}}
-            public TResult Match<TResult>({{ $func_params }}, global::System.Func<TResult> _)
+            public TResult Match<TResult>({{ func_params }}, global::System.Func<TResult> _)
             {
                 switch (_n)
                 {
                     case 0: return _();
-                    {{~ for $t in types ~}}
-                    case {{ $t.index }}: return {{ $t.hint }}(_x._{{ $t.index }}.Value);
+                    {{~ for $p in params ~}}
+                    case {{ $p.index }}: return {{ $p.hint }}({{ storage $p }});
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
             {{~ ## UNION Match(Func) ## ~}}
-            public TResult Match<TResult>({{ $func_params }})
+            public TResult Match<TResult>({{ func_params }})
             {
                 switch (_n)
                 {
-                    case 0: throw new global::System.InvalidOperationException("{{ name }} is empty.");
-                    {{~ for $t in types ~}}
-                    case {{ $t.index }}: return {{ $t.hint }}(_x._{{ $t.index }}.Value);
+                    case 0: throw new global::System.InvalidOperationException("{{ variant.name }} is empty.");
+                    {{~ for $p in params ~}}
+                    case {{ $p.index }}: return {{ $p.hint }}({{ storage $p }});
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ name }} is in a corrupted state.");
+                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
         }
 
         {{~ ## VARIANT CONSTRUCTORS ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Create a variant with a value of type <see cref="{{ $t.name }}"/>.
+        /// Create a {{ variant.name }} with a value of type <see cref="{{ $p.name }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The value to initlaize the variant with.</param>
-        public {{ name }}({{ $t.name }} {{ $t.hint }}) => _variant = new _VariantStorage({{ $t.hint }});
+        /// <param name="{{ $p.hint }}">The value to initlaize the variant with.</param>
+        public {{ variant.name }}({{ value_type $p }} {{ $p.hint }}) => _variant = new _VariantStorage({{ $p.hint }});
         {{~ end ~}}
 
         {{~ ## IMPLICIT CONVERSIONS ## ~}}
-        {{~ for $t in types ~}}
-        {{~ if $t.emit_implicit_cast ~}}
+        {{~ for $p in params ~}}
+        {{~ if $p.emit_implicit_cast ~}}
         /// <summary>
-        /// Create a variant with a value of type <see cref="{{ $t.name }}"/>.
+        /// Create a {{ variant.name }} with a value of type <see cref="{{ $p.name }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The value to initlaize the variant with.</param>
-        public static implicit operator {{ name }}({{ $t.name }} {{ $t.hint }}) => new {{ name }}({{ $t.hint }});
+        /// <param name="{{ $p.hint }}">The value to initlaize the variant with.</param>
+        public static implicit operator {{ variant.name }}({{ value_type $p }} {{ $p.hint }}) => new {{ name }}({{ $p.hint }});
         {{~ end ~}}
         {{~ end ~}}
 
         {{~ # STATIC CREATE FACTORIES ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Create a variant with a value of type <see cref="{{ $t.name }}"/>.
+        /// Create a {{ variant.name }} with a value of type <see cref="{{ $p.name }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The value to initlaize the variant with.</param>
-        public static {{ name }} Create({{ $t.name }} {{ $t.hint }}) => new {{ name }}({{ $t.hint }});
+        /// <param name="{{ $p.hint }}">The value to initlaize the variant with.</param>
+        public static {{ variant.name }} Create({{ value_type $p }} {{ $p.hint }}) => new {{ name }}({{ $p.hint }});
         {{~ end ~}}
 
         {{~ ## VARIANT IsEmpty ## ~}}
         /// <summary>
-        /// <see langword="true"/> if {{ name }} was constructed without a value.
+        /// <see langword="true"/> if {{ variant.name }} was constructed without a value.
         /// </summary>
-        {{~ if $is_struct ~}}
+        {{~ if !variant.is_class ~}}
         /// <remarks>
-        /// Because {{ name }} is a value type, its default constructor cannot be disabled.
-        /// A default-constructed {{ name }} will always have a <see cref="IsEmpty"/> value of <see langword"true"/>
-        /// and never satisfy any matching attempts.
+        /// Because {{ variant.name }} is a value type, its default constructor cannot be disabled.
+        /// A default-constructed {{ variant.name }} will always have a <see cref="IsEmpty"/> value of <see langword"true"/>
+        /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
         /// </remarks>
         {{~ end ~}}
-        public {{ $readonly }}bool IsEmpty => _variant.IsEmpty;
+        public {{ method_modifiers }}bool IsEmpty => _variant.IsEmpty;
 
         {{~ ## VARIANT Equals ## ~}}
-        public {{ $readonly }}override bool Equals(object? other) => other is {{ name }} v && Equals(v);
-        public {{ $readonly }}bool Equals({{ name; if $is_class; "?"; end }} other)
-            => {{ if $is_class; "other != null && "; end }}_variant.Equals(other._variant);
+        public {{ method_modifiers }}override bool Equals(object{{ global_nullable }} other) => other is {{ variant.name }} v && Equals(v);
+        public {{ method_modifiers }}bool Equals({{ value_type variant }} other)
+            => {{ if variant.is_class; "!(other is null) && "; end }}_variant.Equals(other._variant);
 
-        public static bool operator ==({{ in; nullable }} lhs, {{ in; nullable }} rhs)
-            {{~ if $is_class ~}}
-            => lhs?.Equals(rhs) ?? (rhs is null);
-            {{~ else ~}}
-            => lhs.Equals(rhs);
-            {{~ end ~}}
+        public static bool operator ==({{ param_modifiers; value_type variant }} lhs, {{ param_modifiers; value_type variant }} rhs)
+            => {{ coalesce variant "lhs" ".Equals(rhs)" "(rhs is null)" }};
 
-        public static bool operator !=({{ in; nullable }} lhs, {{ in; nullable }} rhs)
+        public static bool operator !=({{ param_modifiers; value_type variant }} lhs, {{ param_modifiers; value_type variant }} rhs)
             => !(lhs == rhs);
 
         {{~ ## VARIANT GetHashCode ## ~}}
-        public {{ $readonly }}override int GetHashCode() => _variant.GetHashCode();
+        public {{ method_modifiers }}override int GetHashCode() => _variant.GetHashCode();
 
         {{~ ## VARIANT ToString ## ~}}
-        public {{ $readonly }}override string ToString() => _variant.ValueString;
+        public {{ method_modifiers }}override string ToString() => _variant.ValueString;
 
         {{~ ## VARIANT Match(T) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Retrieve the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>,
+        /// Retrieve the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>,
         /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">Receives the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
-        /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
-        public {{ $readonly }}void Match(out {{ $t.name }} {{ $t.hint }})
+        /// <param name="{{ $p.hint }}">Receives the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
+        /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
+        public {{ method_modifiers }}void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.hint }})
         {
-            if (!_variant.TryMatch(out {{ $t.hint }}{{ if $t.is_object; "!"; end}}))
+            if (!_variant.TryMatch(out {{ forgive $p $p.hint }}))
             {
-                throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
+                throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
             }
         }
         {{~ end ~}}
 
         {{~ ## VARIANT TryMatch(T) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Retrieve the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>.
+        /// Retrieve the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">Receives the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
-        /// <returns><see langword="true"/> if {{ name }} contained a value of type <see cref="{{ $t.name }}"/>.</returns>
-        public {{ $readonly }}bool TryMatch(out {{ $t.nullable }} {{ $t.hint }})
-            => _variant.TryMatch(out {{ $t.hint }});
+        /// <param name="{{ $p.hint }}">Receives the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ variant.name }} contained a value of type <see cref="{{ $p.name }}"/>.</returns>
+        public {{ method_modifiers }}bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.hint }})
+            => _variant.TryMatch(out {{ $p.hint }});
         {{~ end ~}}
 
         {{~ ## VARIANT TryMatch(Action<T>) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>.
+        /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
-        /// <returns><see langword="true"/> if {{ name }} contained a value of type <see cref="{{ $t.name }}"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
-        public {{ $readonly }}bool TryMatch(global::System.Action<{{ $t.name }}> {{ $t.hint }})
+        /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ variant.name }} contained a value of type <see cref="{{ $p.name }}"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
+        public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.hint }})
         {
-            var result = _variant.TryMatch(out {{ $t.nullable }} _value);
+            bool result = _variant.TryMatch(out {{ outref_type $p }} _value);
             if (result)
             {
-                {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
+                {{ $p.hint }}({{ forgive $p "_value" }});
             }
             return result;
         }
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Action<T>) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>,
+        /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>,
         /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
-        /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
-        public {{ $readonly }}void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }})
+        /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
+        /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
+        public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.hint }})
         {
-            if (_variant.TryMatch(out {{ $t.nullable }} _value))
+            if (_variant.TryMatch(out {{ outref_type $p }} _value))
             {
-                {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
+                {{ $p.hint }}({{ forgive $p "_value" }});
             }
             else
             {
-                throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
+                throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
             }
         }
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Action<T>) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/>,
+        /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>,
         /// otherwise invoke an alternative delegate.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="_"> is rethrown.</exception>
-        public {{ $readonly }}void Match(global::System.Action<{{ $t.name }}> {{ $t.hint }}, global::System.Action _)
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> or <paramref name="_"> is rethrown.</exception>
+        public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.hint }}, global::System.Action _)
         {
-            if (_variant.TryMatch(out {{ $t.nullable }} _value))
+            if (_variant.TryMatch(out {{ outref_type $p }} _value))
             {
-                {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}});
+                {{ $p.hint }}({{ forgive $p "_value" }});
             }
             else
             {
@@ -530,99 +628,99 @@ namespace {{ namespace }}
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Func<T, R>) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/> and return the result,
         /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
-        /// <returns>The value returned from invoking <paramref name="{{ $t.hint }}"/>.</returns>
-        /// <exception cref="{{ mismatch_exception }}">{{ name }} does not contain a value of type <see cref="{{ $t.name }}"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> is rethrown.</exception>
-        public {{ $readonly }}TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }})
-            => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : throw new {{ mismatch_exception }}(expected: "{{ $t.short_name }}", actual: _variant.TypeString);
+        /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
+        /// <returns>The value returned from invoking <paramref name="{{ $p.hint }}"/>.</returns>
+        /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }})
+            => _variant.TryMatch(out {{ outref_type $p }} _value) ? {{ $p.hint }}({{ forgive $p "_value" }}) : throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Func<T, R>, R) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/> and return the result,
         /// otherwise return a provided value.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="{{ $t.hint }}"/>, or <paramref name="default"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="other"> is rethrown.</exception>
-        public {{ $readonly }}TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, TResult _)
-            => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : _;
+        /// <returns>The value returned from invoking <paramref name="{{ $p.hint }}"/>, or <paramref name="default"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> or <paramref name="other"> is rethrown.</exception>
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }}, TResult _)
+            => _variant.TryMatch(out {{ outref_type $p }} _value) ? {{ $p.hint }}({{ forgive $p "_value" }}) : _;
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Func<T, R>, Func<R>) ## ~}}
-        {{~ for $t in types ~}}
+        {{~ for $p in params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ name }} if it is of type <see cref="{{ $t.name }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/> and return the result,
         /// otherwise invoke an alternative delegate and return its result.
         /// </summary>
-        /// <param name="{{ $t.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $t.name }}"/>.</param>
+        /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $t.hint }}"> or <paramref name="_"> is rethrown.</exception>
-        public {{ $readonly }}TResult Match<TResult>(global::System.Func<{{ $t.name }}, TResult> {{ $t.hint }}, global::System.Func<TResult> _)
-            => _variant.TryMatch(out {{ $t.nullable }} _value) ? {{ $t.hint }}(_value{{ if $t.is_object; "!"; end}}) : _();
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> or <paramref name="_"> is rethrown.</exception>
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }}, global::System.Func<TResult> _)
+            => _variant.TryMatch(out {{ outref_type $p }} _value) ? {{ $p.hint }}({{ forgive $p "_value" }}) : _();
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Action<A>, Action<B>, ...) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within {{ name }},
-        /// and throw an exception if {{ name }} is empty.
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ variant.name }},
+        /// and throw an exception if {{ variant.name }} is empty.
         /// </summary>
-        {{~ for $t in types ~}}
-        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ for $p in params ~}}
+        /// <param name="{{ $p.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.name }}"/>.</param>
         {{~ end ~}}
-        /// <exception cref="global::System.InvalidOperationException">{{ name }} is empty.</exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ variant.name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public {{ $readonly }}void Match({{ $action_params }})
-            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }});
+        public {{ method_modifiers }}void Match({{ action_params }})
+            => _variant.Match({{ params | array.each @param_hint | array.join ", " }});
 
         {{~ ## VARIANT Match(Action<A>, Action<B>, ..., empty) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ name }},
-        /// and invoke a special delegate if {{ name }} is empty.
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ variant.name }},
+        /// and invoke a special delegate if {{ variant.name }} is empty.
         /// </summary>
-        {{~ for $t in types ~}}
-        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ for $p in params ~}}
+        /// <param name="{{ $p.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.name }}"/>.</param>
         {{~ end ~}}
-        /// <param name="_">The delegate to invoke if {{ name }} is empty.</param>
+        /// <param name="_">The delegate to invoke if {{ variant.name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public {{ $readonly }}void Match({{ $action_params }}, global::System.Action _)
-            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }}, _);
+        public {{ method_modifiers }}void Match({{ action_params }}, global::System.Action _)
+            => _variant.Match({{ params | array.each @param_hint | array.join ", "  }}, _);
 
         {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within {{ name }} and return the result,
-        /// and throw an exception if {{ name }} is empty.
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ variant.name }} and return the result,
+        /// and throw an exception if {{ variant.name }} is empty.
         /// </summary>
-        {{~ for $t in types ~}}
-        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ for $p in params ~}}
+        /// <param name="{{ $p.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.name }}"/>.</param>
         {{~ end ~}}
-        /// <exception cref="global::System.InvalidOperationException">{{ name }} is empty.</exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ variant.name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public {{ $readonly }}TResult Match<TResult>({{ $func_params }})
-            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }});
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_params }})
+            => _variant.Match({{ params | array.each @param_hint | array.join ", "  }});
 
         {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ name }} and return the result,
-        /// and invoke a special delegate if {{ name }} is empty and return its result.
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ variant.name }} and return the result,
+        /// and invoke a special delegate if {{ variant.name }} is empty and return its result.
         /// </summary>
-        {{~ for $t in types ~}}
-        /// <param name="{{ $t.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $t.name }}"/>.</param>
+        {{~ for $p in params ~}}
+        /// <param name="{{ $p.hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.name }}"/>.</param>
         {{~ end ~}}
-        /// <param name="_">The delegate to invoke if {{ name }} is empty.</param>
+        /// <param name="_">The delegate to invoke if {{ variant.name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public {{ $readonly }}TResult Match<TResult>({{ $func_params }}, global::System.Func<TResult> _)
-            => _variant.Match({{ $f = do; ret $0.hint; end; types | array.each @$f | array.join ", " }}, _);
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_params }}, global::System.Func<TResult> _)
+            => _variant.Match({{ params | array.each @param_hint | array.join ", "  }}, _);
 
         {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
     }

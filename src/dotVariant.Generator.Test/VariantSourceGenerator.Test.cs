@@ -57,8 +57,10 @@ namespace dotVariant.Generator.Test
         public static IEnumerable<TestCaseData> TranslationCases()
             => new (string FileName, string TypeName)[]
                 {
-                    ("Variant-class", "Foo.Variant_class"),
-                    ("Variant-struct", "Foo.Variant_struct"),
+                    ("Variant-class-nullable-disable", "Foo.Variant_class_nullable_disable"),
+                    ("Variant-class-nullable-enable", "Foo.Variant_class_nullable_enable"),
+                    ("Variant-struct-nullable-disable", "Foo.Variant_struct_nullable_disable"),
+                    ("Variant-struct-nullable-enable", "Foo.Variant_struct_nullable_enable"),
                 }
                 .Select(
                     test => new TestCaseData(

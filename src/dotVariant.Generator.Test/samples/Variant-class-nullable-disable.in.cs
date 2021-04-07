@@ -4,12 +4,12 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-using dotVariant;
+#nullable disable
 namespace Foo
 {
-    [Variant]
-    public partial struct Variant_struct
+    [dotVariant.Variant]
+    public partial class Variant_class_nullable_disable
     {
-        static partial void VariantOf(long l, double d, object o);
+        static partial void VariantOf(int i, float f, string s);
     }
 }

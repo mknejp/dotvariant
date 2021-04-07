@@ -34,4 +34,10 @@ namespace dotVariant.Test.Variants
             _variant = default;
         }
     }
+
+    [Variant]
+    internal sealed partial class Class_int_float_nullable
+    {
+        static partial void VariantOf(int i, float f, Helper? o);
+    }
 }
