@@ -27,7 +27,6 @@ namespace dotVariant.Generator
         )
     {
         public static Descriptor FromDeclaration(
-            GeneratorExecutionContext context,
             ITypeSymbol type,
             TypeDeclarationSyntax syntax,
             NullableContext nullability)

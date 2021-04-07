@@ -35,7 +35,7 @@ namespace dotVariant.Generator.Test
             var generator = makeGenerator();
 
             var driver = CSharpGeneratorDriver.Create(generator);
-            driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
+            _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
             var output = outputCompilation.SyntaxTrees.ToDictionary(tree => tree.FilePath, tree => tree.ToString());
             FailIfError(generateDiagnostics);
 
@@ -57,7 +57,7 @@ namespace dotVariant.Generator.Test
             var generator = makeGenerator();
 
             var driver = CSharpGeneratorDriver.Create(generator);
-            driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
+            _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
             return generateDiagnostics;
         }

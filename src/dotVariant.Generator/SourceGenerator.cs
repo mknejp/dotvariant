@@ -30,7 +30,7 @@ namespace dotVariant.Generator
 
             decls
                 .Where(decl => !decl.Diags.Any(d => d.Severity == DiagnosticSeverity.Error))
-                .Select(decl => Descriptor.FromDeclaration(context, decl.Symbol, decl.Syntax, decl.Nullable))
+                .Select(decl => Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable))
                 .ForEach(desc => context.AddSource(desc.Type.ToDisplayString(), Renderer.Render(context, desc)));
         }
 

@@ -37,20 +37,24 @@ dotnet_diagnostic.IDE0073.severity = error
 [*.cs]
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/
 
-# Language rules
+# .NET style rules
 # -----------------------------------------------------------------------------
+# 'this.' and 'Me.' qualifiers
 dotnet_style_qualification_for_field = false:error
 dotnet_style_qualification_for_property = false:error
 dotnet_style_qualification_for_method = false:error
 dotnet_style_qualification_for_event = false:error
-
+# Language keywords instead of framework type names for type references
 dotnet_style_predefined_type_for_locals_parameters_members = true:error
 dotnet_style_predefined_type_for_member_access = true:error
-
+# Modifier preferences
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:error
 dotnet_style_readonly_field = true:error
-
-dotnet_style_object_initializer = true:error
+dotnet_diagnostic.IDE0064.severity = error # Make struct fields writable
+# Parentheses preferences
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:error
+# Expression-level preferences
+dotnet_style_object_initializer = true:suggestion
 dotnet_style_collection_initializer = true:error
 dotnet_style_explicit_tuple_names = true:error
 dotnet_style_prefer_inferred_tuple_names = true:suggestion
@@ -60,10 +64,184 @@ dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_simplified_interpolation = ture:error
 dotnet_style_prefer_simplified_boolean_expressions = ture:error
-
+# Null-checking preferences
 dotnet_style_coalesce_expression = true:error
 dotnet_style_null_propagation = true:error
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:error
 
-# Style rules
+# C# style rules
 # -----------------------------------------------------------------------------
+# 'var' preferences
+csharp_style_var_for_built_in_types = true:error
+csharp_style_var_when_type_is_apparent = true:error
+csharp_style_var_elsewhere = true:suggestion
+# Expression-bodied members
+csharp_style_expression_bodied_properties = when_on_single_line:error
+csharp_style_expression_bodied_indexers = when_on_single_line:error
+csharp_style_expression_bodied_accessors = when_on_single_line:error
+csharp_style_expression_bodied_lambdas = when_on_single_line:error
+# Pattern matching preferences
+csharp_style_pattern_matching_over_as_with_null_check = true:error
+csharp_style_pattern_matching_over_is_with_cast_check = true:error
+# Expression-level preferences
+csharp_style_inlined_variable_declaration = true:suggestion
+csharp_prefer_simple_default_expression = true:error
+csharp_style_pattern_local_over_anonymous_function = true:error
+csharp_style_deconstructed_variable_declaration = true:suggestion
+csharp_style_prefer_index_operator = true:error
+csharp_style_prefer_range_operator = true:error
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+dotnet_diagnostic.IDE0072.severity = error # Add missing cases to switch expression
+# "Null" checking preferences
+csharp_style_throw_expression = true:error
+csharp_style_conditional_delegate_call = true:error
+# Code block preferences
+csharp_prefer_braces = true:error
+csharp_prefer_simple_using_statement = true:error
+# 'using' directive preferences
+csharp_using_directive_placement = outside_namespace:error
+# Modifier preferences
+csharp_prefer_static_local_function = true:suggestion
+
+# Unnecessary code rules
+# -----------------------------------------------------------------------------
+dotnet_diagnostic.IDE0001.severity = error # Simplify name
+dotnet_diagnostic.IDE0002.severity = error # Simplify member access
+dotnet_diagnostic.IDE0004.severity = error # Remove unnecessary cast
+dotnet_diagnostic.IDE0005.severity = error # Remove unnecessary import
+dotnet_diagnostic.IDE0035.severity = error # Remove unreachable code
+dotnet_diagnostic.IDE0051.severity = error # Remove unused private member
+dotnet_diagnostic.IDE0052.severity = error # Remove unread private member
+dotnet_diagnostic.IDE0058.severity = error # Remove unnecessary expression value
+dotnet_diagnostic.IDE0059.severity = error # Remove unnecessary value assignment
+dotnet_diagnostic.IDE0080.severity = error # Remove unnecessary suppression operator
+dotnet_diagnostic.IDE0100.severity = error # Remove unnecessary equality operator
+dotnet_diagnostic.IDE0110.severity = error # Remove unnecessary discard
+csharp_style_unused_value_expression_statement_preference = discard_variable
+csharp_style_unused_value_assignment_preference = discard_variable
+dotnet_code_quality_unused_parameters = all:warning
+dotnet_remove_unnecessary_suppression_exclusions = none:error
+
+# Formatting rules
+# -----------------------------------------------------------------------------
+dotnet_diagnostic.IDE0055.severity = error # Fix formatting
+# .NET formatting rules
+dotnet_sort_system_directives_first = false
+dotnet_separate_import_directive_groups = false
+# C# formatting rules
+# New-line options
+csharp_new_line_before_open_brace = all #control_blocks,local_functions,methods,object_collection_array_initializers,types
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+# Indentation options
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents_when_block = false
+# Spacing options
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_parentheses = none
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_after_comma = true
+csharp_space_before_comma = false
+csharp_space_after_dot = false
+csharp_space_before_dot = false
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_around_declaration_statements = false
+csharp_space_before_open_square_brackets = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_square_brackets = false
+# Wrap options
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+
+# Naming rules
+# -----------------------------------------------------------------------------
+dotnet_diagnostic.IDE1006.severity = error # Naming rule violation
+
+# symbols
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_symbols.const_fields.applicable_kinds = field
+dotnet_naming_symbols.const_fields.applicable_accessibilities = *
+dotnet_naming_symbols.const_fields.required_modifiers = const static
+
+dotnet_naming_symbols.types.applicable_kinds = class,struct,enum,delegate
+dotnet_naming_symbols.types.applicable_accessibilities = *
+
+dotnet_naming_symbols.type_parameters.applicable_kinds = type_parameter
+dotnet_naming_symbols.type_parameters.applicable_accessibilities = *
+
+dotnet_naming_symbols.members.applicable_kinds = property,method,event
+dotnet_naming_symbols.members.applicable_accessibilities = *
+
+dotnet_naming_symbols.locals.applicable_kinds = local,parameter,local_function
+dotnet_naming_symbols.locals.applicable_accessibilities = *
+
+# styles
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = all
+
+dotnet_naming_style.underscore_prefixed_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_prefixed_camel_case.required_prefix = _
+
+dotnet_naming_style.i_prefixed_pascal_case.capitalization = pascal_case
+dotnet_naming_style.i_prefixed_pascal_case.required_prefix = I
+
+dotnet_naming_style.t_prefixed_pascal_case.capitalization = pascal_case
+dotnet_naming_style.t_prefixed_pascal_case.required_prefix = T
+
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+# rules
+dotnet_naming_rule.private_fields.symbols = private_fields
+dotnet_naming_rule.private_fields.style = underscore_prefixed_camel_case
+dotnet_naming_rule.private_fields.severity = error
+
+dotnet_naming_rule.const_fields.symbols = const_fields
+dotnet_naming_rule.const_fields.style = pascal_case
+dotnet_naming_rule.const_fields.severity = error
+
+dotnet_naming_rule.interfaces.symbols = interfaces
+dotnet_naming_rule.interfaces.style = i_prefixed_pascal_case
+dotnet_naming_rule.interfaces.severity = error
+
+dotnet_naming_rule.type_parameters.symbols = type_parameters
+dotnet_naming_rule.type_parameters.style = t_prefixed_pascal_case
+dotnet_naming_rule.type_parameters.severity = error
+
+dotnet_naming_rule.types.symbols = types
+dotnet_naming_rule.types.style = pascal_case
+dotnet_naming_rule.types.severity = error
+
+dotnet_naming_rule.members.symbols = members
+dotnet_naming_rule.members.style = pascal_case
+dotnet_naming_rule.members.severity = error
+
+dotnet_naming_rule.locals.symbols = locals
+dotnet_naming_rule.locals.style = pascal_case
+dotnet_naming_rule.locals.severity = error
+
+# Miscellaneous rules
+# -----------------------------------------------------------------------------
+dotnet_diagnostic.IDE0076.severity = error # Remove invalid global 'SuppressMessageAttribute'
+dotnet_diagnostic.IDE0077.severity = error # Avoid legacy format target in global 'SuppressMessageAttribute'

@@ -13,7 +13,8 @@ namespace dotVariant
     /// </summary>
     public sealed class TypeMismatchException : ArgumentException
     {
-        public TypeMismatchException(string expected, string actual) : base($"Failed to match variant (expected '{expected}', actual '{actual}').")
+        public TypeMismatchException(string expected, string actual)
+            : base($"Failed to match variant (expected '{expected}', actual '{actual}').")
         {
         }
     }

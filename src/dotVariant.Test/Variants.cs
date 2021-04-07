@@ -6,25 +6,25 @@
 
 namespace dotVariant.Test.Variants
 {
-    [dotVariant.Variant]
+    [Variant]
     internal sealed partial class Class_int_float_string
     {
         static partial void VariantOf(int i, float f, string s);
     }
 
-    [dotVariant.Variant]
+    [Variant]
     internal sealed partial class Class_int_float_object
     {
         static partial void VariantOf(int i, float f, Helper o);
     }
 
-    [dotVariant.Variant]
+    [Variant]
     internal readonly partial struct Struct_int_float_object
     {
         static partial void VariantOf(int i, float f, Helper o);
     }
 
-    [dotVariant.Variant]
+    [Variant]
     internal sealed partial class Class_with_default_ctor
     {
         static partial void VariantOf(int i, float f, Helper o);
