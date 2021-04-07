@@ -118,9 +118,10 @@ end
 
 func_params = params | array.each @(do; ret (func_type $0) + " " + $0.hint; end) | array.join ", "
 action_params = params | array.each @(do; ret (action_type $0) + " " + $0.hint; end) | array.join ", "
-method_modifiers = !variant.is_class ? "readonly " : ""
-param_modifiers = !variant.is_class && variant.is_readonly ? "in " : ""
+method_modifiers = !variant.is_class && language.version >= 800 ? "readonly " : ""
+param_modifiers = !variant.is_class && variant.is_readonly && language.version >= 702 ? "in " : ""
 global_nullable = emit_nullability ? "?" : ""
+global_forgive = emit_nullability ? "!" : ""
 
 readonly func_params
 readonly action_params
@@ -314,7 +315,7 @@ namespace {{ variant.namespace }}
                     public Union{{ $p.index }}({{ value_type $p }} value)
                     {
                         {{~ for $dummy in (1..$p.object_padding) limit:$p.object_padding ~}}
-                        _dummy{{ $dummy }} = null{{ emit_nullability ? "!" : "" }};
+                        _dummy{{ $dummy }} = null{{ global_forgive }};
                         {{~ end ~}}
                         Value = value;
                     }
@@ -332,11 +333,14 @@ namespace {{ variant.namespace }}
                 {
                     switch (_n)
                     {
-                        case 0: return "<empty>";
+                        case 0:
+                            return "<empty>";
                         {{~ for $p in params ~}}
-                        case {{ $p.index }}: return "{{ $p.diag_name }}";
+                        case {{ $p.index }}:
+                            return "{{ $p.diag_name }}";
                         {{~ end ~}}
-                        default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                        default:
+                            throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                     }
                 }
             }
@@ -348,11 +352,14 @@ namespace {{ variant.namespace }}
                 {
                     switch (_n)
                     {
-                        case 0: return "<empty>";
+                        case 0:
+                            return "<empty>";
                         {{~ for $p in params ~}}
-                        case {{ $p.index }}: return {{ coalesce_ToString $p (storage $p) }};
+                        case {{ $p.index }}:
+                            return {{ coalesce_ToString $p (storage $p) }};
                         {{~ end ~}}
-                        default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                        default:
+                            throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                     }
                 }
             }
@@ -364,11 +371,14 @@ namespace {{ variant.namespace }}
                 {
                     switch (_n)
                     {
-                        case 0: return null;
+                        case 0:
+                            return null;
                         {{~ for $p in params ~}}
-                        case {{ $p.index }}: return {{ storage $p }};
+                        case {{ $p.index }}:
+                            return {{ storage $p }};
                         {{~ end ~}}
-                        default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                        default:
+                            throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                     }
                 }
             }
@@ -382,12 +392,15 @@ namespace {{ variant.namespace }}
                 }
                 switch (_n)
                 {
-                    case 0: return true;
+                    case 0:
+                        return true;
                     {{~ for $p in params ~}}
                     {{~ $i = $p.index ~}}
-                    case {{ $i }}: return global::System.Collections.Generic.EqualityComparer<{{ $p.name }}>.Default.Equals({{ storage $p }}, other.{{ storage $p }});
+                    case {{ $i }}:
+                        return global::System.Collections.Generic.EqualityComparer<{{ $p.name }}>.Default.Equals({{ storage $p }}, other.{{ storage $p }});
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                    default:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
@@ -429,11 +442,16 @@ namespace {{ variant.namespace }}
             {
                 switch (_n)
                 {
-                    case 0: _(); break;
+                    case 0:
+                        _();
+                        break;
                     {{~ for $p in params ~}}
-                    case {{ $p.index }}: {{ $p.hint }}({{ storage $p }}); break;
+                    case {{ $p.index }}:
+                        {{ $p.hint }}({{ storage $p }});
+                        break;
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                    default:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
@@ -442,11 +460,15 @@ namespace {{ variant.namespace }}
             {
                 switch (_n)
                 {
-                    case 0: throw new global::System.InvalidOperationException("{{ variant.name }} is empty.");
+                    case 0:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is empty.");
                     {{~ for $p in params ~}}
-                    case {{ $p.index }}: {{ $p.hint }}({{ storage $p }}); break;
+                    case {{ $p.index }}:
+                        {{ $p.hint }}({{ storage $p }});
+                        break;
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                    default:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
@@ -455,11 +477,14 @@ namespace {{ variant.namespace }}
             {
                 switch (_n)
                 {
-                    case 0: return _();
+                    case 0:
+                        return _();
                     {{~ for $p in params ~}}
-                    case {{ $p.index }}: return {{ $p.hint }}({{ storage $p }});
+                    case {{ $p.index }}:
+                        return {{ $p.hint }}({{ storage $p }});
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                    default:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
 
@@ -468,11 +493,14 @@ namespace {{ variant.namespace }}
             {
                 switch (_n)
                 {
-                    case 0: throw new global::System.InvalidOperationException("{{ variant.name }} is empty.");
+                    case 0:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is empty.");
                     {{~ for $p in params ~}}
-                    case {{ $p.index }}: return {{ $p.hint }}({{ storage $p }});
+                    case {{ $p.index }}:
+                        return {{ $p.hint }}({{ storage $p }});
                     {{~ end ~}}
-                    default: throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
+                    default:
+                        throw new global::System.InvalidOperationException("{{ variant.name }} is in a corrupted state.");
                 }
             }
         }
@@ -483,7 +511,8 @@ namespace {{ variant.namespace }}
         /// Create a {{ variant.name }} with a value of type <see cref="{{ $p.name }}"/>.
         /// </summary>
         /// <param name="{{ $p.hint }}">The value to initlaize the variant with.</param>
-        public {{ variant.name }}({{ value_type $p }} {{ $p.hint }}) => _variant = new _VariantStorage({{ $p.hint }});
+        public {{ variant.name }}({{ value_type $p }} {{ $p.hint }})
+            => _variant = new _VariantStorage({{ $p.hint }});
         {{~ end ~}}
 
         {{~ ## IMPLICIT CONVERSIONS ## ~}}
@@ -493,7 +522,8 @@ namespace {{ variant.namespace }}
         /// Create a {{ variant.name }} with a value of type <see cref="{{ $p.name }}"/>.
         /// </summary>
         /// <param name="{{ $p.hint }}">The value to initlaize the variant with.</param>
-        public static implicit operator {{ variant.name }}({{ value_type $p }} {{ $p.hint }}) => new {{ name }}({{ $p.hint }});
+        public static implicit operator {{ variant.name }}({{ value_type $p }} {{ $p.hint }})
+            => new {{ name }}({{ $p.hint }});
         {{~ end ~}}
         {{~ end ~}}
 
@@ -503,7 +533,8 @@ namespace {{ variant.namespace }}
         /// Create a {{ variant.name }} with a value of type <see cref="{{ $p.name }}"/>.
         /// </summary>
         /// <param name="{{ $p.hint }}">The value to initlaize the variant with.</param>
-        public static {{ variant.name }} Create({{ value_type $p }} {{ $p.hint }}) => new {{ name }}({{ $p.hint }});
+        public static {{ variant.name }} Create({{ value_type $p }} {{ $p.hint }})
+            => new {{ name }}({{ $p.hint }});
         {{~ end ~}}
 
         {{~ ## VARIANT IsEmpty ## ~}}
@@ -517,10 +548,13 @@ namespace {{ variant.namespace }}
         /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
         /// </remarks>
         {{~ end ~}}
-        public {{ method_modifiers }}bool IsEmpty => _variant.IsEmpty;
+        public {{ method_modifiers }}bool IsEmpty
+            => _variant.IsEmpty;
 
         {{~ ## VARIANT Equals ## ~}}
-        public {{ method_modifiers }}override bool Equals(object{{ global_nullable }} other) => other is {{ variant.name }} v && Equals(v);
+        public {{ method_modifiers }}override bool Equals(object{{ global_nullable }} other)
+            => other is {{ variant.name }} v && Equals(v);
+
         public {{ method_modifiers }}bool Equals({{ value_type variant }} other)
             => {{ if variant.is_class; "!(other is null) && "; end }}_variant.Equals(other._variant);
 
@@ -531,10 +565,12 @@ namespace {{ variant.namespace }}
             => !(lhs == rhs);
 
         {{~ ## VARIANT GetHashCode ## ~}}
-        public {{ method_modifiers }}override int GetHashCode() => _variant.GetHashCode();
+        public {{ method_modifiers }}override int GetHashCode()
+            => _variant.GetHashCode();
 
         {{~ ## VARIANT ToString ## ~}}
-        public {{ method_modifiers }}override string ToString() => _variant.ValueString;
+        public {{ method_modifiers }}override string ToString()
+            => _variant.ValueString;
 
         {{~ ## VARIANT Match(T) ## ~}}
         {{~ for $p in params ~}}
@@ -574,12 +610,12 @@ namespace {{ variant.namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.hint }})
         {
-            bool result = _variant.TryMatch(out {{ outref_type $p }} _value);
-            if (result)
+            if (_variant.TryMatch(out {{ outref_type $p }} _value))
             {
                 {{ $p.hint }}({{ forgive $p "_value" }});
+                return true;
             }
-            return result;
+            return false;
         }
         {{~ end ~}}
 
@@ -638,7 +674,16 @@ namespace {{ variant.namespace }}
         /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }})
-            => _variant.TryMatch(out {{ outref_type $p }} _value) ? {{ $p.hint }}({{ forgive $p "_value" }}) : throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
+        {
+            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            {
+                return {{ $p.hint }}({{ forgive $p "_value" }});
+            }
+            else
+            {
+                throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
+            }
+        }
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Func<T, R>, R) ## ~}}
@@ -652,7 +697,16 @@ namespace {{ variant.namespace }}
         /// <returns>The value returned from invoking <paramref name="{{ $p.hint }}"/>, or <paramref name="default"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> or <paramref name="other"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }}, TResult _)
-            => _variant.TryMatch(out {{ outref_type $p }} _value) ? {{ $p.hint }}({{ forgive $p "_value" }}) : _;
+        {
+            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            {
+                return {{ $p.hint }}({{ forgive $p "_value" }});
+            }
+            else
+            {
+                return _;
+            }
+        }
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Func<T, R>, Func<R>) ## ~}}
@@ -665,7 +719,16 @@ namespace {{ variant.namespace }}
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> or <paramref name="_"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }}, global::System.Func<TResult> _)
-            => _variant.TryMatch(out {{ outref_type $p }} _value) ? {{ $p.hint }}({{ forgive $p "_value" }}) : _();
+        {
+            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            {
+                return {{ $p.hint }}({{ forgive $p "_value" }});
+            }
+            else
+            {
+                return _();
+            }
+        }
         {{~ end ~}}
 
         {{~ ## VARIANT Match(Action<A>, Action<B>, ...) ## ~}}
