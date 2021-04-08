@@ -21,6 +21,7 @@ namespace Foo
             public _VariantTypeProxy(Variant_class_nullable_disable v)
             {
                 Value = v._variant.AsObject;
+                VariantOf(default, default, default);
             }
         }
 
@@ -34,19 +35,16 @@ namespace Foo
             {
                 _n = 1;
                 _x = new Union(i);
-                VariantOf(default, default, default);
             }
             public _VariantStorage(float f)
             {
                 _n = 2;
                 _x = new Union(f);
-                VariantOf(default, default, default);
             }
             public _VariantStorage(string s)
             {
                 _n = 3;
                 _x = new Union(s);
-                VariantOf(default, default, default);
             }
 
             [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]

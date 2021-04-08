@@ -150,6 +150,8 @@ namespace {{ variant.namespace }}
             public _VariantTypeProxy({{ variant.name }} v)
             {
                 Value = v._variant.AsObject;
+                {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
+                VariantOf({{ params | array.each @(do; ret forgive $0 "default"; end) | array.join ", " }});
             }
         }
 
@@ -275,8 +277,6 @@ namespace {{ variant.namespace }}
             {
                 _n = {{ $p.index }};
                 _x = new Union({{ $p.hint }});
-                {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
-                VariantOf({{ params | array.each @(do; ret forgive $0 "default"; end) | array.join ", " }});
             }
             {{~ end ~}}
 
