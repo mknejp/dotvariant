@@ -168,15 +168,15 @@ namespace {{ variant.namespace }}
             This means we can use explicit layout and overlap those types onto the same
             area of memory. There is only one restriction that we must adhere to:
 
-                A unmanaged field and a reference field cannot occupiy the same space.
+                An unmanaged field and a reference field cannot occupiy the same space.
 
             To ensure this the CLR switches the layout of structs containing reference
-            fields from the default "Sequential" to "Auto" and seems to move all reference
-            fields to the beginning of the structure. Let's look at this with a concrete
+            fields from the default "Sequential" to "Auto" and seems to separate all
+            reference fields from unmanaged fields. Let's look at this with a concrete
             example:
 
             struct A { public IntPtr i; public IntPtr j; }
-            struct B { public IntPtr i; public object o; }
+            struct B { public object o; public IntPtr x; }
 
             Have a look at the memory layout of
 
@@ -187,9 +187,9 @@ namespace {{ variant.namespace }}
             | offset | Variant         |
             +--------+-----------------+
             |        | +-----+ +-----+ |
-            |      0 | | A.i | | B.o | | <- ERROR
+            |      0 | | A.i | | B.o | | <- ERROR: TypeLoadException
             |        | +-----+ +-----+ |
-            |      8 | | A.j | | B.i | |
+            |      8 | | A.j | | B.x | |
             |        | +-----+ +-----+ |
             +--------+-----------------+
 
@@ -215,7 +215,7 @@ namespace {{ variant.namespace }}
             |      0 | | WrapA.o       | | B.o | | <- OK
             |        | +---------------+ |     | |
             |        | | +-----------+ | +-----+ |
-            |      8 | | | WrapA.a.i | | | B.i | |
+            |      8 | | | WrapA.a.i | | | B.x | |
             |        | | +-----------+ | +-----+ |
             |     16 | | | WrapA.a.j | |         |
             |        | | +-----------+ |         |
@@ -256,7 +256,7 @@ namespace {{ variant.namespace }}
             |      8 | | | WrapA.o       | | WrapB.b.o | | |
             |        | | +---------------+ |           | | |
             |        | | | +-----------+ | +-----------+ | |
-            |     16 | | | | WrapA.a.i | | | WrapB.b.i | | |
+            |     16 | | | | WrapA.a.i | | | WrapB.b.x | | |
             |        | | | +-----------+ | +-----------+ | |
             |     24 | | | | WrapA.a.j | |               | |
             |        | | | +-----------+ |               | |
@@ -267,8 +267,8 @@ namespace {{ variant.namespace }}
             While this results in some overhead, as the Variant's size is
             the sum of max(object fields) + max(non-object fields) for all
             possible values it can hold, it allows for the elision of boxing
-            for value types and has zero space overhead if it only stores
-            unmanaged value types.
+            for value types and still consumes *much* less memory than if
+            it had to store all values side-by-side.
             ## ~}}
 
             {{~ ## STORAGE CONSTRUCTORS ## ~}}
