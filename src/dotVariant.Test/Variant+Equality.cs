@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace dotVariant.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class Variant_Test
     {
         // Don't use NUnit's equality comparison as it has builtin short-circuiting
