@@ -231,7 +231,7 @@ namespace Foo
                 }
             }
 
-            public readonly override int GetHashCode()
+            public override int GetHashCode()
             {
                 unchecked
                 {
