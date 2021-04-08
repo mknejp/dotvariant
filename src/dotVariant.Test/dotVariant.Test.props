@@ -15,7 +15,6 @@
 
   <ItemGroup Condition="!$(PackageSelfTest)">
     <ProjectReference Include="..\dotVariant.Runtime\dotVariant.Runtime.csproj" />
-    <ProjectReference Include="..\dotVariant.Runtime\dotVariant.Runtime.csproj" />
     <ProjectReference Include="..\dotVariant.Generator\dotVariant.Generator.csproj">
       <OutputItemType>Analyzer</OutputItemType>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

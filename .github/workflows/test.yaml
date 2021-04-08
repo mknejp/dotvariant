@@ -23,6 +23,10 @@ jobs:
   # and the runtime library are packaged correctly.
   package-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tfm: [net5.0, net45]
+        config: [Debug, Release]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,5 +40,5 @@ jobs:
         run: nuget sources add -name local -source dotVariant/bin/Release
 
       - name: Run consumer tests against package
-        run: dotnet test dotVariant.Test/dotVariant.Test.csproj -p:Configuration=Debug -p:PackageSelfTest=true
+        run: dotnet test dotVariant.Test-${{ matrix.tfm }}/dotVariant.Test-${{ matrix.tfm }}.csproj -p:Configuration=${{ matrix.config }} -p:PackageSelfTest=true
 

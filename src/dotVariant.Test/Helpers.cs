@@ -12,13 +12,21 @@ namespace dotVariant.Test
 
     internal sealed class AlwaysEqual : Helper
     {
+#if NULLABLE_ENABLED
         public override bool Equals(object? obj) => obj is AlwaysEqual;
+#else
+        public override bool Equals(object obj) => obj is AlwaysEqual;
+#endif
         public override int GetHashCode() => throw new NotImplementedException();
     }
 
     internal sealed class NeverEqual : Helper
     {
+#if NULLABLE_ENABLED
         public override bool Equals(object? obj) => false;
+#else
+        public override bool Equals(object obj) => false;
+#endif
         public override int GetHashCode() => throw new NotImplementedException();
     }
 }

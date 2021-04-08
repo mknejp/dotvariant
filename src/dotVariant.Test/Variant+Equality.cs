@@ -98,6 +98,7 @@ namespace dotVariant.Test
 
                 Assert.Multiple(() =>
                 {
+#if NULLABLE_ENABLED
                     Assert.That(a.Equals(null), Is.False);
                     Assert.That(a!.Equals((object?)null), Is.False);
 
@@ -112,6 +113,22 @@ namespace dotVariant.Test
 
                     Assert.That(a != (object?)null, Is.True);
                     Assert.That((object?)null != a, Is.True);
+#else
+                    Assert.That(a.Equals(null), Is.False);
+                    Assert.That(a.Equals((object)null), Is.False);
+
+                    Assert.That(a == null, Is.False);
+                    Assert.That(null == a, Is.False);
+
+                    Assert.That(a == (object)null, Is.False);
+                    Assert.That((object)null == a, Is.False);
+
+                    Assert.That(a != null, Is.True);
+                    Assert.That(null != a, Is.True);
+
+                    Assert.That(a != (object)null, Is.True);
+                    Assert.That((object)null != a, Is.True);
+#endif
                 });
             }
 
@@ -191,11 +208,17 @@ namespace dotVariant.Test
                 });
             }
 
+
             [Test]
             public static void Variants_with_null_objects_are_equal()
             {
+#if NULLABLE_ENABLED
                 var a = new Class_int_float_nullable(default(Helper?));
                 var b = new Class_int_float_nullable(default(Helper?));
+#else
+                var a = new Class_int_float_string(default(string));
+                var b = new Class_int_float_string(default(string));
+#endif
 
                 Assert.Multiple(() =>
                 {
@@ -222,8 +245,8 @@ namespace dotVariant.Test
             [Test]
             public static void Variants_with_equal_values_have_equal_hash_codes()
             {
-                var a = new Class_int_float_nullable(1337);
-                var b = new Class_int_float_nullable(1337);
+                var a = new Class_int_float_string(1337);
+                var b = new Class_int_float_string(1337);
 
                 Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
             }
