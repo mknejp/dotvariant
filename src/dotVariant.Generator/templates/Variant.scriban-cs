@@ -14,7 +14,6 @@ Inputs:
 - keyword: The keyword used to declare the type ("class", "struct", ...)
 - in: Contains the "in" keyword if this is a readonly struct, otherwise empty ""
 - nullable: The name of the type with appended nullability annotation
-- mismatch_exception: The fully qualified type name of the mismatch exception
 - params: Array containing all the information about the VariantOf(...) parameters:
   - name: The fully qualified name of the type. Never contains a nullability annotation.
   - diag_name: A shorter type name (without global:: qualifier, for diagnostic strings/messages, may contain nullability annotation).
@@ -114,6 +113,11 @@ func annotate_NotNull(param)
     else
         ret ""
     end
+end
+
+func throw_InvalidOperation(expected, actual)
+    $msg = "$\"Failed to match on '" +  full_name + "' (expected '" + expected + "', actual '" + actual + "').\""
+    ret "throw new global::System.InvalidOperationException(" + $msg + ")"
 end
 
 func_params = params | array.each @(do; ret (func_type $0) + " " + $0.hint; end) | array.join ", "
@@ -576,15 +580,15 @@ namespace {{ variant.namespace }}
         {{~ for $p in params ~}}
         /// <summary>
         /// Retrieve the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>,
-        /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="{{ $p.hint }}">Receives the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
-        /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
         public {{ method_modifiers }}void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.hint }})
         {
             if (!_variant.TryMatch(out {{ forgive $p $p.hint }}))
             {
-                throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
+                {{ throw_InvalidOperation $p.diag_name "{_variant.TypeString}" }};
             }
         }
         {{~ end ~}}
@@ -623,10 +627,10 @@ namespace {{ variant.namespace }}
         {{~ for $p in params ~}}
         /// <summary>
         /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/>,
-        /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
-        /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.hint }})
         {
@@ -636,7 +640,7 @@ namespace {{ variant.namespace }}
             }
             else
             {
-                throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
+                {{ throw_InvalidOperation $p.diag_name "{_variant.TypeString}" }};
             }
         }
         {{~ end ~}}
@@ -667,11 +671,11 @@ namespace {{ variant.namespace }}
         {{~ for $p in params ~}}
         /// <summary>
         /// Invoke a delegate with the value stored within {{ variant.name }} if it is of type <see cref="{{ $p.name }}"/> and return the result,
-        /// otherwise throw <see cref="{{ mismatch_exception }}"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="{{ $p.hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.name }}"/>.</param>
         /// <returns>The value returned from invoking <paramref name="{{ $p.hint }}"/>.</returns>
-        /// <exception cref="{{ mismatch_exception }}">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ variant.name }} does not contain a value of type <see cref="{{ $p.name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.hint }})
         {
@@ -681,7 +685,7 @@ namespace {{ variant.namespace }}
             }
             else
             {
-                throw new {{ mismatch_exception }}(expected: "{{ $p.diag_name }}", actual: _variant.TypeString);
+                {{ throw_InvalidOperation $p.diag_name "{_variant.TypeString}" }};
             }
         }
         {{~ end ~}}

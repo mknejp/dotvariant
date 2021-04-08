@@ -461,54 +461,54 @@ namespace Foo
 
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="int"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="int"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="int"/></exception>
         public void Match(out int i)
         {
             if (!_variant.TryMatch(out i))
             {
-                throw new dotVariant.TypeMismatchException(expected: "int", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'int', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="float"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="f">Receives the stored value if it is of type <see cref="float"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="float"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="float"/></exception>
         public void Match(out float f)
         {
             if (!_variant.TryMatch(out f))
             {
-                throw new dotVariant.TypeMismatchException(expected: "float", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'float', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="string"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="string"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="string"/></exception>
         public void Match([global::System.Diagnostics.CodeAnalysis.NotNull] out string? s)
         {
             if (!_variant.TryMatch(out s!))
             {
-                throw new dotVariant.TypeMismatchException(expected: "string", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'string', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="a">Receives the stored value if it is of type <see cref="global::System.Array"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/></exception>
         public void Match(out global::System.Array? a)
         {
             if (!_variant.TryMatch(out a))
             {
-                throw new dotVariant.TypeMismatchException(expected: "System.Array?", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'System.Array?', actual '{_variant.TypeString}').");
             }
         }
 
@@ -604,10 +604,10 @@ namespace Foo
 
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="int"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="int"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="int"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public void Match(global::System.Action<int> i)
         {
@@ -617,15 +617,15 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "int", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'int', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="float"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="float"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="float"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="float"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
         public void Match(global::System.Action<float> f)
         {
@@ -635,15 +635,15 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "float", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'float', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="string"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="string"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="string"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public void Match(global::System.Action<string> s)
         {
@@ -653,15 +653,15 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "string", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'string', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"> is rethrown.</exception>
         public void Match(global::System.Action<global::System.Array?> a)
         {
@@ -671,7 +671,7 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "System.Array?", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'System.Array?', actual '{_variant.TypeString}').");
             }
         }
 
@@ -750,11 +750,11 @@ namespace Foo
 
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="int"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
         /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="int"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="int"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i)
         {
@@ -764,16 +764,16 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "int", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'int', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="float"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="float"/>.</param>
         /// <returns>The value returned from invoking <paramref name="f"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="float"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="float"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<float, TResult> f)
         {
@@ -783,16 +783,16 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "float", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'float', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="string"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
         /// <returns>The value returned from invoking <paramref name="s"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="string"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="string"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s)
         {
@@ -802,16 +802,16 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "string", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'string', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
         /// <returns>The value returned from invoking <paramref name="a"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<global::System.Array?, TResult> a)
         {
@@ -821,7 +821,7 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "System.Array?", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_enable' (expected 'System.Array?', actual '{_variant.TypeString}').");
             }
         }
 

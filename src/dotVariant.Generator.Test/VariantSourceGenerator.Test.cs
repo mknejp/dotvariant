@@ -28,7 +28,6 @@ namespace dotVariant.Generator.Test
             _extraSources = new()
             {
                 { "VariantAttribute.cs", LoadSample("VariantAttribute.cs") },
-                { "TypeMismatchException.cs", LoadSample("TypeMismatchException.cs") },
             };
         }
 

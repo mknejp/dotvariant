@@ -390,41 +390,41 @@ namespace Foo
 
         /// <summary>
         /// Retrieve the value stored within Variant_struct_nullable_enable if it is of type <see cref="long"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="l">Receives the stored value if it is of type <see cref="long"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/></exception>
         public readonly void Match(out long l)
         {
             if (!_variant.TryMatch(out l))
             {
-                throw new dotVariant.TypeMismatchException(expected: "long", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'long', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Retrieve the value stored within Variant_struct_nullable_enable if it is of type <see cref="double"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="d">Receives the stored value if it is of type <see cref="double"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/></exception>
         public readonly void Match(out double d)
         {
             if (!_variant.TryMatch(out d))
             {
-                throw new dotVariant.TypeMismatchException(expected: "double", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'double', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Retrieve the value stored within Variant_struct_nullable_enable if it is of type <see cref="object"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="o">Receives the stored value if it is of type <see cref="object"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/></exception>
         public readonly void Match([global::System.Diagnostics.CodeAnalysis.NotNull] out object? o)
         {
             if (!_variant.TryMatch(out o!))
             {
-                throw new dotVariant.TypeMismatchException(expected: "object", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'object', actual '{_variant.TypeString}').");
             }
         }
 
@@ -498,10 +498,10 @@ namespace Foo
 
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_struct_nullable_enable if it is of type <see cref="long"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public readonly void Match(global::System.Action<long> l)
         {
@@ -511,15 +511,15 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "long", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'long', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_struct_nullable_enable if it is of type <see cref="double"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public readonly void Match(global::System.Action<double> d)
         {
@@ -529,15 +529,15 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "double", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'double', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_struct_nullable_enable if it is of type <see cref="object"/>,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public readonly void Match(global::System.Action<object> o)
         {
@@ -547,7 +547,7 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "object", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'object', actual '{_variant.TypeString}').");
             }
         }
 
@@ -608,11 +608,11 @@ namespace Foo
 
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_struct_nullable_enable if it is of type <see cref="long"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
         /// <returns>The value returned from invoking <paramref name="l"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<long, TResult> l)
         {
@@ -622,16 +622,16 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "long", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'long', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_struct_nullable_enable if it is of type <see cref="double"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
         /// <returns>The value returned from invoking <paramref name="d"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<double, TResult> d)
         {
@@ -641,16 +641,16 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "double", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'double', actual '{_variant.TypeString}').");
             }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_struct_nullable_enable if it is of type <see cref="object"/> and return the result,
-        /// otherwise throw <see cref="dotVariant.TypeMismatchException"/>.
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
         /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
         /// <returns>The value returned from invoking <paramref name="o"/>.</returns>
-        /// <exception cref="dotVariant.TypeMismatchException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<object, TResult> o)
         {
@@ -660,7 +660,7 @@ namespace Foo
             }
             else
             {
-                throw new dotVariant.TypeMismatchException(expected: "object", actual: _variant.TypeString);
+                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_struct_nullable_enable' (expected 'object', actual '{_variant.TypeString}').");
             }
         }
 

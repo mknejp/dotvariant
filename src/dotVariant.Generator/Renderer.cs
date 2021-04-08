@@ -54,15 +54,11 @@ namespace dotVariant.Generator
                     EmitImplicitCast: !Inspect.IsAncestorOf(p.Type, desc.Type),
                     ToStringNullability: ToStringNullability(p.Type)));
 
-            var exception = compilation.GetTypeByMetadataName("dotVariant.TypeMismatchException");
-            // TODO: exception not found?
-
             var type = desc.Type;
             return new ScriptObject
             {
                 { "in", (type.TypeKind == TypeKind.Struct && Inspect.IsReadonly(type, context.CancellationToken)) ? "in " : "" },
                 { "keyword", type.TypeKind == TypeKind.Class ? "class" : "struct" },
-                { "mismatch_exception", exception!.ToDisplayString() },
                 { "name", type.Name },
                 { "full_name", type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat) },
                 { "namespace", type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString() },
