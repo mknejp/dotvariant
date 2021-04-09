@@ -7,7 +7,7 @@
     <PackageDescription>A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)</PackageDescription>
     <PackageLicenseExpression>BSL-1.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>variant;sumtype;functional;union;algebraic</PackageTags>
+    <PackageTags>variant;sum-types;functional;union;algebraic-data-types;discriminated-unions</PackageTags>
     <RepositoryUrl>https://github.com/mknejp/dotvariant</RepositoryUrl>
     <Version Condition="'$(Version)' == ''">999.0.0</Version>
 
