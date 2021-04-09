@@ -187,8 +187,9 @@ TODO
 TODO
 
 ## Compatibility
-As this library is based on source generators you have to use the .NET 5 SDK to compile your code.
-The generated code is compatible with C#` 7.3`. The required runtime library targets `netstandard1.0`.
+- As this library is based on source generators you have to use the .NET 5 SDK to compile your project.
+- The generated code is compatible down to C#` 7.3` and adjusts itself to the available language version and runtime facilities.
+- The required runtime library targets `netstandard1.0`.
 
 ## License
 Licensed under the [Boost Software License 1.0](LICENSE.txt).
