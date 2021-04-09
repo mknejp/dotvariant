@@ -53,3 +53,10 @@ partial class Variant8
 {
     static partial void VariantOf(int a, string b);
 }
+
+#nullable restore
+[dotVariant.Variant]
+partial class Variant9
+{
+    static partial void VariantOf(int a);
+}

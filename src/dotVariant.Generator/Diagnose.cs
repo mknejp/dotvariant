@@ -47,7 +47,7 @@ namespace dotVariant.Generator
             return
                 new Func<ITypeSymbol, MethodDeclarationSyntax, IMethodSymbol, ImmutableArray<IParameterSymbol>, CancellationToken, IEnumerable<Diagnostic>>[]
                 {
-                    CheckThat.HasAtLeastTwoOptions,
+                    CheckThat.HasAtLeastOneOption,
                     CheckThat.HasNoDuplicateOptions,
                     CheckThat.HasNoReservedName,
                     CheckThat.NoImplicitConversionForBaseClasses,
@@ -132,19 +132,19 @@ namespace dotVariant.Generator
                 bool IsPartial(IMethodSymbol m) => Inspect.IsPartial(m, token);
             }
 
-            public static IEnumerable<Diagnostic> HasAtLeastTwoOptions(
+            public static IEnumerable<Diagnostic> HasAtLeastOneOption(
                 ITypeSymbol type,
                 MethodDeclarationSyntax syntax,
                 IMethodSymbol variantOf,
                 ImmutableArray<IParameterSymbol> options,
                 CancellationToken token)
             {
-                if (options.Count() < 2)
+                if (options.Count() < 1)
                 {
                     yield return MakeError(
-                        nameof(HasAtLeastTwoOptions),
-                        "'VariantOf()' must have at least two parameters.",
-                        $"Variant types must have at least two types in their 'VariantOf()' parameter list.",
+                        nameof(HasAtLeastOneOption),
+                        "'VariantOf()' must have at least one parameter.",
+                        $"Variant types must have at least one parameter in their 'VariantOf()' method.",
                         LocationOfFirstToken(syntax, SyntaxKind.IdentifierToken));
                 }
             }

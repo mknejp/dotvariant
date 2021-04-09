@@ -44,4 +44,10 @@ namespace dotVariant.Test.Variants
     }
 
 #endif
+
+    [Variant]
+    internal sealed partial class Class_int
+    {
+        static partial void VariantOf(int i);
+    }
 }
