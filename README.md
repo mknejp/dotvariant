@@ -9,6 +9,7 @@ A type-safe and space-efficient sum type for C# (comparable to unions in C or C+
   - [Emptiness](#emptiness)
 - [Customization](#customization)
 - [Additional Considerations in Generated Code](#additional-considerations-in-generated-code)
+- [Compatibility](#compatibility)
 - [License](#license)
 
 ## Overview of Variants
@@ -125,7 +126,7 @@ MyAdvancedVariant v = new MyAdvancedVariant.Option1(13); // implicitly converts 
 ```
 
 ### Nullability
-The generated code fully supports nullability annotations. The generated source code honors the nullability context of where the class is defined and its generated interface will match the nullability annotations of the `VariantOf` parameters.
+The generator fully supports nullability annotations. The generated source code honors the nullability context of where the class is defined and its generated interface will match the nullability annotations of the `VariantOf` parameters.
 ```csharp
 #nullable enable
 
@@ -184,6 +185,10 @@ TODO
 
 ## Additional Considerations in Generated Code
 TODO
+
+## Compatibility
+As this library is based on source generators you have to use the .NET 5 SDK to compile your code.
+The generated code is compatible with C#` 7.3`. The required runtime library targets `netstandard1.0`.
 
 ## License
 Licensed under the [Boost Software License 1.0](LICENSE.txt).
