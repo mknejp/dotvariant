@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Scriban;
 using Scriban.Runtime;
 using System;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,13 +31,18 @@ namespace dotVariant.Generator
 
         public static string Render(GeneratorExecutionContext context, Descriptor type, Template template)
         {
-            // TODO: take the project's LangVersion into consideration
-            var templateContext = new TemplateContext();
-            templateContext.PushGlobal(CreateGlobals(context, type));
+            var templateContext = new TemplateContext
+            {
+                MemberRenamer = m => m.Name,
+                StrictVariables = true,
+            };
+            var globals = new ScriptObject();
+            globals.Import(CreateRenderInfo(context, type), renamer: m => m.Name);
+            templateContext.PushGlobal(globals);
             return template.Render(templateContext);
         }
 
-        private static ScriptObject CreateGlobals(GeneratorExecutionContext context, Descriptor desc)
+        private static RenderInfo CreateRenderInfo(GeneratorExecutionContext context, Descriptor desc)
         {
             var compilation = (CSharpCompilation)context.Compilation;
             var maxObjects = desc.Options.Max(NumReferenceFields);
@@ -55,33 +61,22 @@ namespace dotVariant.Generator
                     ToStringNullability: ToStringNullability(p.Type)));
 
             var type = desc.Type;
-            return new ScriptObject
-            {
-                { "in", (type.TypeKind == TypeKind.Struct && Inspect.IsReadonly(type, context.CancellationToken)) ? "in " : "" },
-                { "keyword", type.TypeKind == TypeKind.Class ? "class" : "struct" },
-                { "name", type.Name },
-                { "full_name", type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat) },
-                { "namespace", type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString() },
-                { "nullable", type.TypeKind == TypeKind.Class ? type.Name + "?" : type.Name },
-                { "readonly", type.TypeKind == TypeKind.Struct ? "readonly" : "" },
-                { "params", paramDescriptors.ToArray() },
-                { "language", new LanguageInfo(
+            return new RenderInfo(
+                Language: new LanguageInfo(
                     Nullable: (desc.NullableContext & NullableContext.Enabled) != NullableContext.Disabled ? "enable" : "disable",
-                    Version: ConvertLanguageVersion(compilation.LanguageVersion))
-                },
-                { "runtime", new RuntimeInfo(
-                    HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null)
-                },
-                { "variant", new VariantInfo(
+                    Version: ConvertLanguageVersion(compilation.LanguageVersion)),
+                Options: new OptionsInfo(),
+                Params: paramDescriptors.ToImmutableArray(),
+                Runtime: new RuntimeInfo(
+                    HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null),
+                Variant: new VariantInfo(
                     DiagName: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                     IsClass: type.IsReferenceType,
                     IsReadonly: Inspect.IsReadonly(type, context.CancellationToken),
                     Keyword: desc.Syntax.Keyword.Text,
                     Namespace: type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString(),
                     Name: type.Name,
-                    Nullability: type.IsReferenceType ? "nullable" : "nonnull")
-                },
-            };
+                    Nullability: type.IsReferenceType ? "nullable" : "nonnull"));
         }
 
         private static string ToStringNullability(ITypeSymbol type)
@@ -110,6 +105,13 @@ namespace dotVariant.Generator
                     .Where(m => !m.IsStatic)
                     .Sum(m => NumReferenceFields(m.Type));
 
+        public sealed record RenderInfo(
+            LanguageInfo Language,
+            OptionsInfo Options,
+            ImmutableArray<ParamInfo> Params,
+            RuntimeInfo Runtime,
+            VariantInfo Variant);
+
         public sealed record LanguageInfo(
             /// <summary>
             /// Either <c>"enable"</c> or <c>"disable"</c>.
@@ -119,6 +121,8 @@ namespace dotVariant.Generator
             /// Integer of the form ABB where A=major and BB=minor version of the language (i.e. 703 -> 7.3)
             /// </summary>
             int Version);
+
+        public sealed record OptionsInfo();
 
         public sealed record RuntimeInfo(
             /// <summary>
