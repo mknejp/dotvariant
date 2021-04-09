@@ -1,7 +1,17 @@
 # dotVariant
 A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)
 
-## What is a Variant?
+- [Overview of Variants](#overview-of-variants)
+  - [Declaring a Variant](#declaring-a-variant)
+  - [Using a Variant](#using-a-variant)
+  - [Custom Value Types](#custom-value-types)
+  - [Nullability](#nullability)
+  - [Emptiness](#emptiness)
+- [Customization](#customization)
+- [Additional Considerations in Generated Code](#additional-considerations-in-generated-code)
+- [License](#license)
+
+## Overview of Variants
 A variant is similar to a struct or class, except that it can always only contain _one_ of its fields. A `class` declared with an `int` and a `string` property always contains one `int` value and one `string` value. In comparison to that a variant declared with an `int` option and a `string` option always contains _either_ an `int` value _or_ a `string` value, but never both. The library also makes a best effort at minimizing the amount of storage required by the variant as it can always only contain a single value. This is similar to C and C++ `union`, but tweaked to work under the restrictions of the .NET runtime.
 
 ### Declaring a Variant
@@ -78,7 +88,7 @@ var b2 = variant.TryMatch(out string s); // b2 = true, s = "not an int"
 var i = variant.Match((int x) => x, 42); // i = 42
 var j = variant.Match((int x) => x, () => 1337); // j = 1337
 ```
-The real power behind variants, however, comes from visitation. In this case you receive a variant of which you do not know which type it contains, and you process each type differently:
+The real power behind variants, however, comes from visitation, where you provide the variant with a delegate for each possible type:
 ```csharp
 string GetContainedType(MyVariant variant)
 {
@@ -91,7 +101,7 @@ GetContainedType(new MyVariant(12)); // returns "int"
 GetContainedType(new MyVariant(3.14)); // returns "double"
 GetContainedType(new MyVariant("blubb")); // returns "string"
 ```
-`Visit` accepts one delegate per possible type it _might_ contain, and invokes the one corresponding to the value it _does_ contain at runtime. Naturally, all delegates must return the same type.
+`Visit` accepts one delegate per possible type it _might_ contain, and at runtime invokes the one corresponding to the value it _does_ contain. Naturally, all delegates must return the same type.
 
 There are many available overloads of `Match` and `Visit` which hopefully help you achieve your goal in any scenario.
 
@@ -114,13 +124,47 @@ readonly partial struct MyAdvancedVariant
 MyAdvancedVariant v = new MyAdvancedVariant.Option1(13); // implicitly converts to MyAdvancedVariant
 ```
 
+### Nullability
+The generated code fully supports nullability annotations. The generated source code honors the nullability context of where the class is defined and its generated interface will match the nullability annotations of the `VariantOf` parameters.
+```csharp
+#nullable enable
+
+[Variant]
+class Variant1 // code generated with #nullable enable
+{
+    partial void VariantOf(int a, string s); // s is non-null in all generated code
+}
+
+[Variant]
+class Variant2 // code generated with #nullable enable
+{
+    partial void VariantOf(int a, string? s); // s is nullable in all generated code
+}
+
+#nullable disable
+
+[Variant]
+class Variant3 // code generated with #nullable disable
+{
+    partial void VariantOf(int a, string s); // s is nullable in all generated code
+}
+```
+And of course nullable value types are also supported.
+```csharp
+[Variant]
+class SomeVariant
+{
+    partial void VariantOf(int? a, string s); // OK
+}
+```
+
 ### Emptiness
-If you declare your variant as a `struct`-type, you need to be aware that a variant can be _empty_, meaning it does not hold _any_ value. This is an unfortunate consequence of value types always having a default constructor in .NET. A `class` variant should only ever be empty if you define your own constructor and default-construct the private `_variant` field. Use the public `IsEmpty` property to check for emptiness. Attempting to retrieve a value out of an empty variant results in a `InvalidOperationException`, however there are overloads of `Match` and `Visit` with ways to deal with emptiness in a more fluid manner.
+If you declare your variant as a `struct`-type, you need to be aware that a variant can be _empty_, meaning it does not hold _any_ value. This is an unfortunate consequence of value types always having a default constructor in .NET. A `class` variant should never be empty unless you define your own constructor and default-construct the private `_variant` field. Use the public `IsEmpty` property to check for emptiness. Attempting to retrieve a value out of an empty variant results in a `InvalidOperationException`, however there are overloads of `Match` and `Visit` with ways to deal with emptiness in a more fluid manner.
 ```csharp
 [Variant]
 struct MyStructVariant
 {
-    partial void VariantOf(int first, string second, byte[] third);
+    partial void VariantOf(int first, string second?, byte[] third);
 }
 
 var variant = default(MyStructVariant);
@@ -134,6 +178,12 @@ variant.Match(
     x => "third",
     () => "empty"); // Fourth option called when empty
 ```
+
+## Customization
+TODO
+
+## Additional Considerations in Generated Code
+TODO
 
 ## License
 Licensed under the [Boost Software License 1.0](LICENSE.txt).
