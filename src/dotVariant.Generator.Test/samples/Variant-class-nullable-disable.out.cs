@@ -232,7 +232,7 @@ namespace Foo
                 return _n == 3;
             }
 
-            public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
+            public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
             {
                 switch (_n)
                 {
@@ -253,7 +253,7 @@ namespace Foo
                 }
             }
 
-            public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
+            public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
             {
                 switch (_n)
                 {
@@ -273,7 +273,7 @@ namespace Foo
                 }
             }
 
-            public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
             {
                 switch (_n)
                 {
@@ -290,7 +290,7 @@ namespace Foo
                 }
             }
 
-            public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
+            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
             {
                 switch (_n)
                 {
@@ -787,8 +787,8 @@ namespace Foo
         /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_disable is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
-            => _variant.Match(i, f, s);
+        public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
+            => _variant.Visit(i, f, s);
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_class_nullable_disable,
@@ -799,8 +799,8 @@ namespace Foo
         /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
         /// <param name="_">The delegate to invoke if Variant_class_nullable_disable is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
-            => _variant.Match(i, f, s, _);
+        public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
+            => _variant.Visit(i, f, s, _);
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of the value stored within Variant_class_nullable_disable and return the result,
@@ -812,8 +812,8 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_disable is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
-            => _variant.Match(i, f, s);
+        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
+            => _variant.Visit(i, f, s);
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_class_nullable_disable and return the result,
@@ -825,8 +825,7 @@ namespace Foo
         /// <param name="_">The delegate to invoke if Variant_class_nullable_disable is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
-            => _variant.Match(i, f, s, _);
-
+        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+            => _variant.Visit(i, f, s, _);
     }
 }

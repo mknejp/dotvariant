@@ -274,7 +274,7 @@ namespace Foo
                 return _n == 4;
             }
 
-            public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a, global::System.Action _)
+            public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a, global::System.Action _)
             {
                 switch (_n)
                 {
@@ -298,7 +298,7 @@ namespace Foo
                 }
             }
 
-            public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a)
+            public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a)
             {
                 switch (_n)
                 {
@@ -321,7 +321,7 @@ namespace Foo
                 }
             }
 
-            public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
+            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
             {
                 switch (_n)
                 {
@@ -340,7 +340,7 @@ namespace Foo
                 }
             }
 
-            public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a)
+            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a)
             {
                 switch (_n)
                 {
@@ -985,8 +985,8 @@ namespace Foo
         /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array"/>.</param>
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a)
-            => _variant.Match(i, f, s, a);
+        public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a)
+            => _variant.Visit(i, f, s, a);
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_class_nullable_enable,
@@ -998,8 +998,8 @@ namespace Foo
         /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array"/>.</param>
         /// <param name="_">The delegate to invoke if Variant_class_nullable_enable is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public void Match(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a, global::System.Action _)
-            => _variant.Match(i, f, s, a, _);
+        public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a, global::System.Action _)
+            => _variant.Visit(i, f, s, a, _);
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of the value stored within Variant_class_nullable_enable and return the result,
@@ -1012,8 +1012,8 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a)
-            => _variant.Match(i, f, s, a);
+        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a)
+            => _variant.Visit(i, f, s, a);
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_class_nullable_enable and return the result,
@@ -1026,8 +1026,7 @@ namespace Foo
         /// <param name="_">The delegate to invoke if Variant_class_nullable_enable is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
-            => _variant.Match(i, f, s, a, _);
-
+        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
+            => _variant.Visit(i, f, s, a, _);
     }
 }

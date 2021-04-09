@@ -426,8 +426,8 @@ namespace {{ Variant.Namespace }}
             }
             {{~ end ~}}
 
-            {{~ ## UNION Match(Action) ## ~}}
-            public void Match({{ action_params }}, global::System.Action _)
+            {{~ ## UNION Visit(Action) ## ~}}
+            public void Visit({{ action_params }}, global::System.Action _)
             {
                 switch (_n)
                 {
@@ -444,8 +444,8 @@ namespace {{ Variant.Namespace }}
                 }
             }
 
-            {{~ ## UNION Match(Action) ## ~}}
-            public void Match({{ action_params }})
+            {{~ ## UNION Visit(Action) ## ~}}
+            public void Visit({{ action_params }})
             {
                 switch (_n)
                 {
@@ -461,8 +461,8 @@ namespace {{ Variant.Namespace }}
                 }
             }
 
-            {{~ ## UNION Match(Func) ## ~}}
-            public TResult Match<TResult>({{ func_params }}, global::System.Func<TResult> _)
+            {{~ ## UNION Visit(Func) ## ~}}
+            public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
             {
                 switch (_n)
                 {
@@ -477,8 +477,8 @@ namespace {{ Variant.Namespace }}
                 }
             }
 
-            {{~ ## UNION Match(Func) ## ~}}
-            public TResult Match<TResult>({{ func_params }})
+            {{~ ## UNION Visit(Func) ## ~}}
+            public TResult Visit<TResult>({{ func_params }})
             {
                 switch (_n)
                 {
@@ -561,7 +561,7 @@ namespace {{ Variant.Namespace }}
         public {{ method_modifiers }}override string ToString()
             => _variant.ValueString;
 
-        {{~ ## VARIANT Match(T) ## ~}}
+        {{~ ## VARIANT Match(out T) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>,
@@ -578,7 +578,7 @@ namespace {{ Variant.Namespace }}
         }
         {{~ end ~}}
 
-        {{~ ## VARIANT TryMatch(T) ## ~}}
+        {{~ ## VARIANT TryMatch(out T) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>.
@@ -630,7 +630,7 @@ namespace {{ Variant.Namespace }}
         }
         {{~ end ~}}
 
-        {{~ ## VARIANT Match(Action<T>) ## ~}}
+        {{~ ## VARIANT Match(Action<T>, Action) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>,
@@ -720,7 +720,7 @@ namespace {{ Variant.Namespace }}
         }
         {{~ end ~}}
 
-        {{~ ## VARIANT Match(Action<A>, Action<B>, ...) ## ~}}
+        {{~ ## VARIANT Visit(Action<A>, Action<B>, ...) ## ~}}
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Name }},
         /// and throw an exception if {{ Variant.Name }} is empty.
@@ -730,10 +730,10 @@ namespace {{ Variant.Namespace }}
         {{~ end ~}}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public {{ method_modifiers }}void Match({{ action_params }})
-            => _variant.Match({{ Params | array.each @param_hint | array.join ", " }});
+        public {{ method_modifiers }}void Visit({{ action_params }})
+            => _variant.Visit({{ Params | array.each @param_hint | array.join ", " }});
 
-        {{~ ## VARIANT Match(Action<A>, Action<B>, ..., empty) ## ~}}
+        {{~ ## VARIANT Visit(Action<A>, Action<B>, ..., empty) ## ~}}
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Name }},
         /// and invoke a special delegate if {{ Variant.Name }} is empty.
@@ -743,10 +743,10 @@ namespace {{ Variant.Namespace }}
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        public {{ method_modifiers }}void Match({{ action_params }}, global::System.Action _)
-            => _variant.Match({{ Params | array.each @param_hint | array.join ", "  }}, _);
+        public {{ method_modifiers }}void Visit({{ action_params }}, global::System.Action _)
+            => _variant.Visit({{ Params | array.each @param_hint | array.join ", "  }}, _);
 
-        {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
+        {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ...) ## ~}}
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Name }} and return the result,
         /// and throw an exception if {{ Variant.Name }} is empty.
@@ -757,10 +757,10 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public {{ method_modifiers }}TResult Match<TResult>({{ func_params }})
-            => _variant.Match({{ Params | array.each @param_hint | array.join ", "  }});
+        public {{ method_modifiers }}TResult Visit<TResult>({{ func_params }})
+            => _variant.Visit({{ Params | array.each @param_hint | array.join ", "  }});
 
-        {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
+        {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Name }} and return the result,
         /// and invoke a special delegate if {{ Variant.Name }} is empty and return its result.
@@ -771,10 +771,8 @@ namespace {{ Variant.Namespace }}
         /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-        public {{ method_modifiers }}TResult Match<TResult>({{ func_params }}, global::System.Func<TResult> _)
-            => _variant.Match({{ Params | array.each @param_hint | array.join ", "  }}, _);
-
-        {{~ ## VARIANT Match(Func<A, R>, Func<B, R>, ...) ## ~}}
+        public {{ method_modifiers }}TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
+            => _variant.Visit({{ Params | array.each @param_hint | array.join ", "  }}, _);
     }
 {{~ if Variant.Namespace ~}}
 }
