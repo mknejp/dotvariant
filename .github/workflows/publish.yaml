@@ -29,4 +29,4 @@ jobs:
           }
 
       - name: Upload package
-        run: dotnet nuget push dotVariant/bin/Release/dotVariant.*.nupkg -s nuget.org -k ${{ NUGET_TOKEN }}
+        run: dotnet nuget push dotVariant/bin/Release/dotVariant.*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
