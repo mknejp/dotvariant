@@ -1,4 +1,4 @@
-name: test
+name: continuous test
 on: [push, pull_request]
 
 defaults:
@@ -7,7 +7,7 @@ defaults:
     working-directory: src
 
 jobs:
-  cover-test:
+  main:
     runs-on: ubuntu-latest
     strategy:
       matrix:

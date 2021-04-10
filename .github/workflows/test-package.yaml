@@ -1,7 +1,7 @@
 # Run dotVariant.Test against the pre-built package instead of
 # ProjectReference. This ensures that both the generator
 # and the runtime library are packaged correctly.
-name: test-package
+name: package self-test
 on: [push, pull_request]
 
 defaults:
@@ -10,8 +10,9 @@ defaults:
     working-directory: src
 
 jobs:
-  build-package:
+  build:
     runs-on: ubuntu-latest
+    name: build package
     steps:
       - uses: actions/checkout@v2
 
@@ -24,13 +25,13 @@ jobs:
           path: src/dotVariant/bin/Release/*.nupkg
 
   test-package:
-    needs: build-package
+    needs: build
     runs-on: ${{ matrix.runs-on }}
-    name: ${{ matrix.tfm }}-${{ matrix.runs-on }}-${{ matrix.config }}
+    name: test (${{ matrix.tfm }}, ${{ matrix.runs-on }}, ${{ matrix.config }})
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, macos-latest, windows-latest]
         tfm: [net5.0]
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
         config: [Debug, Release]
         include:
           - tfm: net45
