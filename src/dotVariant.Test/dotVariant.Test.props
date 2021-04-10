@@ -13,6 +13,11 @@
     <PackageReference Include="System.Interactive" Version="5.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <dotVariant-ExtensionClassNamespace>dotVariant.Test</dotVariant-ExtensionClassNamespace>
+  </PropertyGroup>
+
+  <!-- local development setup -->
   <ItemGroup Condition="!$(PackageSelfTest)">
     <ProjectReference Include="..\dotVariant.Runtime\dotVariant.Runtime.csproj" />
     <ProjectReference Include="..\dotVariant.Generator\dotVariant.Generator.csproj">
@@ -22,9 +27,12 @@
       <ExcludeAssets>all</ExcludeAssets>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\dotVariant\build\dotVariant.props" Condition="!$(PackageSelfTest)" />
 
+  <!-- package self-test setup -->
   <ItemGroup Condition="$(PackageSelfTest)">
     <PackageReference Include="dotVariant" Version="$(Version)" />
   </ItemGroup>
+
 
 </Project>

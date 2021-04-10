@@ -1030,3 +1030,318 @@ namespace Foo
             => _variant.Visit(i, f, s, a, _);
     }
 }
+
+namespace Foo
+{
+    public static partial class _Variant_class_nullable_enable_Ex
+    {
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="int"/> and dropping all others.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="i">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<int, TResult> i)
+        {
+            foreach (var variant in source)
+            {
+                if (variant.TryMatch(out int value))
+                {
+                    yield return i(value);
+                }
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="float"/> and dropping all others.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="f">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<float, TResult> f)
+        {
+            foreach (var variant in source)
+            {
+                if (variant.TryMatch(out float value))
+                {
+                    yield return f(value);
+                }
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="string"/> and dropping all others.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="s">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<string, TResult> s)
+        {
+            foreach (var variant in source)
+            {
+                if (variant.TryMatch(out string? value))
+                {
+                    yield return s(value);
+                }
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="global::System.Array"/> and dropping all others.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="a">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<global::System.Array?, TResult> a)
+        {
+            foreach (var variant in source)
+            {
+                if (variant.TryMatch(out global::System.Array? value))
+                {
+                    yield return a(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="int"/> and replacing all others by a fallback value.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="i">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<int, TResult> i,
+                TResult _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(i, _);
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="float"/> and replacing all others by a fallback value.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="f">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<float, TResult> f,
+                TResult _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(f, _);
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="string"/> and replacing all others by a fallback value.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="s">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<string, TResult> s,
+                TResult _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(s, _);
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="global::System.Array"/> and replacing all others by a fallback value.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="a">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<global::System.Array?, TResult> a,
+                TResult _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(a, _);
+            }
+        }
+
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="int"/> and replacing all others with the result of a fallback selector.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="i">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<int, TResult> i,
+                global::System.Func<TResult> _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(i, _);
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="float"/> and replacing all others with the result of a fallback selector.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="f">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<float, TResult> f,
+                global::System.Func<TResult> _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(f, _);
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="string"/> and replacing all others with the result of a fallback selector.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="s">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<string, TResult> s,
+                global::System.Func<TResult> _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(s, _);
+            }
+        }
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
+        /// containing a value of type <see cref="global::System.Array"/> and replacing all others with the result of a fallback selector.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="a">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Match<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<global::System.Array?, TResult> a,
+                global::System.Func<TResult> _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Match(a, _);
+            }
+        }
+
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to each element
+        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException">
+        /// if an element is empty.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="i">The delegate to invoke if the element's value is of type <see cref="int"/>.</param>
+        /// <param name="f">The delegate to invoke if the element's value is of type <see cref="float"/>.</param>
+        /// <param name="s">The delegate to invoke if the element's value is of type <see cref="string"/>.</param>
+        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array"/>.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.InvalidOperationException">The sequence encountered an empty Variant_class_nullable_enable.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Visit<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Visit(i, f, s, a);
+            }
+        }
+
+        /// <summary>
+        /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to each element
+        /// wich matches the type stored within the value, and replacing empty elements with the result of a fallback selector.
+        /// </summary>
+        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="i">The delegate to invoke if the element's value is of type <see cref="int"/>.</param>
+        /// <param name="f">The delegate to invoke if the element's value is of type <see cref="float"/>.</param>
+        /// <param name="s">The delegate to invoke if the element's value is of type <see cref="string"/>.</param>
+        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array"/>.</param>
+        /// <param name="_">The delegate to invoke if an element is empty.</param>
+        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.Collections.Generic.IEnumerable<TResult>
+            Visit<TResult>(
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_class_nullable_enable> source,
+                global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a,
+                global::System.Func<TResult> _)
+        {
+            foreach (var variant in source)
+            {
+                yield return variant.Visit(i, f, s, a, _);
+            }
+        }
+    }
+}
