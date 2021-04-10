@@ -1,0 +1,59 @@
+# Run dotVariant.Test against the pre-built package instead of
+# ProjectReference. This ensures that both the generator
+# and the runtime library are packaged correctly.
+name: package self-test
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: pwsh
+    working-directory: src
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: build package
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build package
+        run: dotnet build dotVariant/dotVariant.csproj -p:Configuration=Release
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dotVariant.nupkg
+          path: src/dotVariant/bin/Release/*.nupkg
+
+  test-package:
+    needs: build
+    runs-on: ${{ matrix.runs-on }}
+    name: test (${{ matrix.tfm }}, ${{ matrix.runs-on }}, ${{ matrix.config }})
+    strategy:
+      matrix:
+        tfm: [net5.0]
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+        config: [Debug, Release]
+        include:
+          - tfm: net45
+            runs-on: windows-latest
+            config: Debug
+          - tfm: net45
+            runs-on: windows-latest
+            config: Release
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: nuget/setup-nuget@v1
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: dotVariant.nupkg
+          path: src/.packages
+
+      - name: Install locally built package
+        run: nuget sources add -name local -source .packages
+
+      - name: Run consumer tests against package
+        run: dotnet test dotVariant.Test-${{ matrix.tfm }}/dotVariant.Test-${{ matrix.tfm }}.csproj -c ${{ matrix.config }} -p:PackageSelfTest=true
+
