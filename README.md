@@ -7,8 +7,9 @@ A type-safe and space-efficient sum type for C# (comparable to unions in C or C+
   - [Custom Value Types](#custom-value-types)
   - [Nullability](#nullability)
   - [Emptiness](#emptiness)
+- [Generated Code Features](#generated-code-features)
+  - [Extension Methods](#extension-methods)
 - [Customization](#customization)
-- [Additional Considerations in Generated Code](#additional-considerations-in-generated-code)
 - [Compatibility](#compatibility)
 - [License](#license)
 
@@ -180,10 +181,39 @@ variant.Match(
     () => "empty"); // Fourth option called when empty
 ```
 
-## Customization
-TODO
+## Generated Code Features
+The generated implemenation provides some additional features depending on the types you provide it, or third-party libraris available to you.
 
-## Additional Considerations in Generated Code
+### Foreign Extension Methods
+If your type is declared in such a way that providing extensions methods is possible you will get additional integration with .NET facilities, or popular external libraries, listed in this section. The visibility (`public` or `internal`) of the extension methods is made to match the accessibility of your type declaration.
+
+#### `IEnumerable<T>`
+These allow for easy and powerful integration into `System.Linq`-like queries on `IEnumerable<T>` sequences, that let you manipulate a stream of variants based on the contained type.
+```csharp
+[Variant]
+public readonly partial struct MyVariant
+{
+    partial void VariantOf(int i, double d, string s);
+}
+
+var xs = new MyVariant[] { 1, 2.0, "3", 4, 5.0, "6" };
+
+// Unary Match only transforms the matching type and drops all others
+xs.Match((int i) => i); // result: IEnumerable<int> [1, 4]
+
+// Binary Match lets you provide a fallback value or delegate to replace non-matching values with
+xs.Match((int i) => i, 0); // result: IEnumerable<int> [1, 0, 0, 4, 0, 0]
+xs.Match((int i) => i, () => -1); // result: IEnumerable<int> [1, -1, -1, 4, -1, -1]
+
+// Visit transform each possible value type individually
+xs.Visit(
+    i => $"int {i}",
+    d => $"double {d}"
+    s=> $"string {s}");
+// result: IEnumerable<string> ["int 1", "double 2", "string 3", "int 4", "double 5", "string 6"]
+```
+
+## Customization
 TODO
 
 ## Compatibility
