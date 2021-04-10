@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
-    <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Visible="false" />
+    <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Link="lib/$(TargetFramework)/%(Filename)%(Extension)" />
+    <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Link="licenses/%(RecursiveDir)%(Filename)%(Extension)"/>
   </ItemGroup>
 
   <Target Name="dotVariant-GatherGeneratorDependencies" AfterTargets="Build">
@@ -26,7 +26,7 @@
     </MSBuild>
     <!--<Message Importance="high" Text="%(GeneratorOutputs.Identity)" />-->
     <ItemGroup>
-      <None Include="@(GeneratorOutputs)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <None Include="@(GeneratorOutputs)" Pack="true" PackagePath="analyzers/dotnet/cs" Link="analyzers/dotnet/cs/%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 
