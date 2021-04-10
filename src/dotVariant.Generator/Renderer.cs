@@ -46,6 +46,8 @@ namespace dotVariant.Generator
         {
             var compilation = (CSharpCompilation)context.Compilation;
             var maxObjects = desc.Options.Max(NumReferenceFields);
+            var type = desc.Type;
+
             var paramDescriptors =
                 desc
                 .Options
@@ -60,24 +62,55 @@ namespace dotVariant.Generator
                     EmitImplicitCast: !Inspect.IsAncestorOf(p.Type, desc.Type),
                     ToStringNullability: ToStringNullability(p.Type)));
 
-            var type = desc.Type;
+            var ns = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
+
+            if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue(
+                "build_property.dotVariant-ExtensionClassNamespace", out var extensionClassNamespace))
+            {
+                extensionClassNamespace = extensionClassNamespace.Trim('.');
+                if (string.IsNullOrWhiteSpace(extensionClassNamespace))
+                {
+                    extensionClassNamespace = null;
+                }
+            }
+            else
+            {
+                extensionClassNamespace = ns;
+            }
+
             return new RenderInfo(
                 Language: new LanguageInfo(
                     Nullable: (desc.NullableContext & NullableContext.Enabled) != NullableContext.Disabled ? "enable" : "disable",
                     Version: ConvertLanguageVersion(compilation.LanguageVersion)),
-                Options: new OptionsInfo(),
+                Options: new OptionsInfo(
+                    ExtensionClassNamespace: extensionClassNamespace),
                 Params: paramDescriptors.ToImmutableArray(),
                 Runtime: new RuntimeInfo(
                     HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null),
                 Variant: new VariantInfo(
                     DiagName: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                    ExtensionsAccessibility: ExtensionsAccessibility(type),
+                    FullName: type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                     IsClass: type.IsReferenceType,
                     IsReadonly: Inspect.IsReadonly(type, context.CancellationToken),
                     Keyword: desc.Syntax.Keyword.Text,
-                    Namespace: type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString(),
+                    Namespace: ns,
                     Name: type.Name,
                     Nullability: type.IsReferenceType ? "nullable" : "nonnull"));
         }
+
+        private static string? ExtensionsAccessibility(ITypeSymbol type)
+            => Inspect.EffectiveAccessibility(type) switch
+            {
+                Accessibility.Internal => SyntaxFactory.Token(SyntaxKind.InternalKeyword).Text,
+                Accessibility.NotApplicable => null,
+                Accessibility.Public => SyntaxFactory.Token(SyntaxKind.PublicKeyword).Text,
+                Accessibility.Private => null,
+                Accessibility.ProtectedAndInternal => null,
+                Accessibility.Protected => null,
+                Accessibility.ProtectedOrInternal => SyntaxFactory.Token(SyntaxKind.InternalKeyword).Text,
+                _ => null,
+            };
 
         private static string ToStringNullability(ITypeSymbol type)
         {
@@ -122,7 +155,11 @@ namespace dotVariant.Generator
             /// </summary>
             int Version);
 
-        public sealed record OptionsInfo();
+        public sealed record OptionsInfo(
+            /// <summary>
+            /// The namespace in which to generate extension method implementations. If <see langword="null"/> use the global namespace.
+            /// </summary>
+            string? ExtensionClassNamespace);
 
         public sealed record RuntimeInfo(
             /// <summary>
@@ -135,6 +172,14 @@ namespace dotVariant.Generator
             /// The fully qualified name of the type (without global:: alias, for diagnostic strings/messages)
             /// </summary>
             string DiagName,
+            /// <summary>
+            /// The accessibility to use for the class containing extension methods. <see langword="null"/> if extensions are impossible to define.
+            /// </summary>
+            string? ExtensionsAccessibility,
+            /// <summary>
+            /// The fully qualified name of the type.
+            /// </summary>
+            string FullName,
             /// <summary>
             /// <see langword="true"/> if this is an object type.
             /// </summary>

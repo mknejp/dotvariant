@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Variant+Equality.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+ToString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+IsEmpty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+IEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+Visit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+Match-Func.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+Match-Action.cs" />

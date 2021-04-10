@@ -63,5 +63,8 @@ namespace dotVariant.Generator
 
         public static IMethodSymbol? FindNullaryToString(ITypeSymbol type)
             => FindMethod(type, m => m.MethodKind == MethodKind.Ordinary && m.Name == "ToString()" && m.Parameters.IsEmpty);
+
+        public static Accessibility EffectiveAccessibility(ITypeSymbol type)
+            => type.DeclaredAccessibility;
     }
 }

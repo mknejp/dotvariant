@@ -18,6 +18,7 @@
   <ItemGroup>
     <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Link="lib/$(TargetFramework)/%(Filename)%(Extension)" />
     <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Link="licenses/%(RecursiveDir)%(Filename)%(Extension)"/>
+    <None Include="build/*" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <Target Name="dotVariant-GatherGeneratorDependencies" AfterTargets="Build">
