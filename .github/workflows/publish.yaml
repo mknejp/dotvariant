@@ -1,0 +1,32 @@
+# Run dotVariant.Test against the pre-built package instead of
+# ProjectReference. This ensures that both the generator
+# and the runtime library are packaged correctly.
+name: publish
+on:
+  push:
+    tags:
+      - 'v*'
+
+defaults:
+  run:
+    shell: pwsh
+    working-directory: src
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build package
+        run: |
+          if ("${{ github.ref }}" -match "^refs/tags/v(.+)") {
+            $version = $Matches[1]
+            dotnet build dotVariant/dotVariant.csproj -p:Configuration=Release -p:Version=$version
+          } else {
+            echo "::error::Unexpected tag format '${ github.refs }}'"
+            exit 1
+          }
+
+      - name: Upload package
+        run: dotnet nuget push dotVariant/bin/Release/dotVariant.*.nupkg -s nuget.org -k ${{ NUGET_TOKEN }}
