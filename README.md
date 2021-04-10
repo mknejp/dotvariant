@@ -10,7 +10,7 @@ A type-safe and space-efficient sum type for C# (comparable to unions in C or C+
 - [Generated Code Features](#generated-code-features)
   - [Third-party Integrations](#third-party-integrations)
 - [Customization](#customization)
-  - [Extension Class Namespace](#extension-classnamespace)
+  - [Extension Class Namespace](#extension-class-namespace)
 - [Compatibility](#compatibility)
 - [License](#license)
 
@@ -27,7 +27,8 @@ namespace MyNamespace
     [Variant] // required attribute
     partial class MyVariant // "partial" is mandatory
     {
-        static partial void VariantOf(int a, double d, string s); // "static partial" is mandatory. do not implement!
+        // "static partial" is mandatory. Do not implement!
+        static partial void VariantOf(int a, double d, string s);
     }
 }
 ```
@@ -78,7 +79,7 @@ var d = variant2.Match((double x) => Math.Sin(x)); // d = 0.90929742682568171
 var variant3 = new MyVariant("world");
 var s = variant3.Match((string x) => $"hello {x}!"); // s = "hello world!"
 ```
-What happens if you try to retrieve a value from a variant it currently does not contain? It throws an `InvalidOperationException`. To avoid this there are overloads of `Match` that give you ways to avoid this disappointing outcome:
+What happens if you try to retrieve a value from a variant it currently does not contain? It throws an `InvalidOperationException`. To avoid this there are overloads of `Match` and `TryMatch` giving you tools to avoid this disappointing outcome:
 ```csharp
 var variant = new MyVariant("not an int");
 
@@ -91,7 +92,7 @@ var b2 = variant.TryMatch(out string s); // b2 = true, s = "not an int"
 var i = variant.Match((int x) => x, 42); // i = 42
 var j = variant.Match((int x) => x, () => 1337); // j = 1337
 ```
-The real power behind variants, however, comes from visitation, where you provide the variant with a delegate for each possible type.
+Until now all you could do was get a single type of value out of the variant using `Match` or `TryMatch`, and these two functions are designed to do only that. The real power behind variants, however, comes from visitation, where you provide a delegate to handle each possibility.
 ```csharp
 string GetContainedType(MyVariant variant)
 {
@@ -106,7 +107,7 @@ GetContainedType("blubb"); // returns "string"
 ```
 `Visit` accepts one delegate per possible type it _might_ contain, and at runtime invokes the one corresponding to the value it _does_ contain. Naturally, all delegates must return the same type.
 
-There are many available overloads of `Match` and `Visit` which hopefully help you achieve your goal in any scenario.
+There are many available overloads of `Match` and `Visit` which hopefully help you achieve your goal in every scenario.
 
 ### Custom Value Types
 Of course you are not restricted to just using builtin types like `int` or `double`. Any type that is valid for fields and parameters is valid for variants. A useful pattern is to declare your own types nested to the variant.
@@ -122,7 +123,7 @@ readonly partial struct MyAdvancedVariant
         public Option1(int value) { Value = value; }
     }
     public readonly struct Option2 { ... }
-    public readonly struct Option3 { ... }
+    public class Option3 { ... }
 }
 MyAdvancedVariant v = new MyAdvancedVariant.Option1(13); // implicitly converts to MyAdvancedVariant
 ```
@@ -188,7 +189,7 @@ The generated implemenation provides some additional features depending on the t
 ### Third-party Integrations
 If your type is declared in such a way that providing extensions methods is possible you will get additional integration with .NET facilities, or popular external libraries, listed in this section. The visibility (`public` or `internal`) of the extension methods is made to match the accessibility of your type declaration.
 
-The `static class` containing all extension methods is by default generated in the same namespace containing the variant type, but that is configurable (see [Extension Class Namespace](#extension-classnamespace)).
+The `static class` containing all extension methods is by default generated in the same namespace containing the variant type, but that is configurable (see [Extension Class Namespace](#extension-class-namespace)).
 
 #### `IEnumerable<T>`
 These allow for easy and powerful integration into `System.Linq`-like queries on `IEnumerable<T>` sequences, that let you manipulate a stream of variants based on the contained type.
