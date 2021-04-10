@@ -171,7 +171,7 @@ namespace Foo
                     switch (_n)
                     {
                         case 0:
-                            return "<empty>";
+                            return "";
                         case 1:
                             return _x._1.Value.ToString();
                         case 2:

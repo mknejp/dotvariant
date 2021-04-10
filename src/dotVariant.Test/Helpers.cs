@@ -8,7 +8,17 @@ using System;
 
 namespace dotVariant.Test
 {
-    internal abstract class Helper { }
+    internal class Helper { }
+
+    internal class ClassWithToString : Helper
+    {
+        public ClassWithToString(string s)
+        {
+            _s = s;
+        }
+        private readonly string _s;
+        public override string ToString() => _s;
+    }
 
     internal sealed class AlwaysEqual : Helper
     {

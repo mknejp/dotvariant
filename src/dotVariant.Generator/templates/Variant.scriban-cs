@@ -342,7 +342,7 @@ namespace {{ Variant.Namespace }}
                     switch (_n)
                     {
                         case 0:
-                            return "<empty>";
+                            return "";
                         {{~ for $p in Params ~}}
                         case {{ $p.Index }}:
                             return {{ coalesce_ToString $p (storage $p) }};

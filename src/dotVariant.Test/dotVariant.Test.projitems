@@ -6,10 +6,19 @@
     <SharedGUID>193d7a79-92bf-46be-bb02-60360da0883d</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>dotVariant.Test2</Import_RootNamespace>
+    <Import_RootNamespace>dotVariant.Test</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+Equality.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+ToString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+IsEmpty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+Visit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+Match-Func.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+Match-Action.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+Match-out.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+TryMatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variants.cs" />
     <None Include="$(MSBuildThisFileDirectory)**/*.props" />
   </ItemGroup>
   <Import Project="$(MSBuildThisFileName).props" />

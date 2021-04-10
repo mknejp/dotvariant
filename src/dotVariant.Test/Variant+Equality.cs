@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace dotVariant.Test
 {
     [Parallelizable(ParallelScope.All)]
-    public class Variant_Test
+    public static partial class Variant_Test
     {
         // Don't use NUnit's equality comparison as it has builtin short-circuiting
         public static class Equality
@@ -245,8 +245,8 @@ namespace dotVariant.Test
             [Test]
             public static void Variants_with_equal_values_have_equal_hash_codes()
             {
-                var a = new Class_int_float_string(1337);
-                var b = new Class_int_float_string(1337);
+                var a = new Class_int_float_string(1);
+                var b = new Class_int_float_string(1);
 
                 Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
             }
@@ -254,8 +254,8 @@ namespace dotVariant.Test
             [Test]
             public static void Variants_with_equal_objects_have_equal_hash_codes()
             {
-                var a = new Class_int_float_string("foo");
-                var b = new Class_int_float_string("foo");
+                var a = new Class_int_float_string("s");
+                var b = new Class_int_float_string("s");
 
                 Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
             }
