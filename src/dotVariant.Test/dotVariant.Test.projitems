@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Variant+Dispose.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+Equality.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+ToString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Variant+IsEmpty.cs" />

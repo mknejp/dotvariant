@@ -4,6 +4,9 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
+using NUnit.Framework;
+using System;
+
 namespace dotVariant.Test.Variants
 {
     [Variant]
@@ -49,5 +52,46 @@ namespace dotVariant.Test.Variants
     internal sealed partial class Class_int
     {
         static partial void VariantOf(int i);
+    }
+
+    [Variant]
+    internal sealed partial class DisposableVariant
+    {
+        static partial void VariantOf(int i, Disposable d);
+    }
+
+    [Variant]
+    internal sealed partial class DisposableVariantWithImpl : IDisposable
+    {
+        static partial void VariantOf(int i, Disposable d);
+
+        public void Dispose()
+        {
+            _variant.Dispose();
+        }
+    }
+
+    public static class TypeLoadTest
+    {
+        [Test]
+        public static void Load()
+        {
+            Assert.That(
+                () => new object[]
+                {
+                    // Make sure we don't get any TypeLoadException
+                    new Class_int_float_string("s"),
+                    new Class_int_float_object(new Helper()),
+                    new Struct_int_float_object(new Helper()),
+                    new Class_with_default_ctor(),
+#if NULLABLE_ENABLED
+                    new Class_int_float_nullable(default(Helper?)),
+#endif
+                    new Class_int(1),
+                    new DisposableVariant(new Disposable(() => { })),
+                    new DisposableVariantWithImpl(new Disposable(() => { })),
+                },
+                Throws.Nothing);
+        }
     }
 }

@@ -8,6 +8,7 @@ A type-safe and space-efficient sum type for C# (comparable to unions in C or C+
   - [Nullability](#nullability)
   - [Emptiness](#emptiness)
 - [Generated Code Features](#generated-code-features)
+  - [`IDisposable` Support](#idisposable-support)
   - [Third-party Integrations](#third-party-integrations)
 - [Customization](#customization)
   - [Extension Class Namespace](#extension-class-namespace)
@@ -185,6 +186,11 @@ variant.Match(
 
 ## Generated Code Features
 The generated implemenation provides some additional features depending on the types you provide it, or third-party libraries available to you.
+
+### `IDisposable` Support
+If _at least one_ of the types included in the `VariantOf()` parameters implements `System.IDisposable` then the generated variant will also implement this interface and provide a public `Dispose()` member which delegates to the stored value's `Dispose()` if applicable.
+
+If there already exists an implementation of `IDisposable.Dispose()` (either you defined one, or it is present in a base class) then the public `Dispose()` method is _not_ generated and it is your responsibility to take care of calling the private `_variant.Dispose()`.
 
 ### Third-party Integrations
 If your type is declared in such a way that providing extensions methods is possible you will get additional integration with .NET facilities, or popular external libraries, listed in this section. The visibility (`public` or `internal`) of the extension methods is made to match the accessibility of your type declaration.
