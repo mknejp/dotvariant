@@ -10,19 +10,11 @@ using System.Collections.Immutable;
 
 namespace dotVariant.Generator
 {
-    internal sealed record Descriptor(
+    public sealed record Descriptor(
         ITypeSymbol Type,
         TypeDeclarationSyntax Syntax,
         ImmutableArray<IParameterSymbol> Options,
-        NullableContext NullableContext
-        // TODO: emptiness possible?
-        // TODO: user-defined constructors
-        // TODO: user-defined ToString()
-        // TODO: user-defined Equals()
-        // TODO: user-defined GetHashCode()
-        // TODO: user-defined Dispose()
-        // TODO: nested class
-        )
+        NullableContext NullableContext)
     {
         public static Descriptor FromDeclaration(
             ITypeSymbol type,

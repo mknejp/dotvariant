@@ -18,26 +18,12 @@ namespace dotVariant.Generator.Test
 {
     [TestOf(typeof(SourceGenerator))]
     [Parallelizable(ParallelScope.All)]
-    internal static class VariantSourceGenerator_Test
+    internal static class SourceGenerator_Test
     {
-        private static Dictionary<string, string>? _extraSources;
-
-        [OneTimeSetUp]
-        public static void LoadAttribute()
-        {
-            _extraSources = new()
-            {
-                { "VariantAttribute.cs", LoadSample("VariantAttribute.cs") },
-            };
-        }
-
         [TestCaseSource(nameof(TranslationCases))]
         public static void Translation(string typeName, string input, string expected)
         {
-            var sources = new Dictionary<string, string>(_extraSources!)
-            {
-                ["input"] = input
-            };
+            var sources = SupportSources.Add("input", input);
             var outputs = GetGeneratedOutput<SourceGenerator>(sources);
             var file =
                 Path.Combine(
@@ -96,10 +82,7 @@ namespace dotVariant.Generator.Test
         [TestCaseSource(nameof(DiagnosticsCases))]
         public static void Diagnostics(string input)
         {
-            var sources = new Dictionary<string, string>(_extraSources!)
-            {
-                ["input"] = input
-            };
+            var sources = SupportSources.Add("input", input);
             var expectations = ExtractExpectations(input);
             var diags =
                 GetGeneratorDiagnostics<SourceGenerator>(sources)
