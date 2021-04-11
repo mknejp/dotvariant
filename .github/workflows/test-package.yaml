@@ -2,7 +2,11 @@
 # ProjectReference. This ensures that both the generator
 # and the runtime library are packaged correctly.
 name: package self-test
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branch:
+      - '*'
 
 defaults:
   run:
