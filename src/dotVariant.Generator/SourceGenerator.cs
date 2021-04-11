@@ -5,8 +5,10 @@
 //
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace dotVariant.Generator
@@ -28,11 +30,24 @@ namespace dotVariant.Generator
                 .SelectMany(desc => desc.Diags)
                 .ForEach(context.ReportDiagnostic);
 
-            decls
+            Descriptors =
+                decls
                 .Where(decl => !decl.Diags.Any(d => d.Severity == DiagnosticSeverity.Error))
                 .Select(decl => Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable))
-                .ForEach(desc => context.AddSource(desc.Type.ToDisplayString(), Renderer.Render(context, desc)));
+                .ToImmutableArray();
+
+            RenderInfos =
+                Descriptors
+                .Select(desc => RenderInfo.FromDescriptor(desc, (CSharpCompilation)context.Compilation, context.AnalyzerConfigOptions, context.CancellationToken))
+                .ToImmutableArray();
+
+            Enumerable
+                .Zip(Descriptors, RenderInfos, (desc, ri) => (desc, ri))
+                .ForEach(v => context.AddSource(v.desc.Type.ToDisplayString(), Renderer.Render(v.ri)));
         }
+
+        public ImmutableArray<Descriptor> Descriptors { get; private set; }
+        public ImmutableArray<RenderInfo> RenderInfos { get; private set; }
 
         public void Initialize(GeneratorInitializationContext context)
         {

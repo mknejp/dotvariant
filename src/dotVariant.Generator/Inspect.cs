@@ -76,11 +76,29 @@ namespace dotVariant.Generator
             return type.FindImplementationForInterfaceMember(dispose!) is not null;
         }
 
+        public static bool HasAnyDisposeMethod(ITypeSymbol type)
+            => type
+                .GetMembers()
+                .OfType<IMethodSymbol>()
+                .Any(m => m.Name == nameof(IDisposable.Dispose));
+
         public static bool IsDisposable(ITypeSymbol type, CSharpCompilation compilation)
         {
             var disposable = compilation.GetTypeByMetadataName($"{nameof(System)}.{nameof(IDisposable)}")!;
             return SymbolEqualityComparer.Default.Equals(type, disposable)
                 || type.AllInterfaces.Contains(disposable, SymbolEqualityComparer.Default);
         }
+
+        public static int NumReferenceFields(IParameterSymbol param)
+            => NumReferenceFields(param.Type);
+
+        public static int NumReferenceFields(ITypeSymbol type)
+            => type.IsReferenceType
+                ? 1
+                : type
+                    .GetMembers()
+                    .OfType<IFieldSymbol>() // Inludes backing fields of auto-properties
+                    .Where(m => !m.IsStatic)
+                    .Sum(m => NumReferenceFields(m.Type));
     }
 }

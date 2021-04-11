@@ -21,11 +21,7 @@ namespace dotVariant.Generator.Test
     {
         public static Dictionary<string, string> GetGeneratedOutput(IDictionary<string, string> sources, Func<ISourceGenerator> makeGenerator, bool failOnInvalidSource = false)
         {
-            var compilation = CSharpCompilation.Create(
-                "compilation",
-                sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, path: s.Key)),
-                new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
-                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            var compilation = Compile(sources);
 
             if (failOnInvalidSource)
             {
@@ -48,16 +44,12 @@ namespace dotVariant.Generator.Test
 
         public static ImmutableArray<Diagnostic> GetGeneratorDiagnostics(IDictionary<string, string> sources, Func<ISourceGenerator> makeGenerator)
         {
-            var compilation = CSharpCompilation.Create(
-                "compilation",
-                sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, path: s.Key)),
-                new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
-                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            var compilation = Compile(sources);
 
             var generator = makeGenerator();
 
             var driver = CSharpGeneratorDriver.Create(generator);
-            _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
+            _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var _, out var generateDiagnostics);
 
             return generateDiagnostics;
         }
@@ -65,6 +57,13 @@ namespace dotVariant.Generator.Test
         public static ImmutableArray<Diagnostic> GetGeneratorDiagnostics<TGenerator>(IDictionary<string, string> sources)
             where TGenerator : ISourceGenerator, new()
             => GetGeneratorDiagnostics(sources, () => new TGenerator());
+
+        public static CSharpCompilation Compile(IDictionary<string, string> sources)
+            => CSharpCompilation.Create(
+                "test",
+                sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, path: s.Key)),
+                new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         public static string TrimLines(string s)
             => string.Join(
@@ -163,6 +162,12 @@ namespace dotVariant.Generator.Test
                     .SetName($"{nameof(ExtractExpectationsTest)}({i})"));
         }
 
+        public static readonly ImmutableDictionary<string, string> SupportSources =
+            new Dictionary<string, string>()
+                {
+                    { "VariantAttribute.cs", LoadSample("VariantAttribute.cs") },
+                }
+                .ToImmutableDictionary();
     }
 
     public record DiagnosticExpectation(int Line, int Column, string Id, DiagnosticSeverity Severity)
