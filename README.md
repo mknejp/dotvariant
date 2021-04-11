@@ -1,4 +1,4 @@
-# dotVariant
+# dotVariant ![GitHub](https://img.shields.io/github/license/mknejp/dotVariant) ![Nuget verion](https://img.shields.io/nuget/v/dotVariant) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mknejp/dotvariant/test-package)
 A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)
 
 - [Overview of Variants](#overview-of-variants)
@@ -8,8 +8,9 @@ A type-safe and space-efficient sum type for C# (comparable to unions in C or C+
   - [Nullability](#nullability)
   - [Emptiness](#emptiness)
 - [Generated Code Features](#generated-code-features)
-  - [Extension Methods](#extension-methods)
+  - [Third-party Integrations](#third-party-integrations)
 - [Customization](#customization)
+  - [Extension Class Namespace](#extension-class-namespace)
 - [Compatibility](#compatibility)
 - [License](#license)
 
@@ -26,13 +27,14 @@ namespace MyNamespace
     [Variant] // required attribute
     partial class MyVariant // "partial" is mandatory
     {
-        partial void VariantOf(int a, double d, string s); // "partial" is mandatory. do not implement!
+        // "static partial" is mandatory. Do not implement!
+        static partial void VariantOf(int a, double d, string s);
     }
 }
 ```
 You are not restricted to just `class`. You can also use `struct`, `readonly struct`, `ref struct`, and so on. Only `record` is currently not supported and probably never will, but that should not stop you, as variants are immutable and have by-value comparison, just like records.
 
-The `VariantOf` method is how you tell the generator what the possible values of this variant are. Anything that is a valid parameter is also a valid option here and the parameter names will be used as hints throughout the generated interface. Do not use `out`, `in` or `ref` modifiers, as those are reserved for future use.
+The `VariantOf` method is how you tell the generator what the possible values of this variant are. Anything that is a valid parameter and field is also a valid option here and the parameter names will be used as hints throughout the generated interface. Do not use `out`, `in` or `ref` modifiers, as those are reserved for future use.
 
 `MyVariant` will receive a rich set of public properties and methods for you to enjoy. In addition you will find a private `_variant` field which hides away all the implementation details. If you chose to add your own custom members to `MyVariant` you may safely access this field.
 
@@ -77,7 +79,7 @@ var d = variant2.Match((double x) => Math.Sin(x)); // d = 0.90929742682568171
 var variant3 = new MyVariant("world");
 var s = variant3.Match((string x) => $"hello {x}!"); // s = "hello world!"
 ```
-What happens if you try to retrieve a value from a variant it currently does not contain? It throws an `InvalidOperationException`. To avoid this there are overloads of `Match` that give you ways to avoid this disappointing outcome:
+What happens if you try to retrieve a value from a variant it currently does not contain? It throws an `InvalidOperationException`. To avoid this there are overloads of `Match` and `TryMatch` giving you tools to avoid this disappointing outcome:
 ```csharp
 var variant = new MyVariant("not an int");
 
@@ -90,7 +92,7 @@ var b2 = variant.TryMatch(out string s); // b2 = true, s = "not an int"
 var i = variant.Match((int x) => x, 42); // i = 42
 var j = variant.Match((int x) => x, () => 1337); // j = 1337
 ```
-The real power behind variants, however, comes from visitation, where you provide the variant with a delegate for each possible type:
+Until now all you could do was get a single type of value out of the variant using `Match` or `TryMatch`, and these two functions are designed to do only that. The real power behind variants, however, comes from visitation, where you provide a delegate to handle each possibility.
 ```csharp
 string GetContainedType(MyVariant variant)
 {
@@ -99,13 +101,13 @@ string GetContainedType(MyVariant variant)
       d => "double"
       s => "string");
 }
-GetContainedType(new MyVariant(12)); // returns "int"
-GetContainedType(new MyVariant(3.14)); // returns "double"
-GetContainedType(new MyVariant("blubb")); // returns "string"
+GetContainedType(12); // returns "int"
+GetContainedType(3.14); // returns "double"
+GetContainedType("blubb"); // returns "string"
 ```
 `Visit` accepts one delegate per possible type it _might_ contain, and at runtime invokes the one corresponding to the value it _does_ contain. Naturally, all delegates must return the same type.
 
-There are many available overloads of `Match` and `Visit` which hopefully help you achieve your goal in any scenario.
+There are many available overloads of `Match` and `Visit` which hopefully help you achieve your goal in every scenario.
 
 ### Custom Value Types
 Of course you are not restricted to just using builtin types like `int` or `double`. Any type that is valid for fields and parameters is valid for variants. A useful pattern is to declare your own types nested to the variant.
@@ -113,7 +115,7 @@ Of course you are not restricted to just using builtin types like `int` or `doub
 [Variant]
 readonly partial struct MyAdvancedVariant
 {
-    partial void VariantOf(Option1 first, Option2 second, Option3 third);
+    static partial void VariantOf(Option1 first, Option2 second, Option3 third);
     
     public readonly struct Option1
     {
@@ -121,7 +123,7 @@ readonly partial struct MyAdvancedVariant
         public Option1(int value) { Value = value; }
     }
     public readonly struct Option2 { ... }
-    public readonly struct Option3 { ... }
+    public class Option3 { ... }
 }
 MyAdvancedVariant v = new MyAdvancedVariant.Option1(13); // implicitly converts to MyAdvancedVariant
 ```
@@ -132,31 +134,31 @@ The generator fully supports nullability annotations. The generated source code 
 #nullable enable
 
 [Variant]
-class Variant1 // code generated with #nullable enable
+partial class Variant1 // code generated with #nullable enable
 {
-    partial void VariantOf(int a, string s); // s is non-null in all generated code
+    static partial void VariantOf(int a, string s); // s is non-null in all generated code
 }
 
 [Variant]
-class Variant2 // code generated with #nullable enable
+partial class Variant2 // code generated with #nullable enable
 {
-    partial void VariantOf(int a, string? s); // s is nullable in all generated code
+    static partial void VariantOf(int a, string? s); // s is nullable in all generated code
 }
 
 #nullable disable
 
 [Variant]
-class Variant3 // code generated with #nullable disable
+partial class Variant3 // code generated with #nullable disable
 {
-    partial void VariantOf(int a, string s); // s is nullable in all generated code
+    static partial void VariantOf(int a, string s); // s is nullable in all generated code
 }
 ```
 And of course nullable value types are also supported.
 ```csharp
 [Variant]
-class SomeVariant
+partial class SomeVariant
 {
-    partial void VariantOf(int? a, string s); // OK
+    static partial void VariantOf(int? a, string s); // OK
 }
 ```
 
@@ -164,9 +166,9 @@ class SomeVariant
 If you declare your variant as a `struct`-type, you need to be aware that a variant can be _empty_, meaning it does not hold _any_ value. This is an unfortunate consequence of value types always having a default constructor in .NET. A `class` variant should never be empty unless you define your own constructor and default-construct the private `_variant` field. Use the public `IsEmpty` property to check for emptiness. Attempting to retrieve a value out of an empty variant results in a `InvalidOperationException`, however there are overloads of `Match` and `Visit` with ways to deal with emptiness in a more fluid manner.
 ```csharp
 [Variant]
-struct MyStructVariant
+partial struct MyStructVariant
 {
-    partial void VariantOf(int first, string second?, byte[] third);
+    static partial void VariantOf(int first, string second?, byte[] third);
 }
 
 var variant = default(MyStructVariant);
@@ -182,10 +184,12 @@ variant.Match(
 ```
 
 ## Generated Code Features
-The generated implemenation provides some additional features depending on the types you provide it, or third-party libraris available to you.
+The generated implemenation provides some additional features depending on the types you provide it, or third-party libraries available to you.
 
-### Foreign Extension Methods
+### Third-party Integrations
 If your type is declared in such a way that providing extensions methods is possible you will get additional integration with .NET facilities, or popular external libraries, listed in this section. The visibility (`public` or `internal`) of the extension methods is made to match the accessibility of your type declaration.
+
+The `static class` containing all extension methods is by default generated in the same namespace containing the variant type, but that is configurable (see [Extension Class Namespace](#extension-class-namespace)).
 
 #### `IEnumerable<T>`
 These allow for easy and powerful integration into `System.Linq`-like queries on `IEnumerable<T>` sequences, that let you manipulate a stream of variants based on the contained type.
@@ -193,7 +197,7 @@ These allow for easy and powerful integration into `System.Linq`-like queries on
 [Variant]
 public readonly partial struct MyVariant
 {
-    partial void VariantOf(int i, double d, string s);
+    static partial void VariantOf(int i, double d, string s);
 }
 
 var xs = new MyVariant[] { 1, 2.0, "3", 4, 5.0, "6" };
@@ -214,12 +218,39 @@ xs.Visit(
 ```
 
 ## Customization
-TODO
+An overview of how you can customize the generated source code.
+
+### Extension Class Namespace
+As mentioned in [Third-party Integrations](#third-party-integrations) if the circumstances are right extension methods for integration with third-party libraries can be generated. By default the accompanying `static class` is put in the namespace containing the variant type.
+```csharp
+// Your declaration
+namespace Foo.Bar.Baz
+{
+  [Variant]
+  internal partial class MyVariant
+  {
+    static partial void VariantOf(int i, double d, string s);
+  }
+}
+// Generated code
+namespace Foo.Bar.Baz
+{
+  partial class MyVariant { /* variant implementation */ }
+  
+  internal static class _MyVariant_Ex { /* all extension methods for MyVariant go here */ }
+}
+```
+However this means the extension methods are only accessible if you are inside namespace `Foo.Bar.Baz` or have `using Foo.Bar.Baz;` active in your scope. Thus if you are in namespace `Foo.Bar` and are handled a `IEnumerable<Foo.Bar.Baz.MyVariant>` then the extension methods won't be visible to you. If this is not what you want you can set a MSBuild property to change the namespace where all extension classes are generated (an additional per-class option is planned) to whichever place you put common extension methods. I highly recomment making them visible everywhere, you don't want to miss out on them!
+```xml
+<PropertyGroup>
+  <dotVariant-ExtensionClassNamespace>Foo.Extensions</dotVariant-ExtensionClassNamespace>
+</PropertyGroup>
+```
 
 ## Compatibility
 - As this library is based on source generators you have to use the .NET 5 SDK to compile your project.
-- The generated code is compatible down to C#` 7.3` and adjusts itself to the available language version and runtime facilities.
-- The required runtime library targets `netstandard1.0`.
+- The generated code is compatible down to C# `7.3` and adjusts itself to the available language version and runtime facilities.
+- The required runtime support library targets `netstandard1.0`.
 
 ## License
 Licensed under the [Boost Software License 1.0](LICENSE.txt).
