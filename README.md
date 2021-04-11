@@ -1,4 +1,4 @@
-# dotVariant
+# dotVariant ![GitHub](https://img.shields.io/github/license/mknejp/dotVariant) ![Nuget verion](https://img.shields.io/nuget/v/dotVariant) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mknejp/dotvariant/test-package)
 A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)
 
 - [Overview of Variants](#overview-of-variants)
