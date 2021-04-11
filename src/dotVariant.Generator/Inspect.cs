@@ -66,5 +66,21 @@ namespace dotVariant.Generator
 
         public static Accessibility EffectiveAccessibility(ITypeSymbol type)
             => type.DeclaredAccessibility;
+
+        public static bool ImplementsDispose(ITypeSymbol type, CSharpCompilation compilation)
+        {
+            var dispose =
+                FindMethod(
+                    compilation.GetTypeByMetadataName($"{nameof(System)}.{nameof(IDisposable)}")!,
+                    m => m.Name == nameof(IDisposable.Dispose));
+            return type.FindImplementationForInterfaceMember(dispose!) is not null;
+        }
+
+        public static bool IsDisposable(ITypeSymbol type, CSharpCompilation compilation)
+        {
+            var disposable = compilation.GetTypeByMetadataName($"{nameof(System)}.{nameof(IDisposable)}")!;
+            return SymbolEqualityComparer.Default.Equals(type, disposable)
+                || type.AllInterfaces.Contains(disposable, SymbolEqualityComparer.Default);
+        }
     }
 }

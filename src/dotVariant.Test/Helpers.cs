@@ -39,4 +39,18 @@ namespace dotVariant.Test
 #endif
         public override int GetHashCode() => throw new NotImplementedException();
     }
+
+    internal sealed class Disposable : Helper, IDisposable
+    {
+        public Disposable(Action f)
+        {
+            _f = f;
+        }
+        private readonly Action _f;
+
+        public void Dispose()
+        {
+            _f();
+        }
+    }
 }

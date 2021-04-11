@@ -60,9 +60,9 @@ end
 
 # Conditionally apply a null-caolescing member access with trailing null-expression after the ??
 # Works with both "Params" and "Variant"
-func coalesce(type, expression, sub_expression, null_expression)
+func coalesce(type, expression, sub_expression, null_expression = null)
     if type.Nullability == "nullable"
-        ret expression + "?" + sub_expression + " ?? " + null_expression
+        ret expression + "?" + sub_expression + (null_expression != null ? (" ?? " + null_expression) : "")
     else
         ret expression + sub_expression
     end
@@ -111,6 +111,7 @@ method_modifiers = !Variant.IsClass && Language.Version >= 800 ? "readonly " : "
 param_modifiers = !Variant.IsClass && Variant.IsReadonly && Language.Version >= 702 ? "in " : ""
 global_nullable = emit_nullability ? "?" : ""
 global_forgive = emit_nullability ? "!" : ""
+needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0
 
 readonly func_params
 readonly action_params
@@ -128,7 +129,11 @@ namespace {{ Variant.Namespace }}
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
     [global::System.Diagnostics.DebuggerNonUserCode]
-    partial {{ Variant.Keyword }} {{ Variant.Name }} : global::System.IEquatable<{{ Variant.Name }}>
+    partial {{ Variant.Keyword }} {{ Variant.Name }}
+        : global::System.IEquatable<{{ Variant.Name }}>
+        {{~ if needs_dispose ~}}
+        , global::System.IDisposable
+        {{~ end ~}}
     {
         [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly _VariantStorage _variant;
@@ -146,6 +151,9 @@ namespace {{ Variant.Namespace }}
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         private readonly struct _VariantStorage
+        {{~ if needs_dispose ~}}
+            : global::System.IDisposable
+        {{~ end ~}}
         {
             private readonly int _n;
             private readonly Union _x;
@@ -266,6 +274,27 @@ namespace {{ Variant.Namespace }}
             {
                 _n = {{ $p.Index }};
                 _x = new Union({{ $p.Hint }});
+            }
+            {{~ end ~}}
+
+            {{~ if needs_dispose ~}}
+            public void Dispose()
+            {
+                switch (_n)
+                {
+                    case 0:
+                        break;
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        {{~ if $p.IsDisposable ~}}
+                        {{ coalesce $p ("_x._" + $p.Index + ".Value") ".Dispose()" }};
+                        {{~ end ~}}
+                        break;
+                    {{~ end ~}}
+                    default:
+                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
+
+                }
             }
             {{~ end ~}}
 
@@ -516,7 +545,7 @@ namespace {{ Variant.Namespace }}
         {{~ end ~}}
         {{~ end ~}}
 
-        {{~ # STATIC CREATE FACTORIES ## ~}}
+        {{~ ## STATIC CREATE FACTORIES ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Create a {{ Variant.Name }} with a value of type <see cref="{{ $p.Name }}"/>.
@@ -524,6 +553,15 @@ namespace {{ Variant.Namespace }}
         /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
         public static {{ Variant.Name }} Create({{ value_type $p }} {{ $p.Hint }})
             => new {{ Variant.Name }}({{ $p.Hint }});
+        {{~ end ~}}
+
+        {{~ ## DISPOSE ## ~}}
+        {{~ if needs_dispose && !Variant.UserDefined.Dispose }}
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _variant.Dispose();
+        }
         {{~ end ~}}
 
         {{~ ## VARIANT IsEmpty ## ~}}

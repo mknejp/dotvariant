@@ -10,7 +10,8 @@ namespace Foo
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
     [global::System.Diagnostics.DebuggerNonUserCode]
-    partial struct Variant_struct_nullable_disable : global::System.IEquatable<Variant_struct_nullable_disable>
+    partial struct Variant_struct_nullable_disable
+        : global::System.IEquatable<Variant_struct_nullable_disable>
     {
         [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly _VariantStorage _variant;
@@ -46,6 +47,7 @@ namespace Foo
                 _n = 3;
                 _x = new Union(o);
             }
+
 
             [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
             [global::System.Diagnostics.DebuggerNonUserCode]
@@ -358,6 +360,7 @@ namespace Foo
         /// <param name="o">The value to initlaize the variant with.</param>
         public static Variant_struct_nullable_disable Create(object o)
             => new Variant_struct_nullable_disable(o);
+
 
         /// <summary>
         /// <see langword="true"/> if Variant_struct_nullable_disable was constructed without a value.

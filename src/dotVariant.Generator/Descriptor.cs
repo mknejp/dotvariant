@@ -15,8 +15,6 @@ namespace dotVariant.Generator
         TypeDeclarationSyntax Syntax,
         ImmutableArray<IParameterSymbol> Options,
         NullableContext NullableContext
-        // TODO: disposable types
-        // TODO: nullability
         // TODO: emptiness possible?
         // TODO: user-defined constructors
         // TODO: user-defined ToString()

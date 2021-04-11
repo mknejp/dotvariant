@@ -58,6 +58,7 @@ namespace dotVariant.Generator
                     ObjectPadding: maxObjects - NumReferenceFields(p),
                     Index: i + 1,
                     IsClass: p.Type.IsReferenceType,
+                    IsDisposable: Inspect.IsDisposable(p.Type, compilation),
                     Nullability: p.Type.NullableAnnotation == NullableAnnotation.NotAnnotated ? "nonnull" : "nullable",
                     EmitImplicitCast: !Inspect.IsAncestorOf(p.Type, desc.Type),
                     ToStringNullability: ToStringNullability(p.Type)));
@@ -78,16 +79,16 @@ namespace dotVariant.Generator
                 extensionClassNamespace = ns;
             }
 
-            return new RenderInfo(
-                Language: new LanguageInfo(
+            return new(
+                Language: new(
                     Nullable: (desc.NullableContext & NullableContext.Enabled) != NullableContext.Disabled ? "enable" : "disable",
                     Version: ConvertLanguageVersion(compilation.LanguageVersion)),
-                Options: new OptionsInfo(
+                Options: new(
                     ExtensionClassNamespace: extensionClassNamespace),
                 Params: paramDescriptors.ToImmutableArray(),
-                Runtime: new RuntimeInfo(
+                Runtime: new(
                     HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null),
-                Variant: new VariantInfo(
+                Variant: new(
                     DiagName: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
                     FullName: type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
@@ -96,7 +97,9 @@ namespace dotVariant.Generator
                     Keyword: desc.Syntax.Keyword.Text,
                     Namespace: ns,
                     Name: type.Name,
-                    Nullability: type.IsReferenceType ? "nullable" : "nonnull"));
+                    Nullability: type.IsReferenceType ? "nullable" : "nonnull",
+                    UserDefined: new(
+                        Dispose: Inspect.ImplementsDispose(type, compilation))));
         }
 
         private static string? ExtensionsAccessibility(ITypeSymbol type)
@@ -204,7 +207,19 @@ namespace dotVariant.Generator
             /// <c>"nonnull"</c> or <c>"nullable"</c>. For a class this determines if certain public methods need nullability annotations.
             /// Always <c>"nonnull"</c> for a value type.
             /// </summary>
-            string Nullability);
+            string Nullability,
+            /// <summary>
+            /// Contains info about relevant members the user has defined.
+            /// </summary>
+            VariantInfo.UserDefinitions UserDefined)
+        {
+            public sealed record UserDefinitions(
+                /// <summary>
+                /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
+                /// </summary>
+                bool Dispose);
+        }
+
 
         public sealed record ParamInfo(
             /// <summary>
@@ -227,6 +242,10 @@ namespace dotVariant.Generator
             /// <see langword="true"/> if this is an object type (or generic with class constraint).
             /// </summary>
             bool IsClass,
+            /// <summary>
+            /// <see langword="true"/> if this type implements <see cref="IDisposable"/>.
+            /// </summary>
+            bool IsDisposable,
             /// <summary>
             /// The fully qualified name of the type. Never contains a nullability annotation.
             /// </summary>
