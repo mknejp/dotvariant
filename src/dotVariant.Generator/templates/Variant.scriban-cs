@@ -76,10 +76,6 @@ func coalesce_ToString(type, expression)
     end
 end
 
-func storage(param)
-    ret "_x._" + param.Index + ".Value"
-end
-
 func param_hint(param)
     ret param.Hint
 end
@@ -105,6 +101,15 @@ func throw_InvalidOperation(expected, actual)
     ret "throw new global::System.InvalidOperationException(" + $msg + ")"
 end
 
+storage_type = "global::dotVariant._G." + (Variant.Namespace ? (Variant.Namespace + ".") : "") + Variant.Name
+func get_value(param, expression = "_variant")
+    ret "((" + storage_type + "_" + param.Index + ")" + expression + ").Value"
+end
+
+func get_n(expression = "_variant")
+    ret "((" + storage_type + "_N)" + expression + ").N"
+end
+
 func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Hint; end) | array.join ", "
 action_params = Params | array.each @(do; ret (action_type $0) + " " + $0.Hint; end) | array.join ", "
 method_modifiers = !Variant.IsClass && Language.Version >= 800 ? "readonly " : ""
@@ -112,12 +117,20 @@ param_modifiers = !Variant.IsClass && Variant.IsReadonly && Language.Version >= 
 global_nullable = emit_nullability ? "?" : ""
 global_forgive = emit_nullability ? "!" : ""
 needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0
+empty_exception = "new global::System.InvalidOperationException(\"" + Variant.Name + " is empty.\")"
+corrupt_exception = "new global::System.InvalidOperationException(\"" + Variant.Name + " has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant\")"
 
+readonly storage_type
+readonly get_value
 readonly func_params
 readonly action_params
 readonly method_modifiers
 readonly param_modifiers
 readonly global_nullable
+readonly global_forgive
+readonly needs_dispose
+readonly empty_exception
+readonly corrupt_string
 ~}}
 {{~ if Language.Version >= 800 ~}}
 #nullable {{ Language.Nullable }}
@@ -136,392 +149,7 @@ namespace {{ Variant.Namespace }}
         {{~ end ~}}
     {
         [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly _VariantStorage _variant;
-
-        private sealed class _VariantTypeProxy
-        {
-            public object{{ global_nullable }} Value { get; }
-            public _VariantTypeProxy({{ Variant.Name }} v)
-            {
-                Value = v._variant.AsObject;
-                {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
-                VariantOf({{ Params | array.each @(do; ret forgive $0 "default"; end) | array.join ", " }});
-            }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct _VariantStorage
-        {{~ if needs_dispose ~}}
-            : global::System.IDisposable
-        {{~ end ~}}
-        {
-            private readonly int _n;
-            private readonly Union _x;
-            {{~ ##
-            Variant tries to use as little space as possible by using an Explicit layout
-            for its possible option types. Because Variant is a sum type there can only
-            ever be a single "active" field, i.e. holding real data.
-
-            This means we can use explicit layout and overlap those types onto the same
-            area of memory. There is only one restriction that we must adhere to:
-
-                An unmanaged field and a reference field cannot occupiy the same space.
-
-            To ensure this the CLR switches the layout of structs containing reference
-            fields from the default "Sequential" to "Auto" and seems to separate all
-            reference fields from unmanaged fields. Let's look at this with a concrete
-            example:
-
-            struct A { public IntPtr i; public IntPtr j; }
-            struct B { public object o; public IntPtr x; }
-
-            Have a look at the memory layout of
-
-            [StructLayout(LayoutKind.Explicit)]
-            class Variant { [FieldOffset(0)] public A a; [FieldOffset(0)] public B b; }
-
-            +--------+-----------------+
-            | offset | Variant         |
-            +--------+-----------------+
-            |        | +-----+ +-----+ |
-            |      0 | | A.i | | B.o | | <- ERROR: TypeLoadException
-            |        | +-----+ +-----+ |
-            |      8 | | A.j | | B.x | |
-            |        | +-----+ +-----+ |
-            +--------+-----------------+
-
-            The line marked above shows how an object reference (B.o) is now sharing
-            space with an unmanaged type (A.i). Trying to load this type will trigger a
-            TypeLoadException saying Variant "contains an object field at offset 0
-            that is incorrectly aligned or overlapped by a non-object field".
-
-            The way we fix this is by wrapping A in a new struct and adding an object reference
-            to it:
-
-            struct WrapA { public A a; public object o; }
-
-            [StructLayout(LayoutKind.Explicit)]
-            class Variant { [FieldOffset(0)] private WrapA a; [FieldOffset(0)] private B b; }
-
-            Leading to this layout:
-
-            +--------+---------------------------+
-            | offset | Variant                   |
-            +--------+---------------------------+
-            |        | +---------------+ +-----+ |
-            |      0 | | WrapA.o       | | B.o | | <- OK
-            |        | +---------------+ |     | |
-            |        | | +-----------+ | +-----+ |
-            |      8 | | | WrapA.a.i | | | B.x | |
-            |        | | +-----------+ | +-----+ |
-            |     16 | | | WrapA.a.j | |         |
-            |        | | +-----------+ |         |
-            |        | +---------------+         |
-            +------------------------------------+
-
-            This layout no longer causes exceptions and can be loaded but at the cost
-            of extra memory consumption and unused "dummy" fields.
-
-            We still have one issue though: where do we put the discriminator (the
-            integer telling us which value is "active" in the Variant)? It needs to
-            always be at the same memory location regardless of the currently active
-            type. We also cannot force it to offset 0 because that's where the managed
-            types will go. The solution here is an extra level of indirection:
-
-                Put all the WrapX types inside a new struct with the explicit layout
-                and leave the discriminator integer outside:
-
-            [StructLayout(LayoutKind.Explicit)]
-            struct Values
-            {
-                [FieldOffset(0)] public WrapA a;
-                [FieldOffset(0)] public WrapB b;
-                ...
-                [FieldOffset(0)] public WrapN n;
-            }
-
-            class Variant { private int discriminator; private Values values; }
-
-            +--------+-------------------------------------+
-            | offset | Variant                             |
-            +--------+-------------------------------------+
-            |      0 | discriminator                       |
-            +--------+-------------------------------------+
-            |        | values                              |
-            |        | +---------------------------------+ |
-            |        | | +---------------+ +-----------+ | |
-            |      8 | | | WrapA.o       | | WrapB.b.o | | |
-            |        | | +---------------+ |           | | |
-            |        | | | +-----------+ | +-----------+ | |
-            |     16 | | | | WrapA.a.i | | | WrapB.b.x | | |
-            |        | | | +-----------+ | +-----------+ | |
-            |     24 | | | | WrapA.a.j | |               | |
-            |        | | | +-----------+ |               | |
-            |        | | +---------------+               | |
-            |        | +---------------------------------+ |
-            +--------+-------------------------------------+
-
-            While this results in some overhead, as the Variant's size is
-            the sum of max(object fields) + max(non-object fields) for all
-            possible values it can hold, it allows for the elision of boxing
-            for value types and still consumes *much* less memory than if
-            it had to store all values side-by-side.
-            ## ~}}
-
-            {{~ ## STORAGE CONSTRUCTORS ## ~}}
-            {{~ for $p in Params ~}}
-            public _VariantStorage({{ value_type $p }} {{ $p.Hint }})
-            {
-                _n = {{ $p.Index }};
-                _x = new Union({{ $p.Hint }});
-            }
-            {{~ end ~}}
-
-            {{~ if needs_dispose ~}}
-            public void Dispose()
-            {
-                switch (_n)
-                {
-                    case 0:
-                        break;
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        {{~ if $p.IsDisposable ~}}
-                        {{ coalesce $p ("_x._" + $p.Index + ".Value") ".Dispose()" }};
-                        {{~ end ~}}
-                        break;
-                    {{~ end ~}}
-                    default:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-
-                }
-            }
-            {{~ end ~}}
-
-            {{~ ## UNION TYPE ## ~}}
-            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-            [global::System.Diagnostics.DebuggerNonUserCode]
-            private readonly struct Union
-            {
-                {{~ ## UNION MEMBERS ## ~}}
-                {{~ for $p in Params ~}}
-                [global::System.Runtime.InteropServices.FieldOffset(0)]
-                public readonly Union{{ $p.Index }} _{{ $p.Index }};
-                {{~ end ~}}
-
-                {{~ ## UNION CONSTRUCTORS ## ~}}
-                {{~ for $p in Params ~}}
-                public Union({{ value_type $p }} value)
-                {
-                    {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
-                    _{{ $other.Index }} = default;
-                    {{~ end ~}}
-                    _{{ $p.Index }} = new Union{{ $p.Index }}(value);
-                }
-                {{~ end ~}}
-
-                {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
-                {{~ for $p in Params ~}}
-                [global::System.Diagnostics.DebuggerNonUserCode]
-                public readonly struct Union{{ $p.Index }}
-                {
-                    public readonly {{ value_type $p }} Value;
-                    {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-                    public readonly object _dummy{{ $dummy }};
-                    {{~ end ~}}
-
-                    public Union{{ $p.Index }}({{ value_type $p }} value)
-                    {
-                        {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-                        _dummy{{ $dummy }} = null{{ global_forgive }};
-                        {{~ end ~}}
-                        Value = value;
-                    }
-                }
-                {{~ end ~}}
-            }
-
-            {{~ ## UNION IsEmpty ## ~}}
-            public bool IsEmpty => _n == 0;
-
-            {{~ ## UNION TypeString ## ~}}
-            public string TypeString
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return "<empty>";
-                        {{~ for $p in Params ~}}
-                        case {{ $p.Index }}:
-                            return "{{ $p.DiagName }}";
-                        {{~ end ~}}
-                        default:
-                            throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                    }
-                }
-            }
-
-            {{~ ## UNION ValueString ## ~}}
-            public string ValueString
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return "";
-                        {{~ for $p in Params ~}}
-                        case {{ $p.Index }}:
-                            return {{ coalesce_ToString $p (storage $p) }};
-                        {{~ end ~}}
-                        default:
-                            throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                    }
-                }
-            }
-
-            {{~ ## UNION AsObject ## ~}}
-            public object{{ global_nullable }} AsObject
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return null;
-                        {{~ for $p in Params ~}}
-                        case {{ $p.Index }}:
-                            return {{ storage $p }};
-                        {{~ end ~}}
-                        default:
-                            throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                    }
-                }
-            }
-
-            {{~ ## UNION Equals ## ~}}
-            public bool Equals(in _VariantStorage other)
-            {
-                if (_n != other._n)
-                {
-                    return false;
-                }
-                switch (_n)
-                {
-                    case 0:
-                        return true;
-                    {{~ for $p in Params ~}}
-                    {{~ $i = $p.Index ~}}
-                    case {{ $i }}:
-                        return global::System.Collections.Generic.EqualityComparer<{{ $p.Name }}>.Default.Equals({{ storage $p }}, other.{{ storage $p }});
-                    {{~ end ~}}
-                    default:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                }
-            }
-
-            {{~ ## UNION GetHashCode ## ~}}
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return 0;
-                        {{~ for $p in Params ~}}
-                        {{~ $i = $p.Index ~}}
-                        case {{ $i }}:
-                            {{~ if Runtime.HasHashCode ~}}
-                            return global::System.HashCode.Combine({{ storage $p }});
-                            {{~ else ~}}
-                            return {{ coalesce $p (storage $p) ".GetHashCode()" "0"}};
-                            {{~ end ~}}
-                        {{~ end ~}}
-                        default:
-                            throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                    }
-                }
-            }
-
-            {{~ ## UNION TryMatch ## ~}}
-            {{~ for $p in Params ~}}
-            public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
-            {
-                {{ $p.Hint }} = _n == {{ $p.Index }} ? {{ storage $p }} : default;
-                return _n == {{ $p.Index }};
-            }
-            {{~ end ~}}
-
-            {{~ ## UNION Visit(Action) ## ~}}
-            public void Visit({{ action_params }}, global::System.Action _)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        _();
-                        break;
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        {{ $p.Hint }}({{ storage $p }});
-                        break;
-                    {{~ end ~}}
-                    default:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                }
-            }
-
-            {{~ ## UNION Visit(Action) ## ~}}
-            public void Visit({{ action_params }})
-            {
-                switch (_n)
-                {
-                    case 0:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        {{ $p.Hint }}({{ storage $p }});
-                        break;
-                    {{~ end ~}}
-                    default:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                }
-            }
-
-            {{~ ## UNION Visit(Func) ## ~}}
-            public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        return _();
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        return {{ $p.Hint }}({{ storage $p }});
-                    {{~ end ~}}
-                    default:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                }
-            }
-
-            {{~ ## UNION Visit(Func) ## ~}}
-            public TResult Visit<TResult>({{ func_params }})
-            {
-                switch (_n)
-                {
-                    case 0:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        return {{ $p.Hint }}({{ storage $p }});
-                    {{~ end ~}}
-                    default:
-                        throw new global::System.InvalidOperationException("{{ Variant.Name }} is in a corrupted state.");
-                }
-            }
-        }
+        private readonly {{ storage_type }} _variant;
 
         {{~ ## VARIANT CONSTRUCTORS ## ~}}
         {{~ for $p in Params ~}}
@@ -530,7 +158,7 @@ namespace {{ Variant.Namespace }}
         /// </summary>
         /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
         public {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
-            => _variant = new _VariantStorage({{ $p.Hint }});
+            => _variant = new {{ storage_type }}({{ $p.Hint }});
         {{~ end ~}}
 
         {{~ ## IMPLICIT CONVERSIONS ## ~}}
@@ -609,7 +237,11 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ $p.Name }}"/></exception>
         public {{ method_modifiers }}void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.Hint }})
         {
-            if (!_variant.TryMatch(out {{ forgive $p $p.Hint }}))
+            if ({{ get_n }} == {{ $p.Index }})
+            {
+                {{ $p.Hint }} = {{ get_value $p }};
+            }
+            else
             {
                 {{ throw_InvalidOperation $p.DiagName "{_variant.TypeString}" }};
             }
@@ -624,7 +256,18 @@ namespace {{ Variant.Namespace }}
         /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
         /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ $p.Name }}"/>.</returns>
         public {{ method_modifiers }}bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
-            => _variant.TryMatch(out {{ $p.Hint }});
+        {
+            if ({{ get_n }} == {{ $p.Index }})
+            {
+                {{ $p.Hint }} = {{ get_value $p }};
+                return true;
+            }
+            else
+            {
+                {{ $p.Hint }} = default;
+                return false;
+            }
+        }
         {{~ end ~}}
 
         {{~ ## VARIANT TryMatch(Action<T>) ## ~}}
@@ -637,12 +280,15 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.Hint }})
         {
-            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            if ({{ get_n }} == {{ $p.Index }})
             {
-                {{ $p.Hint }}({{ forgive $p "_value" }});
+                {{ $p.Hint }}({{ get_value $p }});
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
         {{~ end ~}}
 
@@ -657,9 +303,9 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Hint }})
         {
-            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            if ({{ get_n }} == {{ $p.Index }})
             {
-                {{ $p.Hint }}({{ forgive $p "_value" }});
+                {{ $p.Hint }}({{ get_value $p }});
             }
             else
             {
@@ -679,9 +325,9 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
         public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Hint }}, global::System.Action _)
         {
-            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            if ({{ get_n }} == {{ $p.Index }})
             {
-                {{ $p.Hint }}({{ forgive $p "_value" }});
+                {{ $p.Hint }}({{ get_value $p }});
             }
             else
             {
@@ -702,9 +348,9 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }})
         {
-            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            if ({{ get_n }} == {{ $p.Index }})
             {
-                return {{ $p.Hint }}({{ forgive $p "_value" }});
+                return {{ $p.Hint }}({{ get_value $p }});
             }
             else
             {
@@ -725,9 +371,9 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="other"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, TResult _)
         {
-            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            if ({{ get_n }} == {{ $p.Index }})
             {
-                return {{ $p.Hint }}({{ forgive $p "_value" }});
+                return {{ $p.Hint }}({{ get_value $p }});
             }
             else
             {
@@ -747,9 +393,9 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, global::System.Func<TResult> _)
         {
-            if (_variant.TryMatch(out {{ outref_type $p }} _value))
+            if ({{ get_n }} == {{ $p.Index }})
             {
-                return {{ $p.Hint }}({{ forgive $p "_value" }});
+                return {{ $p.Hint }}({{ get_value $p }});
             }
             else
             {
@@ -769,7 +415,20 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public {{ method_modifiers }}void Visit({{ action_params }})
-            => _variant.Visit({{ Params | array.each @param_hint | array.join ", " }});
+        {
+            switch ({{ get_n }})
+            {
+                case 0:
+                    throw {{ empty_exception }};
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{ $p.Hint }}({{ get_value $p }});
+                    break;
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
 
         {{~ ## VARIANT Visit(Action<A>, Action<B>, ..., empty) ## ~}}
         /// <summary>
@@ -782,7 +441,21 @@ namespace {{ Variant.Namespace }}
         /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public {{ method_modifiers }}void Visit({{ action_params }}, global::System.Action _)
-            => _variant.Visit({{ Params | array.each @param_hint | array.join ", "  }}, _);
+        {
+            switch ({{ get_n }})
+            {
+                case 0:
+                    _();
+                    break;
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{ $p.Hint }}({{ get_value $p }});
+                    break;
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
 
         {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ...) ## ~}}
         /// <summary>
@@ -796,7 +469,19 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public {{ method_modifiers }}TResult Visit<TResult>({{ func_params }})
-            => _variant.Visit({{ Params | array.each @param_hint | array.join ", "  }});
+        {
+            switch ({{ get_n }})
+            {
+                case 0:
+                    throw {{ empty_exception }};
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ $p.Hint }}({{ get_value $p }});
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
 
         {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
         /// <summary>
@@ -810,146 +495,43 @@ namespace {{ Variant.Namespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public {{ method_modifiers }}TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
-            => _variant.Visit({{ Params | array.each @param_hint | array.join ", "  }}, _);
+        {
+            switch ({{ get_n }})
+            {
+                case 0:
+                    return _();
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ $p.Hint }}({{ get_value $p }});
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+
+        private sealed class _VariantTypeProxy
+        {
+            public object{{ global_nullable }} Value { get; }
+            public _VariantTypeProxy({{ Variant.Name }} v)
+            {
+                Value = v._variant.AsObject;
+                {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
+                VariantOf({{ Params | array.each @(do; ret forgive $0 "default"; end) | array.join ", " }});
+            }
+        }
+
+        {{~ ## INTERNAL ACCESS ## ~}}
+        public static explicit operator {{ storage_type }}_N({{ Variant.Name }} v) => ({{ storage_type }}_N)v._variant;
+        {{~ for $p in Params ~}}
+        public static explicit operator {{ storage_type }}_{{ $p.Index }}({{ Variant.Name }} v) => ({{ storage_type }}_{{ $p.Index }})v._variant;
+        {{~ end ~}}
     }
 {{~ if Variant.Namespace ~}}
 }
 {{~ end ~}}
 
+{{ include "Union" }}
+
 {{~ if Variant.ExtensionsAccessibility ~}}
-{{~ if Options.ExtensionClassNamespace ~}}
-namespace {{ Options.ExtensionClassNamespace }}
-{
-{{~ end ~}}
-    {{ Variant.ExtensionsAccessibility }} static partial class _{{ Variant.Name }}_Ex
-    {
-        {{~ ## Match(IEnumerable<V>, Func<A, R>) ## ~}}
-        {{~ for $p in Params ~}}
-        /// <summary>
-        /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="{{ $p.Name }}"/> and dropping all others.
-        /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
-        /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
-        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
-        public static global::System.Collections.Generic.IEnumerable<TResult>
-            Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<{{ Variant.FullName }}> source,
-                {{ func_type $p }} {{ $p.Hint }})
-        {
-            foreach (var variant in source)
-            {
-                if (variant.TryMatch(out {{ outref_type $p }} value))
-                {
-                    yield return {{ $p.Hint }}(value);
-                }
-            }
-        }
-        {{~ end ~}}
-
-        {{~ ## Match(IEnumerable<V>, Func<A, R>, R) ## ~}}
-        {{~ for $p in Params ~}}
-        /// <summary>
-        /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="{{ $p.Name }}"/> and replacing all others by a fallback value.
-        /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
-        /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
-        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
-        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
-        public static global::System.Collections.Generic.IEnumerable<TResult>
-            Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<{{ Variant.FullName }}> source,
-                {{ func_type $p }} {{ $p.Hint }},
-                TResult _)
-        {
-            foreach (var variant in source)
-            {
-                yield return variant.Match({{ $p.Hint }}, _);
-            }
-        }
-        {{~ end ~}}
-
-        {{~ ## Match(IEnumerable<V>, Func<A, R>, Func<R>) ## ~}}
-        {{~ for $p in Params ~}}
-        /// <summary>
-        /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="{{ $p.Name }}"/> and replacing all others with the result of a fallback selector.
-        /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
-        /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
-        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
-        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
-        public static global::System.Collections.Generic.IEnumerable<TResult>
-            Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<{{ Variant.FullName }}> source,
-                {{ func_type $p }} {{ $p.Hint }},
-                global::System.Func<TResult> _)
-        {
-            foreach (var variant in source)
-            {
-                yield return variant.Match({{ $p.Hint }}, _);
-            }
-        }
-        {{~ end ~}}
-
-        {{~ ## Visit(IEnumerable<V>, Func<A, R>, Func<B, R>, ...) ## ~}}
-        /// <summary>
-        /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to each element
-        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException">
-        /// if an element is empty.
-        /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
-        {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
-        {{~ end ~}}
-        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
-        /// <exception cref="global::System.InvalidOperationException">The sequence encountered an empty {{ Variant.Name }}.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
-        public static global::System.Collections.Generic.IEnumerable<TResult>
-            Visit<TResult>(
-                this global::System.Collections.Generic.IEnumerable<{{ Variant.FullName }}> source,
-                {{ func_params }})
-        {
-            foreach (var variant in source)
-            {
-                yield return variant.Visit({{ Params | array.each @param_hint | array.join ", "  }});
-            }
-        }
-
-        {{~ ## Visit(IEnumerable<V>, Func<A, R>, Func<B, R>, ..., empty) ## ~}}
-        /// <summary>
-        /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to each element
-        /// wich matches the type stored within the value, and replacing empty elements with the result of a fallback selector.
-        /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
-        {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
-        {{~ end ~}}
-        /// <param name="_">The delegate to invoke if an element is empty.</param>
-        /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
-        public static global::System.Collections.Generic.IEnumerable<TResult>
-            Visit<TResult>(
-                this global::System.Collections.Generic.IEnumerable<{{ Variant.FullName }}> source,
-                {{ func_params }},
-                global::System.Func<TResult> _)
-        {
-            foreach (var variant in source)
-            {
-                yield return variant.Visit({{ Params | array.each @param_hint | array.join ", "  }}, _);
-            }
-        }
-    }
-{{~ if Options.ExtensionClassNamespace ~}}
-}
-{{~ end ~}}
+{{~ include "IEnumerable" ~}}
 {{~ end ~}}

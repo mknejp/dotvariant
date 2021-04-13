@@ -1,0 +1,399 @@
+{{~
+# Copyright Miro Knejp 2021.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+~}}
+{{~ ##
+Variant tries to use as little space as possible by using an Explicit layout
+for its possible option types. Because Variant is a sum type there can only
+ever be a single "active" field, i.e. holding real data.
+
+This means we can use explicit layout and overlap those types onto the same
+area of memory. There is only one restriction that we must adhere to:
+
+    An unmanaged field and a reference field cannot occupiy the same space.
+
+To ensure this the CLR switches the layout of structs containing reference
+fields from the default "Sequential" to "Auto" and seems to separate all
+reference fields from unmanaged fields. Let's look at this with a concrete
+example:
+
+struct A { public IntPtr i; public IntPtr j; }
+struct B { public object o; public IntPtr x; }
+
+Have a look at the memory layout of
+
+[StructLayout(LayoutKind.Explicit)]
+class Variant { [FieldOffset(0)] public A a; [FieldOffset(0)] public B b; }
+
++--------+-----------------+
+| offset | Variant         |
++--------+-----------------+
+|        | +-----+ +-----+ |
+|      0 | | A.i | | B.o | | <- ERROR: TypeLoadException
+|        | +-----+ +-----+ |
+|      8 | | A.j | | B.x | |
+|        | +-----+ +-----+ |
++--------+-----------------+
+
+The line marked above shows how an object reference (B.o) is now sharing
+space with an unmanaged type (A.i). Trying to load this type will trigger a
+TypeLoadException saying Variant "contains an object field at offset 0
+that is incorrectly aligned or overlapped by a non-object field".
+
+The way we fix this is by wrapping A in a new struct and adding an object reference
+to it:
+
+struct WrapA { public A a; public object o; }
+
+[StructLayout(LayoutKind.Explicit)]
+class Variant { [FieldOffset(0)] private WrapA a; [FieldOffset(0)] private B b; }
+
+Leading to this layout:
+
++--------+---------------------------+
+| offset | Variant                   |
++--------+---------------------------+
+|        | +---------------+ +-----+ |
+|      0 | | WrapA.o       | | B.o | | <- OK
+|        | +---------------+ |     | |
+|        | | +-----------+ | +-----+ |
+|      8 | | | WrapA.a.i | | | B.x | |
+|        | | +-----------+ | +-----+ |
+|     16 | | | WrapA.a.j | |         |
+|        | | +-----------+ |         |
+|        | +---------------+         |
++------------------------------------+
+
+This layout no longer causes exceptions and can be loaded but at the cost
+of extra memory consumption and unused "dummy" fields.
+
+We still have one issue though: where do we put the discriminator (the
+integer telling us which value is "active" in the Variant)? It needs to
+always be at the same memory location regardless of the currently active
+type. We also cannot force it to offset 0 because that's where the managed
+types will go. The solution here is an extra level of indirection:
+
+    Put all the WrapX types inside a new struct with the explicit layout
+    and leave the discriminator integer outside:
+
+[StructLayout(LayoutKind.Explicit)]
+struct Values
+{
+    [FieldOffset(0)] public WrapA a;
+    [FieldOffset(0)] public WrapB b;
+    ...
+    [FieldOffset(0)] public WrapN n;
+}
+
+class Variant { private int discriminator; private Values values; }
+
++--------+-------------------------------------+
+| offset | Variant                             |
++--------+-------------------------------------+
+|      0 | discriminator                       |
++--------+-------------------------------------+
+|        | values                              |
+|        | +---------------------------------+ |
+|        | | +---------------+ +-----------+ | |
+|      8 | | | WrapA.o       | | WrapB.b.o | | |
+|        | | +---------------+ |           | | |
+|        | | | +-----------+ | +-----------+ | |
+|     16 | | | | WrapA.a.i | | | WrapB.b.x | | |
+|        | | | +-----------+ | +-----------+ | |
+|     24 | | | | WrapA.a.j | |               | |
+|        | | | +-----------+ |               | |
+|        | | +---------------+               | |
+|        | +---------------------------------+ |
++--------+-------------------------------------+
+
+While this results in some overhead, as the Variant's size is
+the sum of max(object fields) + max(non-object fields) for all
+possible values it can hold, it allows for the elision of boxing
+for value types and still consumes *much* less memory than if
+it had to store all values side-by-side.
+## ~}}
+{{~
+func $storage(param)
+    ret "_x._" + param.Index + ".Value"
+end
+~}}
+{{~ ## STORAGE WRAPPER ## ~}}
+namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
+{
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct {{ Variant.Name }}
+    {{~ if needs_dispose ~}}
+        : global::System.IDisposable
+    {{~ end ~}}
+    {
+        private readonly {{ Variant.Name }}_Union _x;
+        private readonly uint _n;
+
+        {{~ ## STORAGE CONSTRUCTORS ## ~}}
+        {{~ for $p in Params ~}}
+        public {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
+        {
+            _n = {{ $p.Index }};
+            _x = new {{ Variant.Name }}_Union({{ $p.Hint }});
+        }
+        {{~ end ~}}
+
+        {{~ if needs_dispose ~}}
+        public void Dispose()
+        {
+            switch (_n)
+            {
+                case 0:
+                    break;
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{~ if $p.IsDisposable ~}}
+                    {{ coalesce $p ($storage $p) ".Dispose()" }};
+                    {{~ end ~}}
+                    break;
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+        {{~ end ~}}
+
+        {{~ ## INTERNAL ACCESS ## ~}}
+        public static explicit operator {{ Variant.Name }}_N({{ Variant.Name }} v) => new {{ Variant.Name }}_N(v._n);
+        {{~ for $p in Params ~}}
+        public static explicit operator {{ Variant.Name }}_{{ $p.Index }}({{ Variant.Name }} v) => v._x._{{ $p.Index }};
+        {{~ end ~}}
+
+        {{~ ## UNION IsEmpty ## ~}}
+        public bool IsEmpty => _n == 0;
+
+        {{~ ## UNION TypeString ## ~}}
+        public string TypeString
+        {
+            get
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return "<empty>";
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return "{{ $p.DiagName }}";
+                    {{~ end ~}}
+                    default:
+                        throw {{ corrupt_exception }};
+                }
+            }
+        }
+
+        {{~ ## UNION ValueString ## ~}}
+        public string ValueString
+        {
+            get
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return "";
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return {{ coalesce_ToString $p ($storage $p) }};
+                    {{~ end ~}}
+                    default:
+                        throw {{ corrupt_exception }};
+                }
+            }
+        }
+
+        {{~ ## UNION AsObject ## ~}}
+        public object{{ global_nullable }} AsObject
+        {
+            get
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return null;
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return {{ $storage $p }};
+                    {{~ end ~}}
+                    default:
+                        throw {{ corrupt_exception }};
+                }
+            }
+        }
+
+        {{~ ## UNION Equals ## ~}}
+        public bool Equals(in {{ Variant.Name }} other)
+        {
+            if (_n != other._n)
+            {
+                return false;
+            }
+            switch (_n)
+            {
+                case 0:
+                    return true;
+                {{~ for $p in Params ~}}
+                {{~ $i = $p.Index ~}}
+                case {{ $i }}:
+                    return global::System.Collections.Generic.EqualityComparer<{{ $p.Name }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+
+        {{~ ## UNION GetHashCode ## ~}}
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return 0;
+                    {{~ for $p in Params ~}}
+                    {{~ $i = $p.Index ~}}
+                    case {{ $i }}:
+                        {{~ if Runtime.HasHashCode ~}}
+                        return global::System.HashCode.Combine({{ $storage $p }});
+                        {{~ else ~}}
+                        return {{ coalesce $p ($storage $p) ".GetHashCode()" "0"}};
+                        {{~ end ~}}
+                    {{~ end ~}}
+                    default:
+                        throw {{ corrupt_exception }};
+                }
+            }
+        }
+
+        {{~ ## UNION TryMatch ## ~}}
+        {{~ for $p in Params ~}}
+        public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
+        {
+            {{ $p.Hint }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
+            return _n == {{ $p.Index }};
+        }
+        {{~ end ~}}
+
+        {{~ ## UNION Visit(Action) ## ~}}
+        public void Visit({{ action_params }}, global::System.Action _)
+        {
+            switch (_n)
+            {
+                case 0:
+                    _();
+                    break;
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{ $p.Hint }}({{ $storage $p }});
+                    break;
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+
+        {{~ ## UNION Visit(Action) ## ~}}
+        public void Visit({{ action_params }})
+        {
+            switch (_n)
+            {
+                case 0:
+                    throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{ $p.Hint }}({{ $storage $p }});
+                    break;
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+
+        {{~ ## UNION Visit(Func) ## ~}}
+        public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
+        {
+            switch (_n)
+            {
+                case 0:
+                    return _();
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ $p.Hint }}({{ $storage $p }});
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+
+        {{~ ## UNION Visit(Func) ## ~}}
+        public TResult Visit<TResult>({{ func_params }})
+        {
+            switch (_n)
+            {
+                case 0:
+                    throw {{ empty_exception }};
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ $p.Hint }}({{ $storage $p }});
+                {{~ end ~}}
+                default:
+                    throw {{ corrupt_exception }};
+            }
+        }
+    }
+
+    {{~ ## DISCRIMINATOR COVERTER ## ~}}
+    internal readonly ref struct {{ Variant.Name }}_N
+    {
+        public readonly uint N;
+        public {{ Variant.Name }}_N(uint n) => N = n;
+    }
+
+    {{~ ## UNION TYPE ## ~}}
+    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct {{ Variant.Name }}_Union
+    {
+        {{~ ## UNION MEMBERS ## ~}}
+        {{~ for $p in Params ~}}
+        [global::System.Runtime.InteropServices.FieldOffset(0)]
+        public readonly {{ Variant.Name }}_{{ $p.Index }} _{{ $p.Index }};
+        {{~ end ~}}
+
+        {{~ ## UNION CONSTRUCTORS ## ~}}
+        {{~ for $p in Params ~}}
+        public {{ Variant.Name }}_Union({{ value_type $p }} value)
+        {
+            {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
+            _{{ $other.Index }} = default;
+            {{~ end ~}}
+            _{{ $p.Index }} = new {{ Variant.Name }}_{{ $p.Index }}(value);
+        }
+        {{~ end ~}}
+    }
+
+    {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
+    {{~ for $p in Params ~}}
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct {{ Variant.Name }}_{{ $p.Index }}
+    {
+        public readonly {{ value_type $p }} Value;
+        {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+        public readonly object _dummy{{ $dummy }};
+        {{~ end ~}}
+
+        public {{ Variant.Name }}_{{ $p.Index }}({{ value_type $p }} value)
+        {
+            {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+            _dummy{{ $dummy }} = null{{ global_forgive }};
+            {{~ end ~}}
+            Value = value;
+        }
+    }
+    {{~ end ~}}
+}

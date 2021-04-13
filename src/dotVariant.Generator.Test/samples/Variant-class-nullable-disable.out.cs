@@ -14,320 +14,26 @@ namespace Foo
         : global::System.IEquatable<Variant_class_nullable_disable>
     {
         [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly _VariantStorage _variant;
-
-        private sealed class _VariantTypeProxy
-        {
-            public object Value { get; }
-            public _VariantTypeProxy(Variant_class_nullable_disable v)
-            {
-                Value = v._variant.AsObject;
-                VariantOf(default, default, default);
-            }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct _VariantStorage
-        {
-            private readonly int _n;
-            private readonly Union _x;
-
-            public _VariantStorage(int i)
-            {
-                _n = 1;
-                _x = new Union(i);
-            }
-            public _VariantStorage(float f)
-            {
-                _n = 2;
-                _x = new Union(f);
-            }
-            public _VariantStorage(string s)
-            {
-                _n = 3;
-                _x = new Union(s);
-            }
-
-
-            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-            [global::System.Diagnostics.DebuggerNonUserCode]
-            private readonly struct Union
-            {
-                [global::System.Runtime.InteropServices.FieldOffset(0)]
-                public readonly Union1 _1;
-                [global::System.Runtime.InteropServices.FieldOffset(0)]
-                public readonly Union2 _2;
-                [global::System.Runtime.InteropServices.FieldOffset(0)]
-                public readonly Union3 _3;
-
-                public Union(int value)
-                {
-                    _2 = default;
-                    _3 = default;
-                    _1 = new Union1(value);
-                }
-                public Union(float value)
-                {
-                    _1 = default;
-                    _3 = default;
-                    _2 = new Union2(value);
-                }
-                public Union(string value)
-                {
-                    _1 = default;
-                    _2 = default;
-                    _3 = new Union3(value);
-                }
-
-                [global::System.Diagnostics.DebuggerNonUserCode]
-                public readonly struct Union1
-                {
-                    public readonly int Value;
-                    public readonly object _dummy1;
-
-                    public Union1(int value)
-                    {
-                        _dummy1 = null;
-                        Value = value;
-                    }
-                }
-                [global::System.Diagnostics.DebuggerNonUserCode]
-                public readonly struct Union2
-                {
-                    public readonly float Value;
-                    public readonly object _dummy1;
-
-                    public Union2(float value)
-                    {
-                        _dummy1 = null;
-                        Value = value;
-                    }
-                }
-                [global::System.Diagnostics.DebuggerNonUserCode]
-                public readonly struct Union3
-                {
-                    public readonly string Value;
-
-                    public Union3(string value)
-                    {
-                        Value = value;
-                    }
-                }
-            }
-
-            public bool IsEmpty => _n == 0;
-
-            public string TypeString
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return "<empty>";
-                        case 1:
-                            return "int";
-                        case 2:
-                            return "float";
-                        case 3:
-                            return "string";
-                        default:
-                            throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                    }
-                }
-            }
-
-            public string ValueString
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return "";
-                        case 1:
-                            return _x._1.Value.ToString();
-                        case 2:
-                            return _x._2.Value.ToString();
-                        case 3:
-                            return _x._3.Value?.ToString() ?? "null";
-                        default:
-                            throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                    }
-                }
-            }
-
-            public object AsObject
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return null;
-                        case 1:
-                            return _x._1.Value;
-                        case 2:
-                            return _x._2.Value;
-                        case 3:
-                            return _x._3.Value;
-                        default:
-                            throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                    }
-                }
-            }
-
-            public bool Equals(in _VariantStorage other)
-            {
-                if (_n != other._n)
-                {
-                    return false;
-                }
-                switch (_n)
-                {
-                    case 0:
-                        return true;
-                    case 1:
-                        return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
-                    case 2:
-                        return global::System.Collections.Generic.EqualityComparer<float>.Default.Equals(_x._2.Value, other._x._2.Value);
-                    case 3:
-                        return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._3.Value, other._x._3.Value);
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                }
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return 0;
-                        case 1:
-                            return global::System.HashCode.Combine(_x._1.Value);
-                        case 2:
-                            return global::System.HashCode.Combine(_x._2.Value);
-                        case 3:
-                            return global::System.HashCode.Combine(_x._3.Value);
-                        default:
-                            throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                    }
-                }
-            }
-
-            public bool TryMatch(out int i)
-            {
-                i = _n == 1 ? _x._1.Value : default;
-                return _n == 1;
-            }
-            public bool TryMatch(out float f)
-            {
-                f = _n == 2 ? _x._2.Value : default;
-                return _n == 2;
-            }
-            public bool TryMatch(out string s)
-            {
-                s = _n == 3 ? _x._3.Value : default;
-                return _n == 3;
-            }
-
-            public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        _();
-                        break;
-                    case 1:
-                        i(_x._1.Value);
-                        break;
-                    case 2:
-                        f(_x._2.Value);
-                        break;
-                    case 3:
-                        s(_x._3.Value);
-                        break;
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                }
-            }
-
-            public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
-                    case 1:
-                        i(_x._1.Value);
-                        break;
-                    case 2:
-                        f(_x._2.Value);
-                        break;
-                    case 3:
-                        s(_x._3.Value);
-                        break;
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                }
-            }
-
-            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        return _();
-                    case 1:
-                        return i(_x._1.Value);
-                    case 2:
-                        return f(_x._2.Value);
-                    case 3:
-                        return s(_x._3.Value);
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                }
-            }
-
-            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
-                    case 1:
-                        return i(_x._1.Value);
-                    case 2:
-                        return f(_x._2.Value);
-                    case 3:
-                        return s(_x._3.Value);
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is in a corrupted state.");
-                }
-            }
-        }
+        private readonly global::dotVariant._G.Foo.Variant_class_nullable_disable _variant;
 
         /// <summary>
         /// Create a Variant_class_nullable_disable with a value of type <see cref="int"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
         public Variant_class_nullable_disable(int i)
-            => _variant = new _VariantStorage(i);
+            => _variant = new global::dotVariant._G.Foo.Variant_class_nullable_disable(i);
         /// <summary>
         /// Create a Variant_class_nullable_disable with a value of type <see cref="float"/>.
         /// </summary>
         /// <param name="f">The value to initlaize the variant with.</param>
         public Variant_class_nullable_disable(float f)
-            => _variant = new _VariantStorage(f);
+            => _variant = new global::dotVariant._G.Foo.Variant_class_nullable_disable(f);
         /// <summary>
         /// Create a Variant_class_nullable_disable with a value of type <see cref="string"/>.
         /// </summary>
         /// <param name="s">The value to initlaize the variant with.</param>
         public Variant_class_nullable_disable(string s)
-            => _variant = new _VariantStorage(s);
+            => _variant = new global::dotVariant._G.Foo.Variant_class_nullable_disable(s);
 
         /// <summary>
         /// Create a Variant_class_nullable_disable with a value of type <see cref="int"/>.
@@ -400,7 +106,11 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_disable does not contain a value of type <see cref="int"/></exception>
         public void Match(out int i)
         {
-            if (!_variant.TryMatch(out i))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
+            {
+                i = ((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value;
+            }
+            else
             {
                 throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_disable' (expected 'int', actual '{_variant.TypeString}').");
             }
@@ -413,7 +123,11 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_disable does not contain a value of type <see cref="float"/></exception>
         public void Match(out float f)
         {
-            if (!_variant.TryMatch(out f))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
+            {
+                f = ((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value;
+            }
+            else
             {
                 throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_disable' (expected 'float', actual '{_variant.TypeString}').");
             }
@@ -426,7 +140,11 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_disable does not contain a value of type <see cref="string"/></exception>
         public void Match(out string s)
         {
-            if (!_variant.TryMatch(out s))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
+            {
+                s = ((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value;
+            }
+            else
             {
                 throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_class_nullable_disable' (expected 'string', actual '{_variant.TypeString}').");
             }
@@ -438,21 +156,54 @@ namespace Foo
         /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
         /// <returns><see langword="true"/> if Variant_class_nullable_disable contained a value of type <see cref="int"/>.</returns>
         public bool TryMatch(out int i)
-            => _variant.TryMatch(out i);
+        {
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
+            {
+                i = ((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value;
+                return true;
+            }
+            else
+            {
+                i = default;
+                return false;
+            }
+        }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_disable if it is of type <see cref="float"/>.
         /// </summary>
         /// <param name="f">Receives the stored value if it is of type <see cref="float"/>.</param>
         /// <returns><see langword="true"/> if Variant_class_nullable_disable contained a value of type <see cref="float"/>.</returns>
         public bool TryMatch(out float f)
-            => _variant.TryMatch(out f);
+        {
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
+            {
+                f = ((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value;
+                return true;
+            }
+            else
+            {
+                f = default;
+                return false;
+            }
+        }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_disable if it is of type <see cref="string"/>.
         /// </summary>
         /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
         /// <returns><see langword="true"/> if Variant_class_nullable_disable contained a value of type <see cref="string"/>.</returns>
         public bool TryMatch(out string s)
-            => _variant.TryMatch(out s);
+        {
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
+            {
+                s = ((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value;
+                return true;
+            }
+            else
+            {
+                s = default;
+                return false;
+            }
+        }
 
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_disable if it is of type <see cref="int"/>.
@@ -462,12 +213,15 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<int> i)
         {
-            if (_variant.TryMatch(out int _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
             {
-                i(_value);
+                i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_disable if it is of type <see cref="float"/>.
@@ -477,12 +231,15 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<float> f)
         {
-            if (_variant.TryMatch(out float _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
             {
-                f(_value);
+                f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
         /// <summary>
         /// Invoke a delegate with the value stored within Variant_class_nullable_disable if it is of type <see cref="string"/>.
@@ -492,12 +249,15 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<string> s)
         {
-            if (_variant.TryMatch(out string _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
             {
-                s(_value);
+                s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -509,9 +269,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public void Match(global::System.Action<int> i)
         {
-            if (_variant.TryMatch(out int _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
             {
-                i(_value);
+                i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
             }
             else
             {
@@ -527,9 +287,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
         public void Match(global::System.Action<float> f)
         {
-            if (_variant.TryMatch(out float _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
             {
-                f(_value);
+                f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
             }
             else
             {
@@ -545,9 +305,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public void Match(global::System.Action<string> s)
         {
-            if (_variant.TryMatch(out string _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
             {
-                s(_value);
+                s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
             }
             else
             {
@@ -564,9 +324,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<int> i, global::System.Action _)
         {
-            if (_variant.TryMatch(out int _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
             {
-                i(_value);
+                i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
             }
             else
             {
@@ -582,9 +342,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<float> f, global::System.Action _)
         {
-            if (_variant.TryMatch(out float _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
             {
-                f(_value);
+                f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
             }
             else
             {
@@ -600,9 +360,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<string> s, global::System.Action _)
         {
-            if (_variant.TryMatch(out string _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
             {
-                s(_value);
+                s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
             }
             else
             {
@@ -620,9 +380,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i)
         {
-            if (_variant.TryMatch(out int _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
             {
-                return i(_value);
+                return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
             }
             else
             {
@@ -639,9 +399,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<float, TResult> f)
         {
-            if (_variant.TryMatch(out float _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
             {
-                return f(_value);
+                return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
             }
             else
             {
@@ -658,9 +418,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s)
         {
-            if (_variant.TryMatch(out string _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
             {
-                return s(_value);
+                return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
             }
             else
             {
@@ -678,9 +438,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
         {
-            if (_variant.TryMatch(out int _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
             {
-                return i(_value);
+                return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
             }
             else
             {
@@ -697,9 +457,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<float, TResult> f, TResult _)
         {
-            if (_variant.TryMatch(out float _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
             {
-                return f(_value);
+                return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
             }
             else
             {
@@ -716,9 +476,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
         {
-            if (_variant.TryMatch(out string _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
             {
-                return s(_value);
+                return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
             }
             else
             {
@@ -735,9 +495,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
         {
-            if (_variant.TryMatch(out int _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 1)
             {
-                return i(_value);
+                return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
             }
             else
             {
@@ -753,9 +513,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<float, TResult> f, global::System.Func<TResult> _)
         {
-            if (_variant.TryMatch(out float _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 2)
             {
-                return f(_value);
+                return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
             }
             else
             {
@@ -771,9 +531,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
         {
-            if (_variant.TryMatch(out string _value))
+            if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N == 3)
             {
-                return s(_value);
+                return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
             }
             else
             {
@@ -791,7 +551,24 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_disable is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
-            => _variant.Visit(i, f, s);
+        {
+            switch (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N)
+            {
+                case 0:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
+                case 1:
+                    i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
+                    break;
+                case 2:
+                    f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
+                    break;
+                case 3:
+                    s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
+                    break;
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_class_nullable_disable,
@@ -803,7 +580,25 @@ namespace Foo
         /// <param name="_">The delegate to invoke if Variant_class_nullable_disable is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
-            => _variant.Visit(i, f, s, _);
+        {
+            switch (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N)
+            {
+                case 0:
+                    _();
+                    break;
+                case 1:
+                    i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
+                    break;
+                case 2:
+                    f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
+                    break;
+                case 3:
+                    s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
+                    break;
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of the value stored within Variant_class_nullable_disable and return the result,
@@ -816,7 +611,21 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
-            => _variant.Visit(i, f, s);
+        {
+            switch (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N)
+            {
+                case 0:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
+                case 1:
+                    return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
+                case 2:
+                    return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
+                case 3:
+                    return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
 
         /// <summary>
         /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_class_nullable_disable and return the result,
@@ -829,9 +638,337 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
-            => _variant.Visit(i, f, s, _);
+        {
+            switch (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)_variant).N)
+            {
+                case 0:
+                    return _();
+                case 1:
+                    return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)_variant).Value);
+                case 2:
+                    return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)_variant).Value);
+                case 3:
+                    return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)_variant).Value);
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
+
+        private sealed class _VariantTypeProxy
+        {
+            public object Value { get; }
+            public _VariantTypeProxy(Variant_class_nullable_disable v)
+            {
+                Value = v._variant.AsObject;
+                VariantOf(default, default, default);
+            }
+        }
+
+        public static explicit operator global::dotVariant._G.Foo.Variant_class_nullable_disable_N(Variant_class_nullable_disable v) => (global::dotVariant._G.Foo.Variant_class_nullable_disable_N)v._variant;
+        public static explicit operator global::dotVariant._G.Foo.Variant_class_nullable_disable_1(Variant_class_nullable_disable v) => (global::dotVariant._G.Foo.Variant_class_nullable_disable_1)v._variant;
+        public static explicit operator global::dotVariant._G.Foo.Variant_class_nullable_disable_2(Variant_class_nullable_disable v) => (global::dotVariant._G.Foo.Variant_class_nullable_disable_2)v._variant;
+        public static explicit operator global::dotVariant._G.Foo.Variant_class_nullable_disable_3(Variant_class_nullable_disable v) => (global::dotVariant._G.Foo.Variant_class_nullable_disable_3)v._variant;
     }
 }
+
+namespace dotVariant._G.Foo
+{
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct Variant_class_nullable_disable
+    {
+        private readonly Variant_class_nullable_disable_Union _x;
+        private readonly uint _n;
+
+        public Variant_class_nullable_disable(int i)
+        {
+            _n = 1;
+            _x = new Variant_class_nullable_disable_Union(i);
+        }
+        public Variant_class_nullable_disable(float f)
+        {
+            _n = 2;
+            _x = new Variant_class_nullable_disable_Union(f);
+        }
+        public Variant_class_nullable_disable(string s)
+        {
+            _n = 3;
+            _x = new Variant_class_nullable_disable_Union(s);
+        }
+
+
+        public static explicit operator Variant_class_nullable_disable_N(Variant_class_nullable_disable v) => new Variant_class_nullable_disable_N(v._n);
+        public static explicit operator Variant_class_nullable_disable_1(Variant_class_nullable_disable v) => v._x._1;
+        public static explicit operator Variant_class_nullable_disable_2(Variant_class_nullable_disable v) => v._x._2;
+        public static explicit operator Variant_class_nullable_disable_3(Variant_class_nullable_disable v) => v._x._3;
+
+        public bool IsEmpty => _n == 0;
+
+        public string TypeString
+        {
+            get
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return "<empty>";
+                    case 1:
+                        return "int";
+                    case 2:
+                        return "float";
+                    case 3:
+                        return "string";
+                    default:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                }
+            }
+        }
+
+        public string ValueString
+        {
+            get
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return "";
+                    case 1:
+                        return _x._1.Value.ToString();
+                    case 2:
+                        return _x._2.Value.ToString();
+                    case 3:
+                        return _x._3.Value?.ToString() ?? "null";
+                    default:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                }
+            }
+        }
+
+        public object AsObject
+        {
+            get
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return null;
+                    case 1:
+                        return _x._1.Value;
+                    case 2:
+                        return _x._2.Value;
+                    case 3:
+                        return _x._3.Value;
+                    default:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                }
+            }
+        }
+
+        public bool Equals(in Variant_class_nullable_disable other)
+        {
+            if (_n != other._n)
+            {
+                return false;
+            }
+            switch (_n)
+            {
+                case 0:
+                    return true;
+                case 1:
+                    return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
+                case 2:
+                    return global::System.Collections.Generic.EqualityComparer<float>.Default.Equals(_x._2.Value, other._x._2.Value);
+                case 3:
+                    return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._3.Value, other._x._3.Value);
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return 0;
+                    case 1:
+                        return global::System.HashCode.Combine(_x._1.Value);
+                    case 2:
+                        return global::System.HashCode.Combine(_x._2.Value);
+                    case 3:
+                        return global::System.HashCode.Combine(_x._3.Value);
+                    default:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                }
+            }
+        }
+
+        public bool TryMatch(out int i)
+        {
+            i = _n == 1 ? _x._1.Value : default;
+            return _n == 1;
+        }
+        public bool TryMatch(out float f)
+        {
+            f = _n == 2 ? _x._2.Value : default;
+            return _n == 2;
+        }
+        public bool TryMatch(out string s)
+        {
+            s = _n == 3 ? _x._3.Value : default;
+            return _n == 3;
+        }
+
+        public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action _)
+        {
+            switch (_n)
+            {
+                case 0:
+                    _();
+                    break;
+                case 1:
+                    i(_x._1.Value);
+                    break;
+                case 2:
+                    f(_x._2.Value);
+                    break;
+                case 3:
+                    s(_x._3.Value);
+                    break;
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
+
+        public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s)
+        {
+            switch (_n)
+            {
+                case 0:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
+                case 1:
+                    i(_x._1.Value);
+                    break;
+                case 2:
+                    f(_x._2.Value);
+                    break;
+                case 3:
+                    s(_x._3.Value);
+                    break;
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
+
+        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+        {
+            switch (_n)
+            {
+                case 0:
+                    return _();
+                case 1:
+                    return i(_x._1.Value);
+                case 2:
+                    return f(_x._2.Value);
+                case 3:
+                    return s(_x._3.Value);
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
+
+        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s)
+        {
+            switch (_n)
+            {
+                case 0:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
+                case 1:
+                    return i(_x._1.Value);
+                case 2:
+                    return f(_x._2.Value);
+                case 3:
+                    return s(_x._3.Value);
+                default:
+                    throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            }
+        }
+    }
+
+    internal readonly ref struct Variant_class_nullable_disable_N
+    {
+        public readonly uint N;
+        public Variant_class_nullable_disable_N(uint n) => N = n;
+    }
+
+    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct Variant_class_nullable_disable_Union
+    {
+        [global::System.Runtime.InteropServices.FieldOffset(0)]
+        public readonly Variant_class_nullable_disable_1 _1;
+        [global::System.Runtime.InteropServices.FieldOffset(0)]
+        public readonly Variant_class_nullable_disable_2 _2;
+        [global::System.Runtime.InteropServices.FieldOffset(0)]
+        public readonly Variant_class_nullable_disable_3 _3;
+
+        public Variant_class_nullable_disable_Union(int value)
+        {
+            _2 = default;
+            _3 = default;
+            _1 = new Variant_class_nullable_disable_1(value);
+        }
+        public Variant_class_nullable_disable_Union(float value)
+        {
+            _1 = default;
+            _3 = default;
+            _2 = new Variant_class_nullable_disable_2(value);
+        }
+        public Variant_class_nullable_disable_Union(string value)
+        {
+            _1 = default;
+            _2 = default;
+            _3 = new Variant_class_nullable_disable_3(value);
+        }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct Variant_class_nullable_disable_1
+    {
+        public readonly int Value;
+        public readonly object _dummy1;
+
+        public Variant_class_nullable_disable_1(int value)
+        {
+            _dummy1 = null;
+            Value = value;
+        }
+    }
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct Variant_class_nullable_disable_2
+    {
+        public readonly float Value;
+        public readonly object _dummy1;
+
+        public Variant_class_nullable_disable_2(float value)
+        {
+            _dummy1 = null;
+            Value = value;
+        }
+    }
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    internal readonly struct Variant_class_nullable_disable_3
+    {
+        public readonly string Value;
+
+        public Variant_class_nullable_disable_3(string value)
+        {
+            Value = value;
+        }
+    }
+}
+
 
 namespace Foo
 {
@@ -853,9 +990,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (variant.TryMatch(out int value))
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 1)
                 {
-                    yield return i(value);
+                    yield return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)variant).Value);
                 }
             }
         }
@@ -875,9 +1012,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (variant.TryMatch(out float value))
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 2)
                 {
-                    yield return f(value);
+                    yield return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)variant).Value);
                 }
             }
         }
@@ -897,9 +1034,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (variant.TryMatch(out string value))
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 3)
                 {
-                    yield return s(value);
+                    yield return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)variant).Value);
                 }
             }
         }
@@ -922,7 +1059,14 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Match(i, _);
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 1)
+                {
+                    yield return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)variant).Value);
+                }
+                else
+                {
+                    yield return _;
+                }
             }
         }
         /// <summary>
@@ -943,7 +1087,14 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Match(f, _);
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 2)
+                {
+                    yield return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)variant).Value);
+                }
+                else
+                {
+                    yield return _;
+                }
             }
         }
         /// <summary>
@@ -964,7 +1115,14 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Match(s, _);
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 3)
+                {
+                    yield return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)variant).Value);
+                }
+                else
+                {
+                    yield return _;
+                }
             }
         }
 
@@ -986,7 +1144,14 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Match(i, _);
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 1)
+                {
+                    yield return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)variant).Value);
+                }
+                else
+                {
+                    yield return _();
+                }
             }
         }
         /// <summary>
@@ -1007,7 +1172,14 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Match(f, _);
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 2)
+                {
+                    yield return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)variant).Value);
+                }
+                else
+                {
+                    yield return _();
+                }
             }
         }
         /// <summary>
@@ -1028,7 +1200,14 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Match(s, _);
+                if (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N == 3)
+                {
+                    yield return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)variant).Value);
+                }
+                else
+                {
+                    yield return _();
+                }
             }
         }
 
@@ -1052,7 +1231,22 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Visit(i, f, s);
+                switch (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N)
+                {
+                    case 0:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable is empty.");
+                    case 1:
+                        yield return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)variant).Value);
+                        break;
+                    case 2:
+                        yield return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)variant).Value);
+                        break;
+                    case 3:
+                        yield return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)variant).Value);
+                        break;
+                    default:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                }
             }
         }
 
@@ -1076,7 +1270,23 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                yield return variant.Visit(i, f, s, _);
+                switch (((global::dotVariant._G.Foo.Variant_class_nullable_disable_N)variant).N)
+                {
+                    case 0:
+                        yield return _();
+                        break;
+                    case 1:
+                        yield return i(((global::dotVariant._G.Foo.Variant_class_nullable_disable_1)variant).Value);
+                        break;
+                    case 2:
+                        yield return f(((global::dotVariant._G.Foo.Variant_class_nullable_disable_2)variant).Value);
+                        break;
+                    case 3:
+                        yield return s(((global::dotVariant._G.Foo.Variant_class_nullable_disable_3)variant).Value);
+                        break;
+                    default:
+                        throw new global::System.InvalidOperationException("Variant_class_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                }
             }
         }
     }
