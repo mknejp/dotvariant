@@ -5,22 +5,26 @@
 //
 
 using Scriban;
+using Scriban.Parsing;
 using Scriban.Runtime;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace dotVariant.Generator
 {
     internal static partial class Renderer
     {
-        private static readonly Lazy<Template> _template = new(() =>
+        private static readonly Lazy<Template> _template = new(() => Template.Parse(LoadFromResource("Variant")));
+
+        private static string LoadFromResource(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            using var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.templates.Variant.scriban-cs");
-
-            return Template.Parse(new StreamReader(stream).ReadToEnd());
-        });
+            using var reader = new StreamReader(
+                assembly.GetManifestResourceStream($"{assembly.GetName().Name}.templates.{name}.scriban-cs"));
+            return reader.ReadToEnd();
+        }
 
         public static string Render(RenderInfo info)
             => Render(info, _template.Value);
@@ -31,11 +35,24 @@ namespace dotVariant.Generator
             {
                 MemberRenamer = m => m.Name,
                 StrictVariables = true,
+                TemplateLoader = new IncludeLoader(),
             };
             var globals = new ScriptObject();
             globals.Import(info, renamer: m => m.Name);
             templateContext.PushGlobal(globals);
             return template.Render(templateContext);
+        }
+
+        private sealed class IncludeLoader : ITemplateLoader
+        {
+            public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
+                => templateName;
+
+            public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
+                => LoadFromResource(templatePath);
+
+            public ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
+                => new(Load(context, callerSpan, templatePath));
         }
     }
 }
