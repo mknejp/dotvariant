@@ -117,8 +117,6 @@ param_modifiers = !Variant.IsClass && Variant.IsReadonly && Language.Version >= 
 global_nullable = emit_nullability ? "?" : ""
 global_forgive = emit_nullability ? "!" : ""
 needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0
-empty_exception = "new global::System.InvalidOperationException(\"" + Variant.Name + " is empty.\")"
-corrupt_exception = "new global::System.InvalidOperationException(\"" + Variant.Name + " has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant\")"
 
 readonly storage_type
 readonly get_value
@@ -129,8 +127,6 @@ readonly param_modifiers
 readonly global_nullable
 readonly global_forgive
 readonly needs_dispose
-readonly empty_exception
-readonly corrupt_string
 ~}}
 {{~ if Language.Version >= 800 ~}}
 #nullable {{ Language.Nullable }}
@@ -419,15 +415,15 @@ namespace {{ Variant.Namespace }}
             switch ({{ get_n }})
             {
                 case 0:
-                    throw {{ empty_exception }};
+                    {{ storage_type }}.ThrowEmptyError();
+                    break;
                 {{~ for $p in Params ~}}
                 case {{ $p.Index }}:
                     {{ $p.Hint }}({{ get_value $p }});
                     break;
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            {{ storage_type }}.ThrowInternalError();
         }
 
         {{~ ## VARIANT Visit(Action<A>, Action<B>, ..., empty) ## ~}}
@@ -452,9 +448,8 @@ namespace {{ Variant.Namespace }}
                     {{ $p.Hint }}({{ get_value $p }});
                     break;
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
-            }
+                }
+            {{ storage_type }}.ThrowInternalError();
         }
 
         {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ...) ## ~}}
@@ -473,14 +468,13 @@ namespace {{ Variant.Namespace }}
             switch ({{ get_n }})
             {
                 case 0:
-                    throw {{ empty_exception }};
+                    return {{ storage_type }}.ThrowEmptyError<TResult>();
                 {{~ for $p in Params ~}}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ get_value $p }});
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            return {{ storage_type }}.ThrowInternalError<TResult>();
         }
 
         {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
@@ -504,9 +498,8 @@ namespace {{ Variant.Namespace }}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ get_value $p }});
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            return {{ storage_type }}.ThrowInternalError<TResult>();
         }
 
         private sealed class _VariantTypeProxy

@@ -131,14 +131,16 @@ namespace {{ Options.ExtensionClassNamespace }}
                 switch ({{ $get_n }})
                 {
                     case 0:
-                        throw {{ empty_exception }};
+                        {{ storage_type }}.ThrowEmptyError();
+                        yield break;
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
                         yield return {{ $p.Hint }}({{ $get_value $p }});
                         break;
                     {{~ end ~}}
                     default:
-                        throw {{ corrupt_exception }};
+                        {{ storage_type }}.ThrowInternalError();
+                        yield break;
                 }
             }
         }
@@ -175,7 +177,8 @@ namespace {{ Options.ExtensionClassNamespace }}
                         break;
                     {{~ end ~}}
                     default:
-                        throw {{ corrupt_exception }};
+                        {{ storage_type }}.ThrowInternalError();
+                        yield break;
                 }
             }
         }

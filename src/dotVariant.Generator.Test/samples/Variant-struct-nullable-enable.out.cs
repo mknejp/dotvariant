@@ -554,7 +554,8 @@ namespace Foo
             switch (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+                    global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowEmptyError();
+                    break;
                 case 1:
                     l(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_1)_variant).Value);
                     break;
@@ -564,9 +565,8 @@ namespace Foo
                 case 3:
                     o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)_variant).Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowInternalError();
         }
 
         /// <summary>
@@ -594,9 +594,8 @@ namespace Foo
                 case 3:
                     o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)_variant).Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
-            }
+                }
+            global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowInternalError();
         }
 
         /// <summary>
@@ -614,16 +613,15 @@ namespace Foo
             switch (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+                    return global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowEmptyError<TResult>();
                 case 1:
                     return l(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_1)_variant).Value);
                 case 2:
                     return d(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_2)_variant).Value);
                 case 3:
                     return o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)_variant).Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowInternalError<TResult>();
         }
 
         /// <summary>
@@ -648,9 +646,8 @@ namespace Foo
                     return d(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_2)_variant).Value);
                 case 3:
                     return o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)_variant).Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowInternalError<TResult>();
         }
 
         private sealed class _VariantTypeProxy
@@ -700,6 +697,34 @@ namespace dotVariant._G.Foo
         public static explicit operator Variant_struct_nullable_enable_2(Variant_struct_nullable_enable v) => v._x._2;
         public static explicit operator Variant_struct_nullable_enable_3(Variant_struct_nullable_enable v) => v._x._3;
 
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static void ThrowEmptyError()
+        {
+            throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static T ThrowEmptyError<T>()
+        {
+            throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static void ThrowInternalError()
+        {
+            throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static T ThrowInternalError<T>()
+        {
+            throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+        }
+
         public bool IsEmpty => _n == 0;
 
         public string TypeString
@@ -716,9 +741,8 @@ namespace dotVariant._G.Foo
                         return "double";
                     case 3:
                         return "object";
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<string>();
             }
         }
 
@@ -736,9 +760,8 @@ namespace dotVariant._G.Foo
                         return _x._2.Value.ToString();
                     case 3:
                         return _x._3.Value.ToString() ?? "null";
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<string>();
             }
         }
 
@@ -756,9 +779,8 @@ namespace dotVariant._G.Foo
                         return _x._2.Value;
                     case 3:
                         return _x._3.Value;
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<object?>();
             }
         }
 
@@ -778,9 +800,8 @@ namespace dotVariant._G.Foo
                     return global::System.Collections.Generic.EqualityComparer<double>.Default.Equals(_x._2.Value, other._x._2.Value);
                 case 3:
                     return global::System.Collections.Generic.EqualityComparer<object>.Default.Equals(_x._3.Value, other._x._3.Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return ThrowInternalError<bool>();
         }
 
         public override int GetHashCode()
@@ -797,9 +818,8 @@ namespace dotVariant._G.Foo
                         return global::System.HashCode.Combine(_x._2.Value);
                     case 3:
                         return global::System.HashCode.Combine(_x._3.Value);
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<int>();
             }
         }
 
@@ -835,9 +855,8 @@ namespace dotVariant._G.Foo
                 case 3:
                     o(_x._3.Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            ThrowInternalError();
         }
 
         public void Visit(global::System.Action<long> l, global::System.Action<double> d, global::System.Action<object> o)
@@ -845,7 +864,8 @@ namespace dotVariant._G.Foo
             switch (_n)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+                    ThrowEmptyError();
+                    break;
                 case 1:
                     l(_x._1.Value);
                     break;
@@ -855,9 +875,8 @@ namespace dotVariant._G.Foo
                 case 3:
                     o(_x._3.Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            ThrowInternalError();
         }
 
         public TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o, global::System.Func<TResult> _)
@@ -872,9 +891,8 @@ namespace dotVariant._G.Foo
                     return d(_x._2.Value);
                 case 3:
                     return o(_x._3.Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return ThrowInternalError<TResult>();
         }
 
         public TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
@@ -882,16 +900,15 @@ namespace dotVariant._G.Foo
             switch (_n)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+                    return ThrowEmptyError<TResult>();
                 case 1:
                     return l(_x._1.Value);
                 case 2:
                     return d(_x._2.Value);
                 case 3:
                     return o(_x._3.Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return ThrowInternalError<TResult>();
         }
     }
 
@@ -1233,7 +1250,8 @@ namespace Foo
                 switch (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)variant).N)
                 {
                     case 0:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable is empty.");
+                        global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowEmptyError();
+                        yield break;
                     case 1:
                         yield return l(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_1)variant).Value);
                         break;
@@ -1244,7 +1262,8 @@ namespace Foo
                         yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)variant).Value);
                         break;
                     default:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                        global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowInternalError();
+                        yield break;
                 }
             }
         }
@@ -1284,7 +1303,8 @@ namespace Foo
                         yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)variant).Value);
                         break;
                     default:
-                        throw new global::System.InvalidOperationException("Variant_struct_nullable_enable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                        global::dotVariant._G.Foo.Variant_struct_nullable_enable.ThrowInternalError();
+                        yield break;
                 }
             }
         }
