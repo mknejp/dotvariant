@@ -153,9 +153,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     {{~ end ~}}
                     break;
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            ThrowInternalError();
         }
         {{~ end ~}}
 
@@ -164,6 +163,42 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ for $p in Params ~}}
         public static explicit operator {{ Variant.Name }}_{{ $p.Index }}({{ Variant.Name }} v) => v._x._{{ $p.Index }};
         {{~ end ~}}
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        {{~ if Language.Version >= 800 ~}}
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        {{~ end ~}}
+        public static void ThrowEmptyError()
+        {
+            throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        {{~ if Language.Version >= 800 ~}}
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        {{~ end ~}}
+        public static T ThrowEmptyError<T>()
+        {
+            throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        {{~ if Language.Version >= 800 ~}}
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        {{~ end ~}}
+        public static void ThrowInternalError()
+        {
+            throw new global::System.InvalidOperationException("{{ Variant.Name }} has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        {{~ if Language.Version >= 800 ~}}
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        {{~ end ~}}
+        public static T ThrowInternalError<T>()
+        {
+            throw new global::System.InvalidOperationException("{{ Variant.Name }} has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+        }
 
         {{~ ## UNION IsEmpty ## ~}}
         public bool IsEmpty => _n == 0;
@@ -181,9 +216,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     case {{ $p.Index }}:
                         return "{{ $p.DiagName }}";
                     {{~ end ~}}
-                    default:
-                        throw {{ corrupt_exception }};
                 }
+                return ThrowInternalError<string>();
             }
         }
 
@@ -200,9 +234,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     case {{ $p.Index }}:
                         return {{ coalesce_ToString $p ($storage $p) }};
                     {{~ end ~}}
-                    default:
-                        throw {{ corrupt_exception }};
                 }
+                return ThrowInternalError<string>();
             }
         }
 
@@ -219,9 +252,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     case {{ $p.Index }}:
                         return {{ $storage $p }};
                     {{~ end ~}}
-                    default:
-                        throw {{ corrupt_exception }};
                 }
+                return ThrowInternalError<object{{ global_nullable }}>();
             }
         }
 
@@ -241,9 +273,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                 case {{ $i }}:
                     return global::System.Collections.Generic.EqualityComparer<{{ $p.Name }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            return ThrowInternalError<bool>();
         }
 
         {{~ ## UNION GetHashCode ## ~}}
@@ -264,9 +295,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                         return {{ coalesce $p ($storage $p) ".GetHashCode()" "0"}};
                         {{~ end ~}}
                     {{~ end ~}}
-                    default:
-                        throw {{ corrupt_exception }};
                 }
+                return ThrowInternalError<int>();
             }
         }
 
@@ -292,9 +322,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     {{ $p.Hint }}({{ $storage $p }});
                     break;
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            ThrowInternalError();
         }
 
         {{~ ## UNION Visit(Action) ## ~}}
@@ -303,15 +332,15 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
             switch (_n)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
+                    ThrowEmptyError();
+                    break;
                 {{~ for $p in Params ~}}
                 case {{ $p.Index }}:
                     {{ $p.Hint }}({{ $storage $p }});
                     break;
-                {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
+                    {{~ end ~}}
             }
+            ThrowInternalError();
         }
 
         {{~ ## UNION Visit(Func) ## ~}}
@@ -325,9 +354,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ $storage $p }});
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            return ThrowInternalError<TResult>();
         }
 
         {{~ ## UNION Visit(Func) ## ~}}
@@ -336,14 +364,13 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
             switch (_n)
             {
                 case 0:
-                    throw {{ empty_exception }};
+                    return ThrowEmptyError<TResult>();
                 {{~ for $p in Params ~}}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ $storage $p }});
                 {{~ end ~}}
-                default:
-                    throw {{ corrupt_exception }};
             }
+            return ThrowInternalError<TResult>();
         }
     }
 

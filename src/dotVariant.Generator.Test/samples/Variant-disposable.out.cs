@@ -398,16 +398,16 @@ namespace Foo
             switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+                    global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError();
+                    break;
                 case 1:
                     i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
                     break;
                 case 2:
                     stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
         }
 
         /// <summary>
@@ -431,9 +431,8 @@ namespace Foo
                 case 2:
                     stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
-            }
+                }
+            global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
         }
 
         /// <summary>
@@ -450,14 +449,13 @@ namespace Foo
             switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+                    return global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError<TResult>();
                 case 1:
                     return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
                 case 2:
                     return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError<TResult>();
         }
 
         /// <summary>
@@ -479,9 +477,8 @@ namespace Foo
                     return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
                 case 2:
                     return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError<TResult>();
         }
 
         private sealed class _VariantTypeProxy
@@ -531,14 +528,41 @@ namespace dotVariant._G.Foo
                 case 2:
                     _x._2.Value?.Dispose();
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            ThrowInternalError();
         }
 
         public static explicit operator Variant_disposable_N(Variant_disposable v) => new Variant_disposable_N(v._n);
         public static explicit operator Variant_disposable_1(Variant_disposable v) => v._x._1;
         public static explicit operator Variant_disposable_2(Variant_disposable v) => v._x._2;
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static void ThrowEmptyError()
+        {
+            throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static T ThrowEmptyError<T>()
+        {
+            throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static void ThrowInternalError()
+        {
+            throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+        }
+
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        public static T ThrowInternalError<T>()
+        {
+            throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+        }
 
         public bool IsEmpty => _n == 0;
 
@@ -554,9 +578,8 @@ namespace dotVariant._G.Foo
                         return "int";
                     case 2:
                         return "System.IO.Stream";
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<string>();
             }
         }
 
@@ -572,9 +595,8 @@ namespace dotVariant._G.Foo
                         return _x._1.Value.ToString();
                     case 2:
                         return _x._2.Value?.ToString() ?? "null";
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<string>();
             }
         }
 
@@ -590,9 +612,8 @@ namespace dotVariant._G.Foo
                         return _x._1.Value;
                     case 2:
                         return _x._2.Value;
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<object>();
             }
         }
 
@@ -610,9 +631,8 @@ namespace dotVariant._G.Foo
                     return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
                 case 2:
                     return global::System.Collections.Generic.EqualityComparer<global::System.IO.Stream>.Default.Equals(_x._2.Value, other._x._2.Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return ThrowInternalError<bool>();
         }
 
         public override int GetHashCode()
@@ -627,9 +647,8 @@ namespace dotVariant._G.Foo
                         return global::System.HashCode.Combine(_x._1.Value);
                     case 2:
                         return global::System.HashCode.Combine(_x._2.Value);
-                    default:
-                        throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
                 }
+                return ThrowInternalError<int>();
             }
         }
 
@@ -657,9 +676,8 @@ namespace dotVariant._G.Foo
                 case 2:
                     stream(_x._2.Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            ThrowInternalError();
         }
 
         public void Visit(global::System.Action<int> i, global::System.Action<global::System.IO.Stream> stream)
@@ -667,16 +685,16 @@ namespace dotVariant._G.Foo
             switch (_n)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+                    ThrowEmptyError();
+                    break;
                 case 1:
                     i(_x._1.Value);
                     break;
                 case 2:
                     stream(_x._2.Value);
                     break;
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            ThrowInternalError();
         }
 
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<global::System.IO.Stream, TResult> stream, global::System.Func<TResult> _)
@@ -689,9 +707,8 @@ namespace dotVariant._G.Foo
                     return i(_x._1.Value);
                 case 2:
                     return stream(_x._2.Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return ThrowInternalError<TResult>();
         }
 
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<global::System.IO.Stream, TResult> stream)
@@ -699,14 +716,13 @@ namespace dotVariant._G.Foo
             switch (_n)
             {
                 case 0:
-                    throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+                    return ThrowEmptyError<TResult>();
                 case 1:
                     return i(_x._1.Value);
                 case 2:
                     return stream(_x._2.Value);
-                default:
-                    throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
             }
+            return ThrowInternalError<TResult>();
         }
     }
 
@@ -947,7 +963,8 @@ namespace Foo
                 switch (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N)
                 {
                     case 0:
-                        throw new global::System.InvalidOperationException("Variant_disposable is empty.");
+                        global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError();
+                        yield break;
                     case 1:
                         yield return i(((global::dotVariant._G.Foo.Variant_disposable_1)variant).Value);
                         break;
@@ -955,7 +972,8 @@ namespace Foo
                         yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
                         break;
                     default:
-                        throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                        global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
+                        yield break;
                 }
             }
         }
@@ -991,7 +1009,8 @@ namespace Foo
                         yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
                         break;
                     default:
-                        throw new global::System.InvalidOperationException("Variant_disposable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+                        global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
+                        yield break;
                 }
             }
         }
