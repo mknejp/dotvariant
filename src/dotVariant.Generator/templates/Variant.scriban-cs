@@ -525,6 +525,11 @@ namespace {{ Variant.Namespace }}
 
 {{ include "Union" }}
 
-{{~ if Variant.ExtensionsAccessibility ~}}
-{{~ include "IEnumerable" ~}}
-{{~ end ~}}
+{{~
+if Variant.ExtensionsAccessibility
+    include "IEnumerable"
+    if Runtime.HasSystemReactiveLinq
+        include "IObservable"
+    end
+end
+~}}

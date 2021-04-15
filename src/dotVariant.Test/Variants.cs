@@ -28,6 +28,12 @@ namespace dotVariant.Test.Variants
     }
 
     [Variant]
+    internal readonly partial struct Struct_int_float_string
+    {
+        static partial void VariantOf(int i, float f, string o);
+    }
+
+    [Variant]
     internal sealed partial class Class_with_default_ctor
     {
         static partial void VariantOf(int i, float f, Helper o);

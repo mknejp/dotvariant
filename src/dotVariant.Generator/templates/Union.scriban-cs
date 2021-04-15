@@ -170,7 +170,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
         public static void ThrowEmptyError()
         {
-            throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
+            throw MakeEmptyError();
         }
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
@@ -179,7 +179,12 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
         public static T ThrowEmptyError<T>()
         {
-            throw new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
+            throw MakeEmptyError();
+        }
+
+        public static global::System.Exception MakeEmptyError()
+        {
+            return new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
         }
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
@@ -188,7 +193,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
         public static void ThrowInternalError()
         {
-            throw new global::System.InvalidOperationException("{{ Variant.Name }} has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            throw MakeInternalError();
         }
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
@@ -197,7 +202,12 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
         public static T ThrowInternalError<T>()
         {
-            throw new global::System.InvalidOperationException("{{ Variant.Name }} has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            throw MakeInternalError();
+        }
+
+        public static global::System.Exception MakeInternalError()
+        {
+            return new global::System.InvalidOperationException("{{ Variant.Name }} has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
         }
 
         {{~ ## UNION IsEmpty ## ~}}
