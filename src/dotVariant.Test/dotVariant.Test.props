@@ -14,6 +14,21 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
+  <Choose>
+    <When Condition="'$(TargetFramework)' == 'net5.0'">
+      <ItemGroup>
+        <PackageReference Include="System.Reactive" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
+      </ItemGroup>      
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="System.Reactive" Version="3.0.0" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="3.0.0" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
   <PropertyGroup>
     <dotVariant-ExtensionClassNamespace>dotVariant.Test</dotVariant-ExtensionClassNamespace>
   </PropertyGroup>

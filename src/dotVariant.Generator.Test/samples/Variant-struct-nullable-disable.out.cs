@@ -701,28 +701,38 @@ namespace dotVariant._G.Foo
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
         public static void ThrowEmptyError()
         {
-            throw new global::System.InvalidOperationException("Variant_struct_nullable_disable is empty.");
+            throw MakeEmptyError();
         }
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
         public static T ThrowEmptyError<T>()
         {
-            throw new global::System.InvalidOperationException("Variant_struct_nullable_disable is empty.");
+            throw MakeEmptyError();
+        }
+
+        public static global::System.Exception MakeEmptyError()
+        {
+            return new global::System.InvalidOperationException("Variant_struct_nullable_disable is empty.");
         }
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
         public static void ThrowInternalError()
         {
-            throw new global::System.InvalidOperationException("Variant_struct_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            throw MakeInternalError();
         }
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
         public static T ThrowInternalError<T>()
         {
-            throw new global::System.InvalidOperationException("Variant_struct_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
+            throw MakeInternalError();
+        }
+
+        public static global::System.Exception MakeInternalError()
+        {
+            return new global::System.InvalidOperationException("Variant_struct_nullable_disable has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
         }
 
         public bool IsEmpty => _n == 0;
@@ -1308,5 +1318,502 @@ namespace Foo
                 }
             }
         }
+    }
+}
+namespace Foo
+{
+    using System;
+    using System.Reactive.Linq;
+
+    public static partial class _Variant_struct_nullable_disable_Ex
+    {
+        /// <summary>
+        /// Projects each <see cref="long"/> element of an observable sequence
+        /// into a new form and drops all other elements.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<long, TResult> l)
+        {
+            return source
+                .Where(_variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+                .Select(_variant => l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value));
+        }
+        /// <summary>
+        /// Projects each <see cref="double"/> element of an observable sequence
+        /// into a new form and drops all other elements.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<double, TResult> d)
+        {
+            return source
+                .Where(_variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+                .Select(_variant => d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value));
+        }
+        /// <summary>
+        /// Projects each <see cref="object"/> element of an observable sequence
+        /// into a new form and drops all other elements.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<object, TResult> o)
+        {
+            return source
+                .Where(_variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+                .Select(_variant => o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value));
+        }
+
+        /// <summary>
+        /// Projects each <see cref="long"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback value.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<long, TResult> l,
+                TResult _)
+        {
+            return source.Select(_variant =>
+            {
+                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+                {
+                    return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                }
+                else
+                {
+                    return _;
+                }
+            });
+        }
+        /// <summary>
+        /// Projects each <see cref="double"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback value.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<double, TResult> d,
+                TResult _)
+        {
+            return source.Select(_variant =>
+            {
+                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+                {
+                    return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                }
+                else
+                {
+                    return _;
+                }
+            });
+        }
+        /// <summary>
+        /// Projects each <see cref="object"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback value.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<object, TResult> o,
+                TResult _)
+        {
+            return source.Select(_variant =>
+            {
+                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+                {
+                    return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                }
+                else
+                {
+                    return _;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Projects each <see cref="long"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback selector result.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<long, TResult> l,
+                global::System.Func<TResult> _)
+        {
+            return source.Select(_variant =>
+            {
+                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+                {
+                    return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                }
+                else
+                {
+                    return _();
+                }
+            });
+        }
+        /// <summary>
+        /// Projects each <see cref="double"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback selector result.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<double, TResult> d,
+                global::System.Func<TResult> _)
+        {
+            return source.Select(_variant =>
+            {
+                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+                {
+                    return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                }
+                else
+                {
+                    return _();
+                }
+            });
+        }
+        /// <summary>
+        /// Projects each <see cref="object"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback selector result.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<object, TResult> o,
+                global::System.Func<TResult> _)
+        {
+            return source.Select(_variant =>
+            {
+                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+                {
+                    return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                }
+                else
+                {
+                    return _();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Projects each element of an observable sequence into a new form depending on its contained value type,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to visit.</param>
+        /// <param name="l">The delegate to invoke if the element's value is of type <see cref="long"/>.</param>
+        /// <param name="d">The delegate to invoke if the element's value is of type <see cref="double"/>.</param>
+        /// <param name="o">The delegate to invoke if the element's value is of type <see cref="object"/>.</param>
+        /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Visit<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
+        {
+            return source.Select(_variant =>
+            {
+                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+                {
+                    case 0:
+                        return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowEmptyError<TResult>();
+                    case 1:
+                        return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    case 2:
+                        return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    case 3:
+                        return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    default:
+                        return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Projects each element of an observable sequence into a new form depending on its contained value type,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to visit.</param>
+        /// <param name="l">The delegate to invoke if the element's value is of type <see cref="long"/>.</param>
+        /// <param name="d">The delegate to invoke if the element's value is of type <see cref="double"/>.</param>
+        /// <param name="o">The delegate to invoke if the element's value is of type <see cref="object"/>.</param>
+        /// <param name="_">The delegate to invoke if an element is empty.</param>
+        /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Visit<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o,
+                global::System.Func<TResult> _)
+        {
+            return source.Select(_variant =>
+            {
+                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+                {
+                    case 0:
+                        return _();
+                    case 1:
+                        return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    case 2:
+                        return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    case 3:
+                        return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    default:
+                        return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Splits the observable sequence of Variant_struct_nullable_disable elements into one independent sub-sequences per value type,
+        /// transforming each sub-sequence by the provided selector, and merges the resulting values into one observable sequence,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>The first sub-sequence to produce an OnError message terminates the resulting sequence with OnError.</item>
+        ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="l">Transform an observable sequence of <see cref="long"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="d">Transform an observable sequence of <see cref="double"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="o">Transform an observable sequence of <see cref="object"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<global::System.IObservable<long>, global::System.IObservable<TResult>> l, global::System.Func<global::System.IObservable<double>, global::System.IObservable<TResult>> d, global::System.Func<global::System.IObservable<object>, global::System.IObservable<TResult>> o)
+        {
+            return VisitMany(source, (_1, _2, _3) =>
+            {
+                return Observable.Merge(l(_1), d(_2), o(_3));
+            });
+        }
+
+        /// <summary>
+        /// Splits the observable sequence of Variant_struct_nullable_disable elements into one independent sub-sequences per value type,
+        /// transforming each sub-sequence by the provided selector, and merges the resulting values into one observable sequence.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>The first sub-sequence to produce an OnError message terminates the resulting sequence with OnError.</item>
+        ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="l">Transform an observable sequence of <see cref="long"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="d">Transform an observable sequence of <see cref="double"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="o">Transform an observable sequence of <see cref="object"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="_">Transform a sequence of <see cref="global::System.Reactive.Unit"/> values (each representing an empty variant) into a sequence of <typeparamref name="TResult"/> values.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<global::System.IObservable<long>, global::System.IObservable<TResult>> l, global::System.Func<global::System.IObservable<double>, global::System.IObservable<TResult>> d, global::System.Func<global::System.IObservable<object>, global::System.IObservable<TResult>> o,
+                global::System.Func<global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> _)
+        {
+            return VisitMany(source, (_1, _2, _3, _0) =>
+            {
+                return Observable.Merge(l(_1), d(_2), o(_3), _(_0));
+            });
+        }
+
+        /// <summary>
+        /// Splits the observable sequence of Variant_struct_nullable_disable elements into one independent sub-sequences per value type,
+        /// and combines the resulting values into one observable sequence according to the combining selector,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<TResult>> selector)
+        {
+            return Observable.Create<TResult>(_o =>
+            {
+                var _mo = new VisitManyObserver(false);
+                return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
+                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3)
+                        .Subscribe(_o),
+                    source
+                        .SubscribeSafe(_mo),
+                    _mo);
+            });
+        }
+
+        /// <summary>
+        /// Splits the observable sequence of Variant_struct_nullable_disable elements into one independent sub-sequences per value type,
+        /// and combines the resulting values into one observable sequence according to the combining selector.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
+        {
+            return Observable.Create<TResult>(_o =>
+            {
+                var _mo = new VisitManyObserver(true);
+                return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
+                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3, _mo.Subject0)
+                        .Subscribe(_o),
+                    source
+                        .SubscribeSafe(_mo),
+                    _mo);
+            });
+        }
+
+        private sealed class VisitManyObserver : global::System.IObserver<global::Foo.Variant_struct_nullable_disable>, global::System.IDisposable
+        {
+            public readonly global::System.Reactive.Subjects.Subject<global::System.Reactive.Unit> Subject0 = new global::System.Reactive.Subjects.Subject<global::System.Reactive.Unit>();
+            public readonly global::System.Reactive.Subjects.Subject<long> Subject1 = new global::System.Reactive.Subjects.Subject<long>();
+            public readonly global::System.Reactive.Subjects.Subject<double> Subject2 = new global::System.Reactive.Subjects.Subject<double>();
+            public readonly global::System.Reactive.Subjects.Subject<object> Subject3 = new global::System.Reactive.Subjects.Subject<object>();
+            private readonly bool _accept0;
+
+            public VisitManyObserver(bool _accept0)
+            {
+                this._accept0 = _accept0;
+            }
+
+            public void Dispose()
+            {
+                Subject1.Dispose();
+                Subject2.Dispose();
+                Subject3.Dispose();
+                Subject0.Dispose();
+            }
+
+            public void OnNext(global::Foo.Variant_struct_nullable_disable _variant)
+            {
+                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+                {
+                    case 0:
+                        if (_accept0)
+                        {
+                            Subject0.OnNext(global::System.Reactive.Unit.Default);
+                        }
+                        else
+                        {
+                            OnError(global::dotVariant._G.Foo.Variant_struct_nullable_disable.MakeEmptyError());
+                        }
+                        break;
+                    case 1:
+                        Subject1.OnNext(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                        break;
+                    case 2:
+                        Subject2.OnNext(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                        break;
+                    case 3:
+                        Subject3.OnNext(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                        break;
+                    default:
+                        OnError(global::dotVariant._G.Foo.Variant_struct_nullable_disable.MakeInternalError());
+                        break;
+                }
+            }
+
+            public void OnError(global::System.Exception _ex)
+            {
+                Subject1.OnError(_ex);
+                Subject2.OnError(_ex);
+                Subject3.OnError(_ex);
+                if (_accept0)
+                {
+                    Subject0.OnError(_ex);
+                }
+            }
+
+            public void OnCompleted()
+            {
+                Subject1.OnCompleted();
+                Subject2.OnCompleted();
+                Subject3.OnCompleted();
+                if (_accept0)
+                {
+                    Subject0.OnCompleted();
+                }
+            }
+        }
+
     }
 }

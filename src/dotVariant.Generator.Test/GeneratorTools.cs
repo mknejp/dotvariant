@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -62,7 +63,11 @@ namespace dotVariant.Generator.Test
             => CSharpCompilation.Create(
                 "test",
                 sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, path: s.Key)),
-                new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
+                new[]
+                {
+                    MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(Observable).GetTypeInfo().Assembly.Location),
+                },
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         public static string TrimLines(string s)

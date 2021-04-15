@@ -47,7 +47,11 @@ namespace dotVariant.Generator
             /// <summary>
             /// <see langword="true"/> if <see cref="System.HashCode"/> is found.
             /// </summary>
-            bool HasHashCode);
+            bool HasHashCode,
+            /// <summary>
+            /// <see langword="true"/> if <see cref="System.Reactive.Linq"/> namespace is found.
+            /// </summary>
+            bool HasSystemReactiveLinq);
 
         public sealed record VariantInfo(
             /// <summary>
@@ -176,7 +180,8 @@ namespace dotVariant.Generator
                     ExtensionClassNamespace: ExtensionsNamespace(options, typeNamespace)),
                 Params: paramDescriptors.ToImmutableArray(),
                 Runtime: new(
-                    HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null),
+                    HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null,
+                    HasSystemReactiveLinq: HasReactive(compilation)),
                 Variant: new(
                     DiagName: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
@@ -229,5 +234,8 @@ namespace dotVariant.Generator
                 return typeNamespace;
             }
         }
+
+        private static bool HasReactive(CSharpCompilation compilation)
+            => compilation.GetTypeByMetadataName("System.Reactive.Linq.Observable") is not null;
     }
 }

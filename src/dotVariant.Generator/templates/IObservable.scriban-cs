@@ -1,0 +1,374 @@
+{{~
+# Copyright Miro Knejp 2021.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+~}}
+{{~ if Options.ExtensionClassNamespace ~}}
+namespace {{ Options.ExtensionClassNamespace }}
+{
+{{~ end ~}}
+    {{~ ## These are for extension methods only. All types must still be fully qualidfied. ## ~}}
+    using System;
+    using System.Reactive.Linq;
+
+    {{ Variant.ExtensionsAccessibility }} static partial class _{{ Variant.Name }}_Ex
+    {
+        {{~ ## Match(IObservable<V>, Func<A, R>) ## ~}}
+        {{~ for $p in Params ~}}
+        /// <summary>
+        /// Projects each <see cref="{{ $p.Name }}"/> element of an observable sequence
+        /// into a new form and drops all other elements.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ func_type $p }} {{ $p.Hint }})
+        {
+            return source
+                .Where(_variant => {{ get_n }} == {{ $p.Index }})
+                .Select(_variant => {{ $p.Hint }}({{ get_value $p }}));
+        }
+        {{~ end ~}}
+
+        {{~ ## Match(IObservable<V>, Func<A, R>, R) ## ~}}
+        {{~ for $p in Params ~}}
+        /// <summary>
+        /// Projects each <see cref="{{ $p.Name }}"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback value.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ func_type $p }} {{ $p.Hint }},
+                TResult _)
+        {
+            return source.Select(_variant =>
+            {
+                if ({{ get_n }} == {{ $p.Index }})
+                {
+                    return {{ $p.Hint }}({{ get_value $p }});
+                }
+                else
+                {
+                    return _;
+                }
+            });
+        }
+        {{~ end ~}}
+
+        {{~ ## Match(IObservable<V>, Func<A, R>, Func<R>) ## ~}}
+        {{~ for $p in Params ~}}
+        /// <summary>
+        /// Projects each <see cref="{{ $p.Name }}"/> element of an observable sequence
+        /// into a new form and replaces all other elements by a fallback selector result.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="_">Value to produce for elements which do not match the desired type.</param>
+        /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Match<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ func_type $p }} {{ $p.Hint }},
+                global::System.Func<TResult> _)
+        {
+            return source.Select(_variant =>
+            {
+                if ({{ get_n }} == {{ $p.Index }})
+                {
+                    return {{ $p.Hint }}({{ get_value $p }});
+                }
+                else
+                {
+                    return _();
+                }
+            });
+        }
+        {{~ end ~}}
+
+        {{~ ## Visit(IObservable<V>, Func<A, R>, Func<B, R>, ...) ## ~}}
+        /// <summary>
+        /// Projects each element of an observable sequence into a new form depending on its contained value type,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to visit.</param>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
+        {{~ end ~}}
+        /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Visit<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ func_params }})
+        {
+            return source.Select(_variant =>
+            {
+                switch ({{ get_n }})
+                {
+                    case 0:
+                        return {{ storage_type }}.ThrowEmptyError<TResult>();
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return {{ $p.Hint }}({{ get_value $p }});
+                    {{~ end ~}}
+                    default:
+                        return {{ storage_type }}.ThrowInternalError<TResult>();
+                }
+            });
+        }
+
+        {{~ ## Visit(IObservable<V>, Func<A, R>, Func<B, R>, ..., empty) ## ~}}
+        /// <summary>
+        /// Projects each element of an observable sequence into a new form depending on its contained value type,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <param name="source">An observable sequence whose elements to visit.</param>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
+        {{~ end ~}}
+        /// <param name="_">The delegate to invoke if an element is empty.</param>
+        /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            Visit<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ func_params }},
+                global::System.Func<TResult> _)
+        {
+            return source.Select(_variant =>
+            {
+                switch ({{ get_n }})
+                {
+                    case 0:
+                        return _();
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return {{ $p.Hint }}({{ get_value $p }});
+                    {{~ end ~}}
+                    default:
+                        return {{ storage_type }}.ThrowInternalError<TResult>();
+                }
+            });
+        }
+
+        {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<R>>, Func<IObservable<B>, IObservable<R>>, ...) ## ~}}
+        {{~ if Params.size > 1 # Otherwise signature conflicts with the generic version below, and they are identical ~}}
+        /// <summary>
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
+        /// transforming each sub-sequence by the provided selector, and merges the resulting values into one observable sequence,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>The first sub-sequence to produce an OnError message terminates the resulting sequence with OnError.</item>
+        ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Hint }}">Transform an observable sequence of <see cref="{{ $p.Name }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        {{~ end ~}}
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ Params | array.each @(do; ret "global::System.Func<global::System.IObservable<" + (value_type $0) + ">, global::System.IObservable<TResult>> " + $0.Hint; end) | array.join ", " }})
+        {
+            return VisitMany(source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}) =>
+            {
+                return Observable.Merge({{ Params | array.each @(do; ret $0.Hint + "(_" + $0.Index + ")"; end) | array.join ", " }});
+            });
+        }
+        {{~ end ~}}
+
+        {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<R>>, Func<IObservable<B>, IObservable<R>>, ..., Func<IObservable<Unit>, IObservable<R>> empty) ## ~}}
+        /// <summary>
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
+        /// transforming each sub-sequence by the provided selector, and merges the resulting values into one observable sequence.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>The first sub-sequence to produce an OnError message terminates the resulting sequence with OnError.</item>
+        ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Hint }}">Transform an observable sequence of <see cref="{{ $p.Name }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        {{~ end ~}}
+        /// <param name="_">Transform a sequence of <see cref="global::System.Reactive.Unit"/> values (each representing an empty variant) into a sequence of <typeparamref name="TResult"/> values.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                {{ Params | array.each @(do; ret "global::System.Func<global::System.IObservable<" + (value_type $0) + ">, global::System.IObservable<TResult>> " + $0.Hint; end) | array.join ", " }},
+                global::System.Func<global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> _)
+        {
+            return VisitMany(source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}, _0) =>
+            {
+                return Observable.Merge({{ Params | array.each @(do; ret $0.Hint + "(_" + $0.Index + ")"; end) | array.join ", " }}, _(_0));
+            });
+        }
+
+        {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<B>, ..., IObservable<M>>) ## ~}}
+        /// <summary>
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
+        /// and combines the resulting values into one observable sequence according to the combining selector,
+        /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + (value_type $0) + ">"; end) | array.join ", " }}, global::System.IObservable<TResult>> selector)
+        {
+            return Observable.Create<TResult>(_o =>
+            {
+                var _mo = new VisitManyObserver(false);
+                return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
+                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }})
+                        .Subscribe(_o),
+                    source
+                        .SubscribeSafe(_mo),
+                    _mo);
+            });
+        }
+
+        {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<B>, ..., IObservable<Unit>, IObservable<M>>) ## ~}}
+        /// <summary>
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
+        /// and combines the resulting values into one observable sequence according to the combining selector.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        ///     <item>While the subscription to the source is active the sub-sequences are hot.</item>
+        ///     <item>Multiple subscriptions and repeated subscriptions within the sub-sequences will not cause repeated subscriptions to the source.</item>
+        ///     <item>Once the source sequence terminates it cannot be re-subscribed to with operators like <c>Repeat</c> or <c>Retry</c> from within a sub-sequence.</item>
+        ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
+        /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
+        public static global::System.IObservable<TResult>
+            VisitMany<TResult>(
+                this global::System.IObservable<{{ Variant.FullName }}> source,
+                global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + (value_type $0) + ">"; end) | array.join ", " }}, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
+        {
+            return Observable.Create<TResult>(_o =>
+            {
+                var _mo = new VisitManyObserver(true);
+                return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
+                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}, _mo.Subject0)
+                        .Subscribe(_o),
+                    source
+                        .SubscribeSafe(_mo),
+                    _mo);
+            });
+        }
+
+        private sealed class VisitManyObserver : global::System.IObserver<{{ Variant.FullName }}>, global::System.IDisposable
+        {
+            public readonly global::System.Reactive.Subjects.Subject<global::System.Reactive.Unit> Subject0 = new global::System.Reactive.Subjects.Subject<global::System.Reactive.Unit>();
+            {{~ for $p in Params ~}}
+            public readonly global::System.Reactive.Subjects.Subject<{{ value_type $p }}> Subject{{ $p.Index }} = new global::System.Reactive.Subjects.Subject<{{ value_type $p }}>();
+            {{~ end ~}}
+            private readonly bool _accept0;
+
+            public VisitManyObserver(bool _accept0)
+            {
+                this._accept0 = _accept0;
+            }
+
+            public void Dispose()
+            {
+                {{~ for $p in Params ~}}
+                Subject{{ $p.Index }}.Dispose();
+                {{~ end ~}}
+                Subject0.Dispose();
+            }
+
+            public void OnNext({{ Variant.FullName }} _variant)
+            {
+                switch ({{ get_n }})
+                {
+                    case 0:
+                        if (_accept0)
+                        {
+                            Subject0.OnNext(global::System.Reactive.Unit.Default);
+                        }
+                        else
+                        {
+                            OnError({{ storage_type }}.MakeEmptyError());
+                        }
+                        break;
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        Subject{{ $p.Index }}.OnNext({{ get_value $p }});
+                        break;
+                    {{~ end ~}}
+                    default:
+                        OnError({{ storage_type }}.MakeInternalError());
+                        break;
+                }
+            }
+
+            public void OnError(global::System.Exception _ex)
+            {
+                {{~ for $p in Params ~}}
+                Subject{{ $p.Index }}.OnError(_ex);
+                {{~ end ~}}
+                if (_accept0)
+                {
+                    Subject0.OnError(_ex);
+                }
+            }
+
+            public void OnCompleted()
+            {
+                {{~ for $p in Params ~}}
+                Subject{{ $p.Index }}.OnCompleted();
+                {{~ end ~}}
+                if (_accept0)
+                {
+                    Subject0.OnCompleted();
+                }
+            }
+        }
+
+    }
+{{~ if Options.ExtensionClassNamespace ~}}
+}
+{{~ end ~}}

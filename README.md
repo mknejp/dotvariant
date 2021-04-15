@@ -9,7 +9,7 @@ A type-safe and space-efficient sum type for C# (comparable to unions in C or C+
   - [Emptiness](#emptiness)
 - [Generated Code Features](#generated-code-features)
   - [`IDisposable` Support](#idisposable-support)
-  - [Third-party Integrations](#third-party-integrations)
+  - [External Integrations: `IEnumerable<T>`, `IObservable<T>`](#external-integrations)
 - [Customization](#customization)
   - [Extension Class Namespace](#extension-class-namespace)
 - [Compatibility](#compatibility)
@@ -192,7 +192,7 @@ If _at least one_ of the types included in the `VariantOf()` parameters implemen
 
 If there already exists an implementation of `IDisposable.Dispose()` (either you defined one, or it is present in a base class) then the public `Dispose()` method is _not_ generated and it is your responsibility to take care of calling the private `_variant.Dispose()`.
 
-### Third-party Integrations
+### External Integrations
 If your type is declared in such a way that providing extensions methods is possible you will get additional integration with .NET facilities, or popular external libraries, listed in this section. The visibility (`public` or `internal`) of the extension methods is made to match the accessibility of your type declaration.
 
 The `static class` containing all extension methods is by default generated in the same namespace containing the variant type, but that is configurable (see [Extension Class Namespace](#extension-class-namespace)).
@@ -221,6 +221,54 @@ xs.Visit(
     d => $"double {d}"
     s=> $"string {s}");
 // result: IEnumerable<string> ["int 1", "double 2", "string 3", "int 4", "double 5", "string 6"]
+```
+
+#### `IObservable<T>`
+These allow for easy and powerful integration into `System.Reactive.Linq`-like queries on `IObservable<T>` sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
+```csharp
+[Variant]
+public readonly partial struct MyVariant
+{
+    static partial void VariantOf(int i, double d, string s);
+}
+
+var xs = new MyVariant[] { 1, 2.0, "3", 4, 5.0, "6" }.ToObservable();
+
+// Unary Match only transforms the matching type and drops all others
+xs.Match((int i) => i); // result: IObservable<int> [1, 4]
+
+// Binary Match lets you provide a fallback value or delegate to replace non-matching values with
+xs.Match((int i) => i, 0); // result: IObservable<int> [1, 0, 0, 4, 0, 0]
+xs.Match((int i) => i, () => -1); // result: IObservable<int> [1, -1, -1, 4, -1, -1]
+
+// Visit transform each possible value type individually
+xs.Visit(
+    i => $"int {i}",
+    d => $"double {d}"
+    s=> $"string {s}");
+// result: IObservable<string> ["int 1", "double 2", "string 3", "int 4", "double 5", "string 6"]
+
+// VisitMany splits the sequence into multiple customizable sub-sequences which are then merged into one
+xs.VisitMany(
+    i => i.Where(ix => ix > 1).Select(ix => $"int {ix}"),
+    d => d.Delay(dx => dx * 1000).Select(dx => $"double {dx}"),
+    s => s.Zip(Observable.Interval(100), (sx, _) => $"string {sx}");
+// results with timestamps: IObservable<string> [
+//   "int 4" @0,
+//   "string 3" @100,
+//   "string 6" @200,
+//   "double 2" @2000,
+//   "double 5" @5000,
+// ]
+
+// Altenatively VisitMany allows you to transform and combine the split streams however you want.
+xs.VisitMany((i, d, s) => CombineLatest(i, d, s, (ix, dx, sx) => (ix, dx, sx));
+// results: IObservable<string> [
+//   (1, 2.0, "3"),
+//   (4, 2.0, "3"),
+//   (4, 5.0, "3"),
+//   (4, 5.0, "6"),
+// ]
 ```
 
 ## Customization
