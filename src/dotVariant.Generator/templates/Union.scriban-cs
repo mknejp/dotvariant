@@ -385,7 +385,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
     }
 
     {{~ ## DISCRIMINATOR COVERTER ## ~}}
-    internal readonly ref struct {{ Variant.Name }}_N
+    {{ Variant.Accessibility }} readonly ref struct {{ Variant.Name }}_N
     {
         public readonly uint N;
         public {{ Variant.Name }}_N(uint n) => N = n;
@@ -417,7 +417,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
     {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
     {{~ for $p in Params ~}}
     [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct {{ Variant.Name }}_{{ $p.Index }}
+    {{ Variant.Accessibility }} readonly struct {{ Variant.Name }}_{{ $p.Index }}
     {
         public readonly {{ value_type $p }} Value;
         {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
