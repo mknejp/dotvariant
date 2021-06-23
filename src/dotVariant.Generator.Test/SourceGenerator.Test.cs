@@ -45,6 +45,7 @@ namespace dotVariant.Generator.Test
                     ("Variant-class-nullable-disable", "Foo.Variant_class_nullable_disable"),
                     ("Variant-class-nullable-enable", "Foo.Variant_class_nullable_enable"),
                     ("Variant-disposable", "Foo.Variant_disposable"),
+                    ("Variant-public", "Foo.Variant_public"),
                     ("Variant-struct-nullable-disable", "Foo.Variant_struct_nullable_disable"),
                     ("Variant-struct-nullable-enable", "Foo.Variant_struct_nullable_enable"),
                 }

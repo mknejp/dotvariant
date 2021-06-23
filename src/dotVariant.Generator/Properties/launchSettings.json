@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dotVariant.Generator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\dotVariant.Test-net45\\dotVariant.Test-net45.csproj"
+    }
+  }
+}

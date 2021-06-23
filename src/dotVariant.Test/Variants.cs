@@ -77,6 +77,18 @@ namespace dotVariant.Test.Variants
         }
     }
 
+    [Variant]
+    internal sealed partial class InternalVariant
+    {
+        static partial void VariantOf(int a, string b);
+    }
+
+    [Variant]
+    public sealed partial class PublicVariant
+    {
+        static partial void VariantOf(int a, string b);
+    }
+
     public static class TypeLoadTest
     {
         [Test]

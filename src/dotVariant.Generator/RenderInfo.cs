@@ -55,7 +55,11 @@ namespace dotVariant.Generator
 
         public sealed record VariantInfo(
             /// <summary>
-            /// The fully qualified name of the type (without global:: alias, for diagnostic strings/messages)
+            /// The accessibility modifier of the variant class.
+            /// </summary>
+            string? Accessibility,
+            /// <summary>
+            /// The fully qualified name of the type (without global:: alias, for diagnostic strings/messages).
             /// </summary>
             string DiagName,
             /// <summary>
@@ -183,6 +187,7 @@ namespace dotVariant.Generator
                     HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null,
                     HasSystemReactiveLinq: HasReactive(compilation)),
                 Variant: new(
+                    Accessibility: VariantAccessibility(type),
                     DiagName: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
                     FullName: type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
@@ -207,6 +212,20 @@ namespace dotVariant.Generator
                 Accessibility.ProtectedAndInternal => null,
                 Accessibility.Protected => null,
                 Accessibility.ProtectedOrInternal => SyntaxFactory.Token(SyntaxKind.InternalKeyword).Text,
+                _ => null,
+            };
+
+        private static string? VariantAccessibility(ITypeSymbol type)
+            => EffectiveAccessibility(type) switch
+            {
+                Accessibility.Internal => SyntaxFactory.Token(SyntaxKind.InternalKeyword).Text,
+                Accessibility.Public => SyntaxFactory.Token(SyntaxKind.PublicKeyword).Text,
+                // These only apply to nested types which are currently not supported
+                Accessibility.Private => null,
+                Accessibility.ProtectedAndInternal => null,
+                Accessibility.Protected => null,
+                Accessibility.ProtectedOrInternal => null,
+                Accessibility.NotApplicable => null,
                 _ => null,
             };
 

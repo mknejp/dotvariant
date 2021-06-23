@@ -1132,7 +1132,7 @@ namespace dotVariant._G.Foo
         }
     }
 
-    internal readonly ref struct Variant_class_nullable_enable_N
+    public readonly ref struct Variant_class_nullable_enable_N
     {
         public readonly uint N;
         public Variant_class_nullable_enable_N(uint n) => N = n;
@@ -1182,7 +1182,7 @@ namespace dotVariant._G.Foo
     }
 
     [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_class_nullable_enable_1
+    public readonly struct Variant_class_nullable_enable_1
     {
         public readonly int Value;
         public readonly object _dummy1;
@@ -1194,7 +1194,7 @@ namespace dotVariant._G.Foo
         }
     }
     [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_class_nullable_enable_2
+    public readonly struct Variant_class_nullable_enable_2
     {
         public readonly float Value;
         public readonly object _dummy1;
@@ -1206,7 +1206,7 @@ namespace dotVariant._G.Foo
         }
     }
     [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_class_nullable_enable_3
+    public readonly struct Variant_class_nullable_enable_3
     {
         public readonly string Value;
 
@@ -1216,7 +1216,7 @@ namespace dotVariant._G.Foo
         }
     }
     [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_class_nullable_enable_4
+    public readonly struct Variant_class_nullable_enable_4
     {
         public readonly global::System.Array? Value;
 
