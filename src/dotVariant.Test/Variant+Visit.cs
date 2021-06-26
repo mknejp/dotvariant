@@ -17,33 +17,36 @@ namespace dotVariant.Test
             public static void Visit_calls_corresponding_action_1()
             {
                 var v = new Class_int_float_string(1);
+                var called = false;
                 v.Visit(
-                    x => { Assert.That(x, Is.EqualTo(1)); Assert.Pass(); },
+                    x => { Assert.That(x, Is.EqualTo(1)); called = true; },
                     _ => { Assert.Fail("wrong delegate called"); },
                     _ => { Assert.Fail("wrong delegate called"); });
-                Assert.Fail("no delegate called");
+                Assert.That(called, Is.True, "no delegate called");
             }
 
             [Test]
             public static void Visit_calls_corresponding_action_2()
             {
                 var v = new Class_int_float_string(1f);
+                var called = false;
                 v.Visit(
                     _ => { Assert.Fail("wrong delegate called"); },
-                    x => { Assert.That(x, Is.EqualTo(1f)); Assert.Pass(); },
+                    x => { Assert.That(x, Is.EqualTo(1f)); called = true; },
                     _ => { Assert.Fail("wrong delegate called"); });
-                Assert.Fail("no delegate called");
+                Assert.That(called, Is.True, "no delegate called");
             }
 
             [Test]
             public static void Visit_calls_corresponding_action_3()
             {
                 var v = new Class_int_float_string("s");
+                var called = false;
                 v.Visit(
                     _ => { Assert.Fail("wrong delegate called"); },
                     _ => { Assert.Fail("wrong delegate called"); },
-                    x => { Assert.That(x, Is.EqualTo("s")); Assert.Pass(); });
-                Assert.Fail("no delegate called");
+                    x => { Assert.That(x, Is.EqualTo("s")); called = true; });
+                Assert.That(called, Is.True, "no delegate called");
             }
 
             [Test]

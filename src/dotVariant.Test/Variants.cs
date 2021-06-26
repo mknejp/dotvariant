@@ -108,6 +108,8 @@ namespace dotVariant.Test.Variants
                     new Class_int(1),
                     new DisposableVariant(new Disposable(() => { })),
                     new DisposableVariantWithImpl(new Disposable(() => { })),
+                    new InternalVariant(1),
+                    new PublicVariant(1),
                 },
                 Throws.Nothing);
         }

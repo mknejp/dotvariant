@@ -733,8 +733,10 @@ namespace Foo
                 case 4:
                     a(((global::dotVariant._G.Foo.Variant_class_nullable_enable_4)_variant).Value);
                     break;
+                default:
+                    global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError();
+                    break;
             }
-            global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError();
         }
 
         /// <summary>
@@ -766,8 +768,10 @@ namespace Foo
                 case 4:
                     a(((global::dotVariant._G.Foo.Variant_class_nullable_enable_4)_variant).Value);
                     break;
-                }
-            global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError();
+                default:
+                    global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError();
+                    break;
+            }
         }
 
         /// <summary>
@@ -795,8 +799,9 @@ namespace Foo
                     return s(((global::dotVariant._G.Foo.Variant_class_nullable_enable_3)_variant).Value);
                 case 4:
                     return a(((global::dotVariant._G.Foo.Variant_class_nullable_enable_4)_variant).Value);
+                default:
+                    return global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError<TResult>();
             }
-            return global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError<TResult>();
         }
 
         /// <summary>
@@ -824,8 +829,9 @@ namespace Foo
                     return s(((global::dotVariant._G.Foo.Variant_class_nullable_enable_3)_variant).Value);
                 case 4:
                     return a(((global::dotVariant._G.Foo.Variant_class_nullable_enable_4)_variant).Value);
+                default:
+                    return global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError<TResult>();
             }
-            return global::dotVariant._G.Foo.Variant_class_nullable_enable.ThrowInternalError<TResult>();
         }
 
         private sealed class _VariantTypeProxy
@@ -938,8 +944,9 @@ namespace dotVariant._G.Foo
                         return "string";
                     case 4:
                         return "System.Array?";
+                    default:
+                        return ThrowInternalError<string>();
                 }
-                return ThrowInternalError<string>();
             }
         }
 
@@ -959,8 +966,9 @@ namespace dotVariant._G.Foo
                         return _x._3.Value.ToString();
                     case 4:
                         return _x._4.Value?.ToString() ?? "null";
+                    default:
+                        return ThrowInternalError<string>();
                 }
-                return ThrowInternalError<string>();
             }
         }
 
@@ -980,8 +988,9 @@ namespace dotVariant._G.Foo
                         return _x._3.Value;
                     case 4:
                         return _x._4.Value;
+                    default:
+                        return ThrowInternalError<object?>();
                 }
-                return ThrowInternalError<object?>();
             }
         }
 
@@ -1003,8 +1012,9 @@ namespace dotVariant._G.Foo
                     return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._3.Value, other._x._3.Value);
                 case 4:
                     return global::System.Collections.Generic.EqualityComparer<global::System.Array>.Default.Equals(_x._4.Value, other._x._4.Value);
+                default:
+                    return ThrowInternalError<bool>();
             }
-            return ThrowInternalError<bool>();
         }
 
         public override int GetHashCode()
@@ -1023,8 +1033,9 @@ namespace dotVariant._G.Foo
                         return global::System.HashCode.Combine(_x._3.Value);
                     case 4:
                         return global::System.HashCode.Combine(_x._4.Value);
+                    default:
+                        return ThrowInternalError<int>();
                 }
-                return ThrowInternalError<int>();
             }
         }
 
@@ -1068,8 +1079,10 @@ namespace dotVariant._G.Foo
                 case 4:
                     a(_x._4.Value);
                     break;
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
 
         public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a)
@@ -1091,8 +1104,10 @@ namespace dotVariant._G.Foo
                 case 4:
                     a(_x._4.Value);
                     break;
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
 
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
@@ -1109,8 +1124,9 @@ namespace dotVariant._G.Foo
                     return s(_x._3.Value);
                 case 4:
                     return a(_x._4.Value);
+                default:
+                    return ThrowInternalError<TResult>();
             }
-            return ThrowInternalError<TResult>();
         }
 
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<float, TResult> f, global::System.Func<string, TResult> s, global::System.Func<global::System.Array?, TResult> a)
@@ -1127,8 +1143,9 @@ namespace dotVariant._G.Foo
                     return s(_x._3.Value);
                 case 4:
                     return a(_x._4.Value);
+                default:
+                    return ThrowInternalError<TResult>();
             }
-            return ThrowInternalError<TResult>();
         }
     }
 

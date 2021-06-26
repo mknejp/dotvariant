@@ -153,8 +153,10 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     {{~ end ~}}
                     break;
                 {{~ end ~}}
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
         {{~ end ~}}
 
@@ -226,8 +228,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     case {{ $p.Index }}:
                         return "{{ $p.DiagName }}";
                     {{~ end ~}}
+                    default:
+                        return ThrowInternalError<string>();
                 }
-                return ThrowInternalError<string>();
             }
         }
 
@@ -244,8 +247,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     case {{ $p.Index }}:
                         return {{ coalesce_ToString $p ($storage $p) }};
                     {{~ end ~}}
+                    default:
+                        return ThrowInternalError<string>();
                 }
-                return ThrowInternalError<string>();
             }
         }
 
@@ -262,8 +266,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     case {{ $p.Index }}:
                         return {{ $storage $p }};
                     {{~ end ~}}
+                    default:
+                        return ThrowInternalError<object{{ global_nullable }}>();
                 }
-                return ThrowInternalError<object{{ global_nullable }}>();
             }
         }
 
@@ -283,8 +288,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                 case {{ $i }}:
                     return global::System.Collections.Generic.EqualityComparer<{{ $p.Name }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
                 {{~ end ~}}
+                default:
+                    return ThrowInternalError<bool>();
             }
-            return ThrowInternalError<bool>();
         }
 
         {{~ ## UNION GetHashCode ## ~}}
@@ -305,8 +311,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                         return {{ coalesce $p ($storage $p) ".GetHashCode()" "0"}};
                         {{~ end ~}}
                     {{~ end ~}}
+                    default:
+                        return ThrowInternalError<int>();
                 }
-                return ThrowInternalError<int>();
             }
         }
 
@@ -332,8 +339,10 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     {{ $p.Hint }}({{ $storage $p }});
                     break;
                 {{~ end ~}}
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
 
         {{~ ## UNION Visit(Action) ## ~}}
@@ -349,8 +358,10 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                     {{ $p.Hint }}({{ $storage $p }});
                     break;
                     {{~ end ~}}
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
 
         {{~ ## UNION Visit(Func) ## ~}}
@@ -364,8 +375,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ $storage $p }});
                 {{~ end ~}}
+                default:
+                    return ThrowInternalError<TResult>();
             }
-            return ThrowInternalError<TResult>();
         }
 
         {{~ ## UNION Visit(Func) ## ~}}
@@ -379,8 +391,9 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ $storage $p }});
                 {{~ end ~}}
+                default:
+                    return ThrowInternalError<TResult>();
             }
-            return ThrowInternalError<TResult>();
         }
     }
 
