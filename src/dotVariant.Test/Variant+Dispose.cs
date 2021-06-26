@@ -16,9 +16,10 @@ namespace dotVariant.Test
             [Test]
             public static void If_active_member_is_disposable_its_Dispose_is_called()
             {
-                var a = new DisposableVariant(new Disposable(() => Assert.Pass()));
+                var disposed = false;
+                var a = new DisposableVariant(new Disposable(() => disposed = true));
                 a.Dispose();
-                Assert.Fail("Dispose() not called");
+                Assert.That(disposed, Is.True, "Dispose() not called");
             }
         }
     }

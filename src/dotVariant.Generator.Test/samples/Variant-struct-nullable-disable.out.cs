@@ -565,8 +565,10 @@ namespace Foo
                 case 3:
                     o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
                     break;
+                default:
+                    global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
+                    break;
             }
-            global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
         }
 
         /// <summary>
@@ -594,8 +596,10 @@ namespace Foo
                 case 3:
                     o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
                     break;
-                }
-            global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
+                default:
+                    global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
+                    break;
+            }
         }
 
         /// <summary>
@@ -620,8 +624,9 @@ namespace Foo
                     return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
                 case 3:
                     return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                default:
+                    return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
             }
-            return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
         }
 
         /// <summary>
@@ -646,8 +651,9 @@ namespace Foo
                     return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
                 case 3:
                     return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                default:
+                    return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
             }
-            return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
         }
 
         private sealed class _VariantTypeProxy
@@ -751,8 +757,9 @@ namespace dotVariant._G.Foo
                         return "double";
                     case 3:
                         return "object";
+                    default:
+                        return ThrowInternalError<string>();
                 }
-                return ThrowInternalError<string>();
             }
         }
 
@@ -770,8 +777,9 @@ namespace dotVariant._G.Foo
                         return _x._2.Value.ToString();
                     case 3:
                         return _x._3.Value?.ToString() ?? "null";
+                    default:
+                        return ThrowInternalError<string>();
                 }
-                return ThrowInternalError<string>();
             }
         }
 
@@ -789,8 +797,9 @@ namespace dotVariant._G.Foo
                         return _x._2.Value;
                     case 3:
                         return _x._3.Value;
+                    default:
+                        return ThrowInternalError<object>();
                 }
-                return ThrowInternalError<object>();
             }
         }
 
@@ -810,8 +819,9 @@ namespace dotVariant._G.Foo
                     return global::System.Collections.Generic.EqualityComparer<double>.Default.Equals(_x._2.Value, other._x._2.Value);
                 case 3:
                     return global::System.Collections.Generic.EqualityComparer<object>.Default.Equals(_x._3.Value, other._x._3.Value);
+                default:
+                    return ThrowInternalError<bool>();
             }
-            return ThrowInternalError<bool>();
         }
 
         public override int GetHashCode()
@@ -828,8 +838,9 @@ namespace dotVariant._G.Foo
                         return global::System.HashCode.Combine(_x._2.Value);
                     case 3:
                         return global::System.HashCode.Combine(_x._3.Value);
+                    default:
+                        return ThrowInternalError<int>();
                 }
-                return ThrowInternalError<int>();
             }
         }
 
@@ -865,8 +876,10 @@ namespace dotVariant._G.Foo
                 case 3:
                     o(_x._3.Value);
                     break;
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
 
         public void Visit(global::System.Action<long> l, global::System.Action<double> d, global::System.Action<object> o)
@@ -885,8 +898,10 @@ namespace dotVariant._G.Foo
                 case 3:
                     o(_x._3.Value);
                     break;
+                default:
+                    ThrowInternalError();
+                    break;
             }
-            ThrowInternalError();
         }
 
         public TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o, global::System.Func<TResult> _)
@@ -901,8 +916,9 @@ namespace dotVariant._G.Foo
                     return d(_x._2.Value);
                 case 3:
                     return o(_x._3.Value);
+                default:
+                    return ThrowInternalError<TResult>();
             }
-            return ThrowInternalError<TResult>();
         }
 
         public TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
@@ -917,8 +933,9 @@ namespace dotVariant._G.Foo
                     return d(_x._2.Value);
                 case 3:
                     return o(_x._3.Value);
+                default:
+                    return ThrowInternalError<TResult>();
             }
-            return ThrowInternalError<TResult>();
         }
     }
 

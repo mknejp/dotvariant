@@ -422,8 +422,10 @@ namespace {{ Variant.Namespace }}
                     {{ $p.Hint }}({{ get_value $p }});
                     break;
                 {{~ end ~}}
+                default:
+                    {{ storage_type }}.ThrowInternalError();
+                    break;
             }
-            {{ storage_type }}.ThrowInternalError();
         }
 
         {{~ ## VARIANT Visit(Action<A>, Action<B>, ..., empty) ## ~}}
@@ -448,8 +450,10 @@ namespace {{ Variant.Namespace }}
                     {{ $p.Hint }}({{ get_value $p }});
                     break;
                 {{~ end ~}}
-                }
-            {{ storage_type }}.ThrowInternalError();
+                default:
+                    {{ storage_type }}.ThrowInternalError();
+                    break;
+            }
         }
 
         {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ...) ## ~}}
@@ -473,8 +477,9 @@ namespace {{ Variant.Namespace }}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ get_value $p }});
                 {{~ end ~}}
+                default:
+                    return {{ storage_type }}.ThrowInternalError<TResult>();
             }
-            return {{ storage_type }}.ThrowInternalError<TResult>();
         }
 
         {{~ ## VARIANT Visit(Func<A, R>, Func<B, R>, ..., empty) ## ~}}
@@ -498,8 +503,9 @@ namespace {{ Variant.Namespace }}
                 case {{ $p.Index }}:
                     return {{ $p.Hint }}({{ get_value $p }});
                 {{~ end ~}}
+                default:
+                    return {{ storage_type }}.ThrowInternalError<TResult>();
             }
-            return {{ storage_type }}.ThrowInternalError<TResult>();
         }
 
         private sealed class _VariantTypeProxy
