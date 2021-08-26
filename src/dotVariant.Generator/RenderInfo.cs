@@ -243,15 +243,10 @@ namespace dotVariant.Generator
 
         private static string? ExtensionsNamespace(AnalyzerConfigOptionsProvider options, string? typeNamespace)
         {
-            if (options.GlobalOptions.TryGetValue("build_property.dotVariant-ExtensionClassNamespace", out var property))
-            {
-                property = property.Trim('.');
-                return string.IsNullOrWhiteSpace(property) ? null : property;
-            }
-            else
-            {
-                return typeNamespace;
-            }
+            // All compiler-visible properties exist. If not set they are an empty string. Thus the "Try" part is meaningless.
+            _ = options.GlobalOptions.TryGetValue("build_property.dotVariant-ExtensionClassNamespace", out var value);
+            value = value?.Trim('.');
+            return string.IsNullOrWhiteSpace(value) ? typeNamespace : value;
         }
 
         private static bool HasReactive(CSharpCompilation compilation)
