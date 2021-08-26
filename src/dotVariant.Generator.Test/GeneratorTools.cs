@@ -10,6 +10,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -122,6 +123,34 @@ namespace dotVariant.Generator.Test
         {
             var position = diag.Location.GetMappedLineSpan().StartLinePosition;
             return new(Line: position.Line + 1, Column: position.Character + 1, diag.Id, Severity: diag.Severity);
+        }
+    }
+
+    public sealed class AnalyzerConfigOptionsProvider : Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptionsProvider
+    {
+        public AnalyzerConfigOptionsProvider(ImmutableDictionary<string, string>? msBuildProperties)
+        {
+            GlobalOptions = new Options
+            {
+                // Properties are looked up with the build_property prefix
+                MSBbuildProperties =
+                    (msBuildProperties ?? ImmutableDictionary<string, string>.Empty)
+                    .ToImmutableDictionary(p => "build_property." + p.Key, p => p.Value)
+            };
+        }
+
+        public override Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions GlobalOptions { get; }
+
+        public override Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions GetOptions(SyntaxTree tree) => GlobalOptions;
+
+        public override Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions GetOptions(AdditionalText textFile) => GlobalOptions;
+
+        private class Options : Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions
+        {
+            public ImmutableDictionary<string, string>? MSBbuildProperties { get; init; }
+
+            public override bool TryGetValue(string key, [NotNullWhen(true)] out string? value)
+                => MSBbuildProperties!.TryGetValue(key, out value);
         }
     }
 }

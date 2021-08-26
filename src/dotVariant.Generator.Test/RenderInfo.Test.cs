@@ -34,11 +34,21 @@ namespace dotVariant.Generator.Test
             check(ris[0]);
         }
 
-        private static ImmutableArray<RenderInfo> GetRenderInfoFromCompilation(string source)
+        [TestCaseSource(nameof(ExtensionClassNamespaceTestCases))]
+        public static void ExtensionClassNamespace(string source, Dictionary<string, string> properties, Action<RenderInfo> check)
+        {
+            var ris = GetRenderInfoFromCompilation(source, properties.ToImmutableDictionary());
+            Assert.That(ris, Is.Not.Empty);
+            check(ris[0]);
+        }
+
+        private static ImmutableArray<RenderInfo> GetRenderInfoFromCompilation(string source, ImmutableDictionary<string, string>? msBuildProperties = null)
         {
             var compilation = Compile(SupportSources.Add("input", source));
             var generator = new SourceGenerator();
-            var driver = CSharpGeneratorDriver.Create(generator);
+            var driver = CSharpGeneratorDriver.Create(
+                new[] { generator },
+                optionsProvider: new AnalyzerConfigOptionsProvider(msBuildProperties));
             _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var _, out var _);
             return generator.RenderInfos;
         }
@@ -70,7 +80,11 @@ namespace dotVariant.Generator.Test
                                 static partial void VariantOf(int a, float b);
                             }
                         }",
-                        ri => Assert.That(ri.Variant.Namespace, Is.EqualTo("Foo.Bar"))
+                        ri => Assert.Multiple(() =>
+                        {
+                            Assert.That(ri.Variant.Namespace, Is.EqualTo("Foo.Bar"));
+                            Assert.That(ri.Options.ExtensionClassNamespace, Is.EqualTo("Foo.Bar"));
+                        })
                     ),
                     (
                         "global namespace",
@@ -557,5 +571,77 @@ namespace dotVariant.Generator.Test
                     ),
                 }
                 .Select(test => new TestCaseData(test.Source, test.Check).SetName($"{nameof(Params)}({test.Name})"));
+
+        public static IEnumerable<TestCaseData> ExtensionClassNamespaceTestCases()
+            => new (string Name, string Source, string ExtensionClassNamespace, Action<RenderInfo> Check)[]
+                {
+                    (
+                        "global namespace with empty property",
+                        @"
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(int a);
+                        }",
+                        "",
+                        ri => Assert.That(ri.Options.ExtensionClassNamespace, Is.Null)
+                    ),
+                    (
+                        "global namespace with non-empty property",
+                        @"
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(int a);
+                        }",
+                        "Baz.Qux",
+                        ri => Assert.That(ri.Options.ExtensionClassNamespace, Is.EqualTo("Baz.Qux"))
+                    ),
+                    (
+                        "non-global namespace with empty property",
+                        @"
+                        namespace Foo.Bar
+                        {
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(int a);
+                            }
+                        }",
+                        "",
+                        ri => Assert.That(ri.Options.ExtensionClassNamespace, Is.EqualTo("Foo.Bar"))
+                    ),
+                    (
+                        "non-global namespace with non-empty property",
+                        @"
+                        namespace Foo.Bar
+                        {
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(int a);
+                            }
+                        }",
+                        "Baz.Qux",
+                        ri => Assert.That(ri.Options.ExtensionClassNamespace, Is.EqualTo("Baz.Qux"))
+                    ),
+                    (
+                        "property dots are trimmed",
+                        @"
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(int a);
+                        }",
+                        ".Baz.Qux.",
+                        ri => Assert.That(ri.Options.ExtensionClassNamespace, Is.EqualTo("Baz.Qux"))
+                    ),
+                }
+                .Select(test =>
+                    new TestCaseData(
+                        test.Source,
+                        new Dictionary<string, string> { ["dotVariant-ExtensionClassNamespace"] = test.ExtensionClassNamespace },
+                        test.Check)
+                    .SetName($"{nameof(ExtensionClassNamespace)}({test.Name})"));
     }
 }
