@@ -108,10 +108,17 @@ namespace dotVariant.Test.Variants
                     new Class_int(1),
                     new DisposableVariant(new Disposable(() => { })),
                     new DisposableVariantWithImpl(new Disposable(() => { })),
+                    new GlobalVariant(1),
                     new InternalVariant(1),
                     new PublicVariant(1),
                 },
                 Throws.Nothing);
         }
     }
+}
+
+[dotVariant.Variant]
+internal partial class GlobalVariant
+{
+    static partial void VariantOf(int a, string b);
 }

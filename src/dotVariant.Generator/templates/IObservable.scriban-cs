@@ -7,10 +7,6 @@
 namespace {{ Options.ExtensionClassNamespace }}
 {
 {{~ end ~}}
-    {{~ ## These are for extension methods only. All types must still be fully qualidfied. ## ~}}
-    using System;
-    using System.Reactive.Linq;
-
     {{ Variant.ExtensionsAccessibility }} static partial class _{{ Variant.Name }}_Ex
     {
         {{~ ## Match(IObservable<V>, Func<A, R>) ## ~}}
@@ -28,9 +24,9 @@ namespace {{ Options.ExtensionClassNamespace }}
                 this global::System.IObservable<{{ Variant.FullName }}> source,
                 {{ func_type $p }} {{ $p.Hint }})
         {
-            return source
-                .Where(_variant => {{ get_n }} == {{ $p.Index }})
-                .Select(_variant => {{ $p.Hint }}({{ get_value $p }}));
+            return global::System.Reactive.Linq.Observable.Select(
+                global::System.Reactive.Linq.Observable.Where(source, _variant => {{ get_n }} == {{ $p.Index }}),
+                _variant => {{ $p.Hint }}({{ get_value $p }}));
         }
         {{~ end ~}}
 
@@ -51,7 +47,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                 {{ func_type $p }} {{ $p.Hint }},
                 TResult _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if ({{ get_n }} == {{ $p.Index }})
                 {
@@ -82,7 +78,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                 {{ func_type $p }} {{ $p.Hint }},
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if ({{ get_n }} == {{ $p.Index }})
                 {
@@ -112,7 +108,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                 this global::System.IObservable<{{ Variant.FullName }}> source,
                 {{ func_params }})
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 switch ({{ get_n }})
                 {
@@ -146,7 +142,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                 {{ func_params }},
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 switch ({{ get_n }})
                 {
@@ -191,7 +187,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {
             return VisitMany(source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}) =>
             {
-                return Observable.Merge({{ Params | array.each @(do; ret $0.Hint + "(_" + $0.Index + ")"; end) | array.join ", " }});
+                return global::System.Reactive.Linq.Observable.Merge({{ Params | array.each @(do; ret $0.Hint + "(_" + $0.Index + ")"; end) | array.join ", " }});
             });
         }
         {{~ end ~}}
@@ -225,7 +221,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {
             return VisitMany(source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}, _0) =>
             {
-                return Observable.Merge({{ Params | array.each @(do; ret $0.Hint + "(_" + $0.Index + ")"; end) | array.join ", " }}, _(_0));
+                return global::System.Reactive.Linq.Observable.Merge({{ Params | array.each @(do; ret $0.Hint + "(_" + $0.Index + ")"; end) | array.join ", " }}, _(_0));
             });
         }
 
@@ -253,14 +249,12 @@ namespace {{ Options.ExtensionClassNamespace }}
                 this global::System.IObservable<{{ Variant.FullName }}> source,
                 global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + (value_type $0) + ">"; end) | array.join ", " }}, global::System.IObservable<TResult>> selector)
         {
-            return Observable.Create<TResult>(_o =>
+            return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(false);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }})
-                        .Subscribe(_o),
-                    source
-                        .SubscribeSafe(_mo),
+                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
                     _mo);
             });
         }
@@ -287,14 +281,12 @@ namespace {{ Options.ExtensionClassNamespace }}
                 this global::System.IObservable<{{ Variant.FullName }}> source,
                 global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + (value_type $0) + ">"; end) | array.join ", " }}, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
         {
-            return Observable.Create<TResult>(_o =>
+            return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(true);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}, _mo.Subject0)
-                        .Subscribe(_o),
-                    source
-                        .SubscribeSafe(_mo),
+                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}, _mo.Subject0).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
                     _mo);
             });
         }
