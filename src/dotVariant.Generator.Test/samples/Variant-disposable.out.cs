@@ -1047,9 +1047,6 @@ namespace Foo
 }
 namespace Foo
 {
-    using System;
-    using System.Reactive.Linq;
-
     public static partial class _Variant_disposable_Ex
     {
         /// <summary>
@@ -1065,9 +1062,9 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_disposable> source,
                 global::System.Func<int, TResult> i)
         {
-            return source
-                .Where(_variant => ((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
-                .Select(_variant => i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value));
+            return global::System.Reactive.Linq.Observable.Select(
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1),
+                _variant => i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="global::System.IO.Stream"/> element of an observable sequence
@@ -1082,9 +1079,9 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_disposable> source,
                 global::System.Func<global::System.IO.Stream, TResult> stream)
         {
-            return source
-                .Where(_variant => ((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
-                .Select(_variant => stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value));
+            return global::System.Reactive.Linq.Observable.Select(
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2),
+                _variant => stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value));
         }
 
         /// <summary>
@@ -1102,7 +1099,7 @@ namespace Foo
                 global::System.Func<int, TResult> i,
                 TResult _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
                 {
@@ -1129,7 +1126,7 @@ namespace Foo
                 global::System.Func<global::System.IO.Stream, TResult> stream,
                 TResult _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
                 {
@@ -1157,7 +1154,7 @@ namespace Foo
                 global::System.Func<int, TResult> i,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
                 {
@@ -1184,7 +1181,7 @@ namespace Foo
                 global::System.Func<global::System.IO.Stream, TResult> stream,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
                 {
@@ -1211,7 +1208,7 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_disposable> source,
                 global::System.Func<int, TResult> i, global::System.Func<global::System.IO.Stream, TResult> stream)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
                 {
@@ -1243,7 +1240,7 @@ namespace Foo
                 global::System.Func<int, TResult> i, global::System.Func<global::System.IO.Stream, TResult> stream,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
                 {
@@ -1285,7 +1282,7 @@ namespace Foo
         {
             return VisitMany(source, (_1, _2) =>
             {
-                return Observable.Merge(i(_1), stream(_2));
+                return global::System.Reactive.Linq.Observable.Merge(i(_1), stream(_2));
             });
         }
 
@@ -1316,7 +1313,7 @@ namespace Foo
         {
             return VisitMany(source, (_1, _2, _0) =>
             {
-                return Observable.Merge(i(_1), stream(_2), _(_0));
+                return global::System.Reactive.Linq.Observable.Merge(i(_1), stream(_2), _(_0));
             });
         }
 
@@ -1343,14 +1340,12 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_disposable> source,
                 global::System.Func<global::System.IObservable<int>, global::System.IObservable<global::System.IO.Stream>, global::System.IObservable<TResult>> selector)
         {
-            return Observable.Create<TResult>(_o =>
+            return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(false);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector(_mo.Subject1, _mo.Subject2)
-                        .Subscribe(_o),
-                    source
-                        .SubscribeSafe(_mo),
+                    selector(_mo.Subject1, _mo.Subject2).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
                     _mo);
             });
         }
@@ -1376,14 +1371,12 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_disposable> source,
                 global::System.Func<global::System.IObservable<int>, global::System.IObservable<global::System.IO.Stream>, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
         {
-            return Observable.Create<TResult>(_o =>
+            return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(true);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject0)
-                        .Subscribe(_o),
-                    source
-                        .SubscribeSafe(_mo),
+                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject0).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
                     _mo);
             });
         }

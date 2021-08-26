@@ -1339,9 +1339,6 @@ namespace Foo
 }
 namespace Foo
 {
-    using System;
-    using System.Reactive.Linq;
-
     public static partial class _Variant_struct_nullable_enable_Ex
     {
         /// <summary>
@@ -1357,9 +1354,9 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_struct_nullable_enable> source,
                 global::System.Func<long, TResult> l)
         {
-            return source
-                .Where(_variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 1)
-                .Select(_variant => l(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_1)_variant).Value));
+            return global::System.Reactive.Linq.Observable.Select(
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 1),
+                _variant => l(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_1)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="double"/> element of an observable sequence
@@ -1374,9 +1371,9 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_struct_nullable_enable> source,
                 global::System.Func<double, TResult> d)
         {
-            return source
-                .Where(_variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 2)
-                .Select(_variant => d(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_2)_variant).Value));
+            return global::System.Reactive.Linq.Observable.Select(
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 2),
+                _variant => d(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_2)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="object"/> element of an observable sequence
@@ -1391,9 +1388,9 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_struct_nullable_enable> source,
                 global::System.Func<object, TResult> o)
         {
-            return source
-                .Where(_variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 3)
-                .Select(_variant => o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)_variant).Value));
+            return global::System.Reactive.Linq.Observable.Select(
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 3),
+                _variant => o(((global::dotVariant._G.Foo.Variant_struct_nullable_enable_3)_variant).Value));
         }
 
         /// <summary>
@@ -1411,7 +1408,7 @@ namespace Foo
                 global::System.Func<long, TResult> l,
                 TResult _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 1)
                 {
@@ -1438,7 +1435,7 @@ namespace Foo
                 global::System.Func<double, TResult> d,
                 TResult _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 2)
                 {
@@ -1465,7 +1462,7 @@ namespace Foo
                 global::System.Func<object, TResult> o,
                 TResult _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 3)
                 {
@@ -1493,7 +1490,7 @@ namespace Foo
                 global::System.Func<long, TResult> l,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 1)
                 {
@@ -1520,7 +1517,7 @@ namespace Foo
                 global::System.Func<double, TResult> d,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 2)
                 {
@@ -1547,7 +1544,7 @@ namespace Foo
                 global::System.Func<object, TResult> o,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 if (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N == 3)
                 {
@@ -1575,7 +1572,7 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_struct_nullable_enable> source,
                 global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 switch (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N)
                 {
@@ -1610,7 +1607,7 @@ namespace Foo
                 global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o,
                 global::System.Func<TResult> _)
         {
-            return source.Select(_variant =>
+            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
                 switch (((global::dotVariant._G.Foo.Variant_struct_nullable_enable_N)_variant).N)
                 {
@@ -1655,7 +1652,7 @@ namespace Foo
         {
             return VisitMany(source, (_1, _2, _3) =>
             {
-                return Observable.Merge(l(_1), d(_2), o(_3));
+                return global::System.Reactive.Linq.Observable.Merge(l(_1), d(_2), o(_3));
             });
         }
 
@@ -1687,7 +1684,7 @@ namespace Foo
         {
             return VisitMany(source, (_1, _2, _3, _0) =>
             {
-                return Observable.Merge(l(_1), d(_2), o(_3), _(_0));
+                return global::System.Reactive.Linq.Observable.Merge(l(_1), d(_2), o(_3), _(_0));
             });
         }
 
@@ -1714,14 +1711,12 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_struct_nullable_enable> source,
                 global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<TResult>> selector)
         {
-            return Observable.Create<TResult>(_o =>
+            return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(false);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3)
-                        .Subscribe(_o),
-                    source
-                        .SubscribeSafe(_mo),
+                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
                     _mo);
             });
         }
@@ -1747,14 +1742,12 @@ namespace Foo
                 this global::System.IObservable<global::Foo.Variant_struct_nullable_enable> source,
                 global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
         {
-            return Observable.Create<TResult>(_o =>
+            return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(true);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3, _mo.Subject0)
-                        .Subscribe(_o),
-                    source
-                        .SubscribeSafe(_mo),
+                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3, _mo.Subject0).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
                     _mo);
             });
         }
