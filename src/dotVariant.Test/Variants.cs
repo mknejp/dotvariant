@@ -107,6 +107,7 @@ namespace dotVariant.Test.Variants
                     new Class_int_float_string("s"),
                     new Class_int_float_object(new Helper()),
                     new Struct_int_float_object(new Helper()),
+                    new Struct_int_float_string("s"),
                     new Class_with_default_ctor(),
 #if NULLABLE_ENABLED
                     new Class_int_float_nullable(default(Helper?)),
