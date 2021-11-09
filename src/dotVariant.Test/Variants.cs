@@ -78,6 +78,12 @@ namespace dotVariant.Test.Variants
     }
 
     [Variant]
+    internal readonly partial struct NullableValueType
+    {
+        static partial void VariantOf(int? i);
+    }
+
+    [Variant]
     internal sealed partial class InternalVariant
     {
         static partial void VariantOf(int a, string b);
@@ -109,6 +115,7 @@ namespace dotVariant.Test.Variants
                     new DisposableVariant(new Disposable(() => { })),
                     new DisposableVariantWithImpl(new Disposable(() => { })),
                     new GlobalVariant(1),
+                    new NullableValueType(1),
                     new InternalVariant(1),
                     new PublicVariant(1),
                 },

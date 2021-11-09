@@ -138,7 +138,9 @@ namespace dotVariant.Generator
             /// </summary>
             string Name,
             /// <summary>
-            /// <c>"nonnull"</c> or <c>"nullable"</c>. For classes this determines whether the parameter was originally as nullable or null oblivious verses not nullable. For value types this determines whether it's a <see cref="Nullable{T}"/>.
+            /// <c>"nonnull"</c> or <c>"nullable"</c>. Determines whether the parameter was originally annotated as nullable or null oblivious versus not nullable.
+            /// For class types this controls parameter and return type signatures.
+            /// For value types this only controls whether to null-coalesce ToString().
             /// </summary>
             string Nullability,
             /// <summary>
