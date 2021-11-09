@@ -23,7 +23,7 @@ func value_type(type, name = null)
     if type.IsClass
         ret emit_nullability && type.Nullability == "nullable" ? (name + "?" ): name
     else
-        ret type.Nullability == "nullable" ? (name + "?") : name
+        ret name
     end
 end
 
@@ -36,7 +36,7 @@ func outref_type(type, name = null)
     if type.IsClass
         ret emit_nullability ? (name + "?") : name
     else
-        ret type.Nullability == "nullable" ? (name + "?") : name
+        ret name
     end
 end
 
