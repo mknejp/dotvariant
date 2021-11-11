@@ -127,15 +127,57 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         : global::System.IDisposable
     {{~ end ~}}
     {
-        private readonly {{ Variant.Name }}_Union _x;
-        private readonly uint _n;
+        {{~ ## UNION TYPE ## ~}}
+        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+        private readonly struct Union
+        {
+            {{~ ## UNION MEMBERS ## ~}}
+            {{~ for $p in Params ~}}
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_{{ $p.Index }} _{{ $p.Index }};
+            {{~ end ~}}
+
+            {{~ ## UNION CONSTRUCTORS ## ~}}
+            {{~ for $p in Params ~}}
+            public Union({{ value_type $p }} value)
+            {
+                {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
+                _{{ $other.Index }} = default;
+                {{~ end ~}}
+                _{{ $p.Index }} = new Value_{{ $p.Index }}(value);
+            }
+            {{~ end ~}}
+        }
+
+        {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
+        {{~ for $p in Params ~}}
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_{{ $p.Index }}
+        {
+            public readonly {{ value_type $p }} Value;
+            {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+            public readonly object _dummy{{ $dummy }};
+            {{~ end ~}}
+
+            public Value_{{ $p.Index }}({{ value_type $p }} value)
+            {
+                {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+                _dummy{{ $dummy }} = null{{ global_forgive }};
+                {{~ end ~}}
+                Value = value;
+            }
+        }
+        {{~ end ~}}
+
+        private readonly Union _x;
+        private readonly byte _n;
 
         {{~ ## STORAGE CONSTRUCTORS ## ~}}
         {{~ for $p in Params ~}}
         public {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
         {
             _n = {{ $p.Index }};
-            _x = new {{ Variant.Name }}_Union({{ $p.Hint }});
+            _x = new Union({{ $p.Hint }});
         }
         {{~ end ~}}
 
@@ -161,9 +203,11 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
 
         {{~ ## INTERNAL ACCESS ## ~}}
-        public static explicit operator {{ Variant.Name }}_N({{ Variant.Name }} v) => new {{ Variant.Name }}_N(v._n);
+        public static explicit operator global::dotVariant._Private.Discriminator({{ Variant.Name }} v)
+            => (global::dotVariant._Private.Discriminator)v._n;
         {{~ for $p in Params ~}}
-        public static explicit operator {{ Variant.Name }}_{{ $p.Index }}({{ Variant.Name }} v) => v._x._{{ $p.Index }};
+        public static explicit operator global::dotVariant._Private.Accessor_{{ $p.Index }}<{{ value_type $p }}>(in {{ Variant.Name }} v)
+            => new global::dotVariant._Private.Accessor_{{ $p.Index }}<{{ value_type $p }}>(v._x._{{ $p.Index }}.Value);
         {{~ end ~}}
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
@@ -396,54 +440,4 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
             }
         }
     }
-
-    {{~ ## DISCRIMINATOR COVERTER ## ~}}
-    {{ Variant.Accessibility }} readonly ref struct {{ Variant.Name }}_N
-    {
-        public readonly uint N;
-        public {{ Variant.Name }}_N(uint n) => N = n;
-    }
-
-    {{~ ## UNION TYPE ## ~}}
-    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct {{ Variant.Name }}_Union
-    {
-        {{~ ## UNION MEMBERS ## ~}}
-        {{~ for $p in Params ~}}
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly {{ Variant.Name }}_{{ $p.Index }} _{{ $p.Index }};
-        {{~ end ~}}
-
-        {{~ ## UNION CONSTRUCTORS ## ~}}
-        {{~ for $p in Params ~}}
-        public {{ Variant.Name }}_Union({{ value_type $p }} value)
-        {
-            {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
-            _{{ $other.Index }} = default;
-            {{~ end ~}}
-            _{{ $p.Index }} = new {{ Variant.Name }}_{{ $p.Index }}(value);
-        }
-        {{~ end ~}}
-    }
-
-    {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
-    {{~ for $p in Params ~}}
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    {{ Variant.Accessibility }} readonly struct {{ Variant.Name }}_{{ $p.Index }}
-    {
-        public readonly {{ value_type $p }} Value;
-        {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-        public readonly object _dummy{{ $dummy }};
-        {{~ end ~}}
-
-        public {{ Variant.Name }}_{{ $p.Index }}({{ value_type $p }} value)
-        {
-            {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-            _dummy{{ $dummy }} = null{{ global_forgive }};
-            {{~ end ~}}
-            Value = value;
-        }
-    }
-    {{~ end ~}}
 }

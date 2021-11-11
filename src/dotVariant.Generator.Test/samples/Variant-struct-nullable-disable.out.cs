@@ -105,9 +105,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/></exception>
         public readonly void Match(out long l)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                l = ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value;
+                l = ((global::dotVariant._Private.Accessor_1<long>)_variant).Value;
             }
             else
             {
@@ -122,9 +122,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/></exception>
         public readonly void Match(out double d)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                d = ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value;
+                d = ((global::dotVariant._Private.Accessor_2<double>)_variant).Value;
             }
             else
             {
@@ -139,9 +139,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/></exception>
         public readonly void Match(out object o)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                o = ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value;
+                o = ((global::dotVariant._Private.Accessor_3<object>)_variant).Value;
             }
             else
             {
@@ -156,9 +156,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_struct_nullable_disable contained a value of type <see cref="long"/>.</returns>
         public readonly bool TryMatch(out long l)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                l = ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value;
+                l = ((global::dotVariant._Private.Accessor_1<long>)_variant).Value;
                 return true;
             }
             else
@@ -174,9 +174,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_struct_nullable_disable contained a value of type <see cref="double"/>.</returns>
         public readonly bool TryMatch(out double d)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                d = ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value;
+                d = ((global::dotVariant._Private.Accessor_2<double>)_variant).Value;
                 return true;
             }
             else
@@ -192,9 +192,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_struct_nullable_disable contained a value of type <see cref="object"/>.</returns>
         public readonly bool TryMatch(out object o)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                o = ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value;
+                o = ((global::dotVariant._Private.Accessor_3<object>)_variant).Value;
                 return true;
             }
             else
@@ -212,9 +212,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public readonly bool TryMatch(global::System.Action<long> l)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                 return true;
             }
             else
@@ -230,9 +230,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public readonly bool TryMatch(global::System.Action<double> d)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                 return true;
             }
             else
@@ -248,9 +248,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public readonly bool TryMatch(global::System.Action<object> o)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                 return true;
             }
             else
@@ -268,9 +268,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public readonly void Match(global::System.Action<long> l)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
             }
             else
             {
@@ -286,9 +286,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public readonly void Match(global::System.Action<double> d)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
             }
             else
             {
@@ -304,9 +304,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public readonly void Match(global::System.Action<object> o)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
             }
             else
             {
@@ -323,9 +323,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="_"> is rethrown.</exception>
         public readonly void Match(global::System.Action<long> l, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
             }
             else
             {
@@ -341,9 +341,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="_"> is rethrown.</exception>
         public readonly void Match(global::System.Action<double> d, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
             }
             else
             {
@@ -359,9 +359,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="_"> is rethrown.</exception>
         public readonly void Match(global::System.Action<object> o, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
             }
             else
             {
@@ -379,9 +379,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<long, TResult> l)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
             }
             else
             {
@@ -398,9 +398,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<double, TResult> d)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
             }
             else
             {
@@ -417,9 +417,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<object, TResult> o)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
             }
             else
             {
@@ -437,9 +437,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="other"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<long, TResult> l, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
             }
             else
             {
@@ -456,9 +456,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="other"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<double, TResult> d, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
             }
             else
             {
@@ -475,9 +475,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="other"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<object, TResult> o, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
             }
             else
             {
@@ -494,9 +494,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="_"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<long, TResult> l, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
             }
             else
             {
@@ -512,9 +512,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="_"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<double, TResult> d, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
             }
             else
             {
@@ -530,9 +530,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="_"> is rethrown.</exception>
         public readonly TResult Match<TResult>(global::System.Func<object, TResult> o, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
             {
-                return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
             }
             else
             {
@@ -551,19 +551,19 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public readonly void Visit(global::System.Action<long> l, global::System.Action<double> d, global::System.Action<object> o)
         {
-            switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowEmptyError();
                     break;
                 case 1:
-                    l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                     break;
                 case 2:
-                    d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                     break;
                 case 3:
-                    o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                     break;
                 default:
                     global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
@@ -582,19 +582,19 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public readonly void Visit(global::System.Action<long> l, global::System.Action<double> d, global::System.Action<object> o, global::System.Action _)
         {
-            switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     _();
                     break;
                 case 1:
-                    l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                     break;
                 case 2:
-                    d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                     break;
                 case 3:
-                    o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                     break;
                 default:
                     global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
@@ -614,16 +614,16 @@ namespace Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public readonly TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
         {
-            switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowEmptyError<TResult>();
                 case 1:
-                    return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                 case 2:
-                    return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                 case 3:
-                    return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                 default:
                     return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
             }
@@ -641,16 +641,16 @@ namespace Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public readonly TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o, global::System.Func<TResult> _)
         {
-            switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     return _();
                 case 1:
-                    return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                 case 2:
-                    return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                 case 3:
-                    return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                 default:
                     return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
             }
@@ -666,10 +666,14 @@ namespace Foo
             }
         }
 
-        public static explicit operator global::dotVariant._G.Foo.Variant_struct_nullable_disable_N(Variant_struct_nullable_disable v) => (global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_struct_nullable_disable_1(Variant_struct_nullable_disable v) => (global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_struct_nullable_disable_2(Variant_struct_nullable_disable v) => (global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_struct_nullable_disable_3(Variant_struct_nullable_disable v) => (global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Discriminator(Variant_struct_nullable_disable v) => (global::dotVariant._Private.Discriminator)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_1<long>(Variant_struct_nullable_disable v) => (global::dotVariant._Private.Accessor_1<long>)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_2<double>(Variant_struct_nullable_disable v) => (global::dotVariant._Private.Accessor_2<double>)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_3<object>(Variant_struct_nullable_disable v) => (global::dotVariant._Private.Accessor_3<object>)v._variant;
     }
 }
 
@@ -678,30 +682,99 @@ namespace dotVariant._G.Foo
     [global::System.Diagnostics.DebuggerNonUserCode]
     internal readonly struct Variant_struct_nullable_disable
     {
-        private readonly Variant_struct_nullable_disable_Union _x;
-        private readonly uint _n;
+        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+        private readonly struct Union
+        {
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_1 _1;
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_2 _2;
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_3 _3;
+
+            public Union(long value)
+            {
+                _2 = default;
+                _3 = default;
+                _1 = new Value_1(value);
+            }
+            public Union(double value)
+            {
+                _1 = default;
+                _3 = default;
+                _2 = new Value_2(value);
+            }
+            public Union(object value)
+            {
+                _1 = default;
+                _2 = default;
+                _3 = new Value_3(value);
+            }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_1
+        {
+            public readonly long Value;
+            public readonly object _dummy1;
+
+            public Value_1(long value)
+            {
+                _dummy1 = null;
+                Value = value;
+            }
+        }
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_2
+        {
+            public readonly double Value;
+            public readonly object _dummy1;
+
+            public Value_2(double value)
+            {
+                _dummy1 = null;
+                Value = value;
+            }
+        }
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_3
+        {
+            public readonly object Value;
+
+            public Value_3(object value)
+            {
+                Value = value;
+            }
+        }
+
+        private readonly Union _x;
+        private readonly byte _n;
 
         public Variant_struct_nullable_disable(long l)
         {
             _n = 1;
-            _x = new Variant_struct_nullable_disable_Union(l);
+            _x = new Union(l);
         }
         public Variant_struct_nullable_disable(double d)
         {
             _n = 2;
-            _x = new Variant_struct_nullable_disable_Union(d);
+            _x = new Union(d);
         }
         public Variant_struct_nullable_disable(object o)
         {
             _n = 3;
-            _x = new Variant_struct_nullable_disable_Union(o);
+            _x = new Union(o);
         }
 
 
-        public static explicit operator Variant_struct_nullable_disable_N(Variant_struct_nullable_disable v) => new Variant_struct_nullable_disable_N(v._n);
-        public static explicit operator Variant_struct_nullable_disable_1(Variant_struct_nullable_disable v) => v._x._1;
-        public static explicit operator Variant_struct_nullable_disable_2(Variant_struct_nullable_disable v) => v._x._2;
-        public static explicit operator Variant_struct_nullable_disable_3(Variant_struct_nullable_disable v) => v._x._3;
+        public static explicit operator global::dotVariant._Private.Discriminator(Variant_struct_nullable_disable v)
+            => (global::dotVariant._Private.Discriminator)v._n;
+        public static explicit operator global::dotVariant._Private.Accessor_1<long>(in Variant_struct_nullable_disable v)
+            => new global::dotVariant._Private.Accessor_1<long>(v._x._1.Value);
+        public static explicit operator global::dotVariant._Private.Accessor_2<double>(in Variant_struct_nullable_disable v)
+            => new global::dotVariant._Private.Accessor_2<double>(v._x._2.Value);
+        public static explicit operator global::dotVariant._Private.Accessor_3<object>(in Variant_struct_nullable_disable v)
+            => new global::dotVariant._Private.Accessor_3<object>(v._x._3.Value);
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
@@ -938,78 +1011,6 @@ namespace dotVariant._G.Foo
             }
         }
     }
-
-    public readonly ref struct Variant_struct_nullable_disable_N
-    {
-        public readonly uint N;
-        public Variant_struct_nullable_disable_N(uint n) => N = n;
-    }
-
-    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_struct_nullable_disable_Union
-    {
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_struct_nullable_disable_1 _1;
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_struct_nullable_disable_2 _2;
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_struct_nullable_disable_3 _3;
-
-        public Variant_struct_nullable_disable_Union(long value)
-        {
-            _2 = default;
-            _3 = default;
-            _1 = new Variant_struct_nullable_disable_1(value);
-        }
-        public Variant_struct_nullable_disable_Union(double value)
-        {
-            _1 = default;
-            _3 = default;
-            _2 = new Variant_struct_nullable_disable_2(value);
-        }
-        public Variant_struct_nullable_disable_Union(object value)
-        {
-            _1 = default;
-            _2 = default;
-            _3 = new Variant_struct_nullable_disable_3(value);
-        }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_struct_nullable_disable_1
-    {
-        public readonly long Value;
-        public readonly object _dummy1;
-
-        public Variant_struct_nullable_disable_1(long value)
-        {
-            _dummy1 = null;
-            Value = value;
-        }
-    }
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_struct_nullable_disable_2
-    {
-        public readonly double Value;
-        public readonly object _dummy1;
-
-        public Variant_struct_nullable_disable_2(double value)
-        {
-            _dummy1 = null;
-            Value = value;
-        }
-    }
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_struct_nullable_disable_3
-    {
-        public readonly object Value;
-
-        public Variant_struct_nullable_disable_3(object value)
-        {
-            Value = value;
-        }
-    }
 }
 
 
@@ -1033,9 +1034,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)variant).Value);
+                    yield return l(((global::dotVariant._Private.Accessor_1<long>)variant).Value);
                 }
             }
         }
@@ -1055,9 +1056,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)variant).Value);
+                    yield return d(((global::dotVariant._Private.Accessor_2<double>)variant).Value);
                 }
             }
         }
@@ -1077,9 +1078,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 3)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 3)
                 {
-                    yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)variant).Value);
+                    yield return o(((global::dotVariant._Private.Accessor_3<object>)variant).Value);
                 }
             }
         }
@@ -1102,9 +1103,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)variant).Value);
+                    yield return l(((global::dotVariant._Private.Accessor_1<long>)variant).Value);
                 }
                 else
                 {
@@ -1130,9 +1131,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)variant).Value);
+                    yield return d(((global::dotVariant._Private.Accessor_2<double>)variant).Value);
                 }
                 else
                 {
@@ -1158,9 +1159,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 3)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 3)
                 {
-                    yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)variant).Value);
+                    yield return o(((global::dotVariant._Private.Accessor_3<object>)variant).Value);
                 }
                 else
                 {
@@ -1187,9 +1188,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)variant).Value);
+                    yield return l(((global::dotVariant._Private.Accessor_1<long>)variant).Value);
                 }
                 else
                 {
@@ -1215,9 +1216,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)variant).Value);
+                    yield return d(((global::dotVariant._Private.Accessor_2<double>)variant).Value);
                 }
                 else
                 {
@@ -1243,9 +1244,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N == 3)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 3)
                 {
-                    yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)variant).Value);
+                    yield return o(((global::dotVariant._Private.Accessor_3<object>)variant).Value);
                 }
                 else
                 {
@@ -1274,19 +1275,19 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)variant))
                 {
                     case 0:
                         global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowEmptyError();
                         yield break;
                     case 1:
-                        yield return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)variant).Value);
+                        yield return l(((global::dotVariant._Private.Accessor_1<long>)variant).Value);
                         break;
                     case 2:
-                        yield return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)variant).Value);
+                        yield return d(((global::dotVariant._Private.Accessor_2<double>)variant).Value);
                         break;
                     case 3:
-                        yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)variant).Value);
+                        yield return o(((global::dotVariant._Private.Accessor_3<object>)variant).Value);
                         break;
                     default:
                         global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
@@ -1315,19 +1316,19 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)variant))
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)variant).Value);
+                        yield return l(((global::dotVariant._Private.Accessor_1<long>)variant).Value);
                         break;
                     case 2:
-                        yield return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)variant).Value);
+                        yield return d(((global::dotVariant._Private.Accessor_2<double>)variant).Value);
                         break;
                     case 3:
-                        yield return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)variant).Value);
+                        yield return o(((global::dotVariant._Private.Accessor_3<object>)variant).Value);
                         break;
                     default:
                         global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError();
@@ -1355,8 +1356,8 @@ namespace Foo
                 global::System.Func<long, TResult> l)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1),
-                _variant => l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 1),
+                _variant => l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="double"/> element of an observable sequence
@@ -1372,8 +1373,8 @@ namespace Foo
                 global::System.Func<double, TResult> d)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2),
-                _variant => d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 2),
+                _variant => d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="object"/> element of an observable sequence
@@ -1389,8 +1390,8 @@ namespace Foo
                 global::System.Func<object, TResult> o)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3),
-                _variant => o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 3),
+                _variant => o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value));
         }
 
         /// <summary>
@@ -1410,9 +1411,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
                 {
-                    return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                 }
                 else
                 {
@@ -1437,9 +1438,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
                 {
-                    return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                 }
                 else
                 {
@@ -1464,9 +1465,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
                 {
-                    return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                 }
                 else
                 {
@@ -1492,9 +1493,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
                 {
-                    return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                    return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                 }
                 else
                 {
@@ -1519,9 +1520,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
                 {
-                    return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                    return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                 }
                 else
                 {
@@ -1546,9 +1547,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N == 3)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 3)
                 {
-                    return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                    return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                 }
                 else
                 {
@@ -1574,16 +1575,16 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowEmptyError<TResult>();
                     case 1:
-                        return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                        return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                     case 2:
-                        return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                        return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                     case 3:
-                        return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                        return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                     default:
                         return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
                 }
@@ -1609,16 +1610,16 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         return _();
                     case 1:
-                        return l(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                        return l(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                     case 2:
-                        return d(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                        return d(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                     case 3:
-                        return o(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                        return o(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                     default:
                         return global::dotVariant._G.Foo.Variant_struct_nullable_disable.ThrowInternalError<TResult>();
                 }
@@ -1775,7 +1776,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant_struct_nullable_disable _variant)
             {
-                switch (((global::dotVariant._G.Foo.Variant_struct_nullable_disable_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         if (_accept0)
@@ -1788,13 +1789,13 @@ namespace Foo
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_1)_variant).Value);
+                        Subject1.OnNext(((global::dotVariant._Private.Accessor_1<long>)_variant).Value);
                         break;
                     case 2:
-                        Subject2.OnNext(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_2)_variant).Value);
+                        Subject2.OnNext(((global::dotVariant._Private.Accessor_2<double>)_variant).Value);
                         break;
                     case 3:
-                        Subject3.OnNext(((global::dotVariant._G.Foo.Variant_struct_nullable_disable_3)_variant).Value);
+                        Subject3.OnNext(((global::dotVariant._Private.Accessor_3<object>)_variant).Value);
                         break;
                     default:
                         OnError(global::dotVariant._G.Foo.Variant_struct_nullable_disable.MakeInternalError());

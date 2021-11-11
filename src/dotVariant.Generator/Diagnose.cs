@@ -48,6 +48,7 @@ namespace dotVariant.Generator
                 new Func<ITypeSymbol, MethodDeclarationSyntax, IMethodSymbol, ImmutableArray<IParameterSymbol>, CancellationToken, IEnumerable<Diagnostic>>[]
                 {
                     CheckThat.HasAtLeastOneOption,
+                    CheckThat.NotTooManyOptions,
                     CheckThat.HasNoDuplicateOptions,
                     CheckThat.HasNoReservedName,
                     CheckThat.NoImplicitConversionForBaseClasses,
@@ -145,6 +146,23 @@ namespace dotVariant.Generator
                         nameof(HasAtLeastOneOption),
                         "'VariantOf()' must have at least one parameter.",
                         $"Variant types must have at least one parameter in their 'VariantOf()' method.",
+                        LocationOfFirstToken(syntax, SyntaxKind.IdentifierToken));
+                }
+            }
+
+            public static IEnumerable<Diagnostic> NotTooManyOptions(
+                ITypeSymbol type,
+                MethodDeclarationSyntax syntax,
+                IMethodSymbol variantOf,
+                ImmutableArray<IParameterSymbol> options,
+                CancellationToken token)
+            {
+                if (options.Count() > byte.MaxValue)
+                {
+                    yield return MakeError(
+                        nameof(NotTooManyOptions),
+                        $"'VariantOf()' must not have more than {byte.MaxValue} parameters.",
+                        $"Variant types must not have more than {byte.MaxValue} parameters in their 'VariantOf()' method.",
                         LocationOfFirstToken(syntax, SyntaxKind.IdentifierToken));
                 }
             }
