@@ -88,9 +88,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
         public void Match(out int i)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i = ((global::dotVariant._G.Foo.Variant_public_1)_variant).Value;
+                i = ((global::dotVariant._Private.Accessor_1<int>)_variant).Value;
             }
             else
             {
@@ -105,9 +105,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
         public void Match(out string s)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                s = ((global::dotVariant._G.Foo.Variant_public_2)_variant).Value;
+                s = ((global::dotVariant._Private.Accessor_2<string>)_variant).Value;
             }
             else
             {
@@ -122,9 +122,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="int"/>.</returns>
         public bool TryMatch(out int i)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i = ((global::dotVariant._G.Foo.Variant_public_1)_variant).Value;
+                i = ((global::dotVariant._Private.Accessor_1<int>)_variant).Value;
                 return true;
             }
             else
@@ -140,9 +140,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="string"/>.</returns>
         public bool TryMatch(out string s)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                s = ((global::dotVariant._G.Foo.Variant_public_2)_variant).Value;
+                s = ((global::dotVariant._Private.Accessor_2<string>)_variant).Value;
                 return true;
             }
             else
@@ -160,9 +160,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<int> i)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 return true;
             }
             else
@@ -178,9 +178,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<string> s)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                 return true;
             }
             else
@@ -198,9 +198,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public void Match(global::System.Action<int> i)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -216,9 +216,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public void Match(global::System.Action<string> s)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
             }
             else
             {
@@ -235,9 +235,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<int> i, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -253,9 +253,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<string> s, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
             }
             else
             {
@@ -273,9 +273,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -292,9 +292,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
             }
             else
             {
@@ -312,9 +312,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -331,9 +331,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
             }
             else
             {
@@ -350,9 +350,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -368,9 +368,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
             }
             else
             {
@@ -388,16 +388,16 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<int> i, global::System.Action<string> s)
         {
-            switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     global::dotVariant._G.Foo.Variant_public.ThrowEmptyError();
                     break;
                 case 1:
-                    i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                    i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     break;
                 case 2:
-                    s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                    s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                     break;
                 default:
                     global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
@@ -415,16 +415,16 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<int> i, global::System.Action<string> s, global::System.Action _)
         {
-            switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     _();
                     break;
                 case 1:
-                    i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                    i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     break;
                 case 2:
-                    s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                    s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                     break;
                 default:
                     global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
@@ -443,14 +443,14 @@ namespace Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s)
         {
-            switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     return global::dotVariant._G.Foo.Variant_public.ThrowEmptyError<TResult>();
                 case 1:
-                    return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 case 2:
-                    return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                 default:
                     return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
             }
@@ -467,14 +467,14 @@ namespace Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
         {
-            switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     return _();
                 case 1:
-                    return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 case 2:
-                    return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                 default:
                     return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
             }
@@ -490,9 +490,12 @@ namespace Foo
             }
         }
 
-        public static explicit operator global::dotVariant._G.Foo.Variant_public_N(Variant_public v) => (global::dotVariant._G.Foo.Variant_public_N)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_public_1(Variant_public v) => (global::dotVariant._G.Foo.Variant_public_1)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_public_2(Variant_public v) => (global::dotVariant._G.Foo.Variant_public_2)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Discriminator(Variant_public v) => (global::dotVariant._Private.Discriminator)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_1<int>(Variant_public v) => (global::dotVariant._Private.Accessor_1<int>)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_2<string>(Variant_public v) => (global::dotVariant._Private.Accessor_2<string>)v._variant;
     }
 }
 
@@ -501,24 +504,70 @@ namespace dotVariant._G.Foo
     [global::System.Diagnostics.DebuggerNonUserCode]
     internal readonly struct Variant_public
     {
-        private readonly Variant_public_Union _x;
-        private readonly uint _n;
+        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+        private readonly struct Union
+        {
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_1 _1;
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_2 _2;
+
+            public Union(int value)
+            {
+                _2 = default;
+                _1 = new Value_1(value);
+            }
+            public Union(string value)
+            {
+                _1 = default;
+                _2 = new Value_2(value);
+            }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_1
+        {
+            public readonly int Value;
+            public readonly object _dummy1;
+
+            public Value_1(int value)
+            {
+                _dummy1 = null;
+                Value = value;
+            }
+        }
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_2
+        {
+            public readonly string Value;
+
+            public Value_2(string value)
+            {
+                Value = value;
+            }
+        }
+
+        private readonly Union _x;
+        private readonly byte _n;
 
         public Variant_public(int i)
         {
             _n = 1;
-            _x = new Variant_public_Union(i);
+            _x = new Union(i);
         }
         public Variant_public(string s)
         {
             _n = 2;
-            _x = new Variant_public_Union(s);
+            _x = new Union(s);
         }
 
 
-        public static explicit operator Variant_public_N(Variant_public v) => new Variant_public_N(v._n);
-        public static explicit operator Variant_public_1(Variant_public v) => v._x._1;
-        public static explicit operator Variant_public_2(Variant_public v) => v._x._2;
+        public static explicit operator global::dotVariant._Private.Discriminator(Variant_public v)
+            => (global::dotVariant._Private.Discriminator)v._n;
+        public static explicit operator global::dotVariant._Private.Accessor_1<int>(in Variant_public v)
+            => new global::dotVariant._Private.Accessor_1<int>(v._x._1.Value);
+        public static explicit operator global::dotVariant._Private.Accessor_2<string>(in Variant_public v)
+            => new global::dotVariant._Private.Accessor_2<string>(v._x._2.Value);
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
@@ -730,56 +779,6 @@ namespace dotVariant._G.Foo
             }
         }
     }
-
-    public readonly ref struct Variant_public_N
-    {
-        public readonly uint N;
-        public Variant_public_N(uint n) => N = n;
-    }
-
-    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_public_Union
-    {
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_public_1 _1;
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_public_2 _2;
-
-        public Variant_public_Union(int value)
-        {
-            _2 = default;
-            _1 = new Variant_public_1(value);
-        }
-        public Variant_public_Union(string value)
-        {
-            _1 = default;
-            _2 = new Variant_public_2(value);
-        }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_public_1
-    {
-        public readonly int Value;
-        public readonly object _dummy1;
-
-        public Variant_public_1(int value)
-        {
-            _dummy1 = null;
-            Value = value;
-        }
-    }
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_public_2
-    {
-        public readonly string Value;
-
-        public Variant_public_2(string value)
-        {
-            Value = value;
-        }
-    }
 }
 
 
@@ -803,9 +802,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._G.Foo.Variant_public_1)variant).Value);
+                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                 }
             }
         }
@@ -825,9 +824,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return s(((global::dotVariant._G.Foo.Variant_public_2)variant).Value);
+                    yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
                 }
             }
         }
@@ -850,9 +849,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._G.Foo.Variant_public_1)variant).Value);
+                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                 }
                 else
                 {
@@ -878,9 +877,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return s(((global::dotVariant._G.Foo.Variant_public_2)variant).Value);
+                    yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
                 }
                 else
                 {
@@ -907,9 +906,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._G.Foo.Variant_public_1)variant).Value);
+                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                 }
                 else
                 {
@@ -935,9 +934,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return s(((global::dotVariant._G.Foo.Variant_public_2)variant).Value);
+                    yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
                 }
                 else
                 {
@@ -965,16 +964,16 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((global::dotVariant._G.Foo.Variant_public_N)variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)variant))
                 {
                     case 0:
                         global::dotVariant._G.Foo.Variant_public.ThrowEmptyError();
                         yield break;
                     case 1:
-                        yield return i(((global::dotVariant._G.Foo.Variant_public_1)variant).Value);
+                        yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                         break;
                     case 2:
-                        yield return s(((global::dotVariant._G.Foo.Variant_public_2)variant).Value);
+                        yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
                         break;
                     default:
                         global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
@@ -1002,16 +1001,16 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((global::dotVariant._G.Foo.Variant_public_N)variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)variant))
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return i(((global::dotVariant._G.Foo.Variant_public_1)variant).Value);
+                        yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                         break;
                     case 2:
-                        yield return s(((global::dotVariant._G.Foo.Variant_public_2)variant).Value);
+                        yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
                         break;
                     default:
                         global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
@@ -1039,8 +1038,8 @@ namespace Foo
                 global::System.Func<int, TResult> i)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1),
-                _variant => i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 1),
+                _variant => i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="string"/> element of an observable sequence
@@ -1056,8 +1055,8 @@ namespace Foo
                 global::System.Func<string, TResult> s)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2),
-                _variant => s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 2),
+                _variant => s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value));
         }
 
         /// <summary>
@@ -1077,9 +1076,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 }
                 else
                 {
@@ -1104,9 +1103,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
                 {
-                    return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                 }
                 else
                 {
@@ -1132,9 +1131,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 }
                 else
                 {
@@ -1159,9 +1158,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_public_N)_variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
                 {
-                    return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                 }
                 else
                 {
@@ -1186,14 +1185,14 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         return global::dotVariant._G.Foo.Variant_public.ThrowEmptyError<TResult>();
                     case 1:
-                        return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                        return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     case 2:
-                        return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                        return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                     default:
                         return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
                 }
@@ -1218,14 +1217,14 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         return _();
                     case 1:
-                        return i(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                        return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     case 2:
-                        return s(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                        return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                     default:
                         return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
                 }
@@ -1378,7 +1377,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant_public _variant)
             {
-                switch (((global::dotVariant._G.Foo.Variant_public_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         if (_accept0)
@@ -1391,10 +1390,10 @@ namespace Foo
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant._G.Foo.Variant_public_1)_variant).Value);
+                        Subject1.OnNext(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                         break;
                     case 2:
-                        Subject2.OnNext(((global::dotVariant._G.Foo.Variant_public_2)_variant).Value);
+                        Subject2.OnNext(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
                         break;
                     default:
                         OnError(global::dotVariant._G.Foo.Variant_public.MakeInternalError());

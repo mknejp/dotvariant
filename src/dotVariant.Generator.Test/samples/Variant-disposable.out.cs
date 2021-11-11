@@ -95,9 +95,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/></exception>
         public void Match(out int i)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i = ((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value;
+                i = ((global::dotVariant._Private.Accessor_1<int>)_variant).Value;
             }
             else
             {
@@ -112,9 +112,9 @@ namespace Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/></exception>
         public void Match(out global::System.IO.Stream stream)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                stream = ((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value;
+                stream = ((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value;
             }
             else
             {
@@ -129,9 +129,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_disposable contained a value of type <see cref="int"/>.</returns>
         public bool TryMatch(out int i)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i = ((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value;
+                i = ((global::dotVariant._Private.Accessor_1<int>)_variant).Value;
                 return true;
             }
             else
@@ -147,9 +147,9 @@ namespace Foo
         /// <returns><see langword="true"/> if Variant_disposable contained a value of type <see cref="global::System.IO.Stream"/>.</returns>
         public bool TryMatch(out global::System.IO.Stream stream)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                stream = ((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value;
+                stream = ((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value;
                 return true;
             }
             else
@@ -167,9 +167,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<int> i)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 return true;
             }
             else
@@ -185,9 +185,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<global::System.IO.Stream> stream)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                 return true;
             }
             else
@@ -205,9 +205,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public void Match(global::System.Action<int> i)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -223,9 +223,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> is rethrown.</exception>
         public void Match(global::System.Action<global::System.IO.Stream> stream)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
             }
             else
             {
@@ -242,9 +242,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<int> i, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -260,9 +260,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> or <paramref name="_"> is rethrown.</exception>
         public void Match(global::System.Action<global::System.IO.Stream> stream, global::System.Action _)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
             }
             else
             {
@@ -280,9 +280,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -299,9 +299,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<global::System.IO.Stream, TResult> stream)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
             }
             else
             {
@@ -319,9 +319,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -338,9 +338,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> or <paramref name="other"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<global::System.IO.Stream, TResult> stream, TResult _)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
             }
             else
             {
@@ -357,9 +357,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
             {
-                return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
             }
             else
             {
@@ -375,9 +375,9 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> or <paramref name="_"> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<global::System.IO.Stream, TResult> stream, global::System.Func<TResult> _)
         {
-            if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
             {
-                return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
             }
             else
             {
@@ -395,16 +395,16 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<int> i, global::System.Action<global::System.IO.Stream> stream)
         {
-            switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError();
                     break;
                 case 1:
-                    i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                    i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     break;
                 case 2:
-                    stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                    stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                     break;
                 default:
                     global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
@@ -422,16 +422,16 @@ namespace Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<int> i, global::System.Action<global::System.IO.Stream> stream, global::System.Action _)
         {
-            switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     _();
                     break;
                 case 1:
-                    i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                    i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     break;
                 case 2:
-                    stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                    stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                     break;
                 default:
                     global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
@@ -450,14 +450,14 @@ namespace Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<global::System.IO.Stream, TResult> stream)
         {
-            switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     return global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError<TResult>();
                 case 1:
-                    return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 case 2:
-                    return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                    return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                 default:
                     return global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError<TResult>();
             }
@@ -474,14 +474,14 @@ namespace Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<global::System.IO.Stream, TResult> stream, global::System.Func<TResult> _)
         {
-            switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
             {
                 case 0:
                     return _();
                 case 1:
-                    return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 case 2:
-                    return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                    return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                 default:
                     return global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError<TResult>();
             }
@@ -497,9 +497,12 @@ namespace Foo
             }
         }
 
-        public static explicit operator global::dotVariant._G.Foo.Variant_disposable_N(Variant_disposable v) => (global::dotVariant._G.Foo.Variant_disposable_N)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_disposable_1(Variant_disposable v) => (global::dotVariant._G.Foo.Variant_disposable_1)v._variant;
-        public static explicit operator global::dotVariant._G.Foo.Variant_disposable_2(Variant_disposable v) => (global::dotVariant._G.Foo.Variant_disposable_2)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Discriminator(Variant_disposable v) => (global::dotVariant._Private.Discriminator)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_1<int>(Variant_disposable v) => (global::dotVariant._Private.Accessor_1<int>)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_2<global::System.IO.Stream>(Variant_disposable v) => (global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)v._variant;
     }
 }
 
@@ -509,18 +512,61 @@ namespace dotVariant._G.Foo
     internal readonly struct Variant_disposable
         : global::System.IDisposable
     {
-        private readonly Variant_disposable_Union _x;
-        private readonly uint _n;
+        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+        private readonly struct Union
+        {
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_1 _1;
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_2 _2;
+
+            public Union(int value)
+            {
+                _2 = default;
+                _1 = new Value_1(value);
+            }
+            public Union(global::System.IO.Stream value)
+            {
+                _1 = default;
+                _2 = new Value_2(value);
+            }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_1
+        {
+            public readonly int Value;
+            public readonly object _dummy1;
+
+            public Value_1(int value)
+            {
+                _dummy1 = null;
+                Value = value;
+            }
+        }
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_2
+        {
+            public readonly global::System.IO.Stream Value;
+
+            public Value_2(global::System.IO.Stream value)
+            {
+                Value = value;
+            }
+        }
+
+        private readonly Union _x;
+        private readonly byte _n;
 
         public Variant_disposable(int i)
         {
             _n = 1;
-            _x = new Variant_disposable_Union(i);
+            _x = new Union(i);
         }
         public Variant_disposable(global::System.IO.Stream stream)
         {
             _n = 2;
-            _x = new Variant_disposable_Union(stream);
+            _x = new Union(stream);
         }
 
         public void Dispose()
@@ -540,9 +586,12 @@ namespace dotVariant._G.Foo
             }
         }
 
-        public static explicit operator Variant_disposable_N(Variant_disposable v) => new Variant_disposable_N(v._n);
-        public static explicit operator Variant_disposable_1(Variant_disposable v) => v._x._1;
-        public static explicit operator Variant_disposable_2(Variant_disposable v) => v._x._2;
+        public static explicit operator global::dotVariant._Private.Discriminator(Variant_disposable v)
+            => (global::dotVariant._Private.Discriminator)v._n;
+        public static explicit operator global::dotVariant._Private.Accessor_1<int>(in Variant_disposable v)
+            => new global::dotVariant._Private.Accessor_1<int>(v._x._1.Value);
+        public static explicit operator global::dotVariant._Private.Accessor_2<global::System.IO.Stream>(in Variant_disposable v)
+            => new global::dotVariant._Private.Accessor_2<global::System.IO.Stream>(v._x._2.Value);
 
         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
@@ -754,56 +803,6 @@ namespace dotVariant._G.Foo
             }
         }
     }
-
-    public readonly ref struct Variant_disposable_N
-    {
-        public readonly uint N;
-        public Variant_disposable_N(uint n) => N = n;
-    }
-
-    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_disposable_Union
-    {
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_disposable_1 _1;
-        [global::System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly Variant_disposable_2 _2;
-
-        public Variant_disposable_Union(int value)
-        {
-            _2 = default;
-            _1 = new Variant_disposable_1(value);
-        }
-        public Variant_disposable_Union(global::System.IO.Stream value)
-        {
-            _1 = default;
-            _2 = new Variant_disposable_2(value);
-        }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_disposable_1
-    {
-        public readonly int Value;
-        public readonly object _dummy1;
-
-        public Variant_disposable_1(int value)
-        {
-            _dummy1 = null;
-            Value = value;
-        }
-    }
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    public readonly struct Variant_disposable_2
-    {
-        public readonly global::System.IO.Stream Value;
-
-        public Variant_disposable_2(global::System.IO.Stream value)
-        {
-            Value = value;
-        }
-    }
 }
 
 
@@ -827,9 +826,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._G.Foo.Variant_disposable_1)variant).Value);
+                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                 }
             }
         }
@@ -849,9 +848,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
+                    yield return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)variant).Value);
                 }
             }
         }
@@ -874,9 +873,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._G.Foo.Variant_disposable_1)variant).Value);
+                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                 }
                 else
                 {
@@ -902,9 +901,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
+                    yield return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)variant).Value);
                 }
                 else
                 {
@@ -931,9 +930,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._G.Foo.Variant_disposable_1)variant).Value);
+                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                 }
                 else
                 {
@@ -959,9 +958,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
                 {
-                    yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
+                    yield return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)variant).Value);
                 }
                 else
                 {
@@ -989,16 +988,16 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)variant))
                 {
                     case 0:
                         global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError();
                         yield break;
                     case 1:
-                        yield return i(((global::dotVariant._G.Foo.Variant_disposable_1)variant).Value);
+                        yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                         break;
                     case 2:
-                        yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
+                        yield return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)variant).Value);
                         break;
                     default:
                         global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
@@ -1026,16 +1025,16 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((global::dotVariant._G.Foo.Variant_disposable_N)variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)variant))
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return i(((global::dotVariant._G.Foo.Variant_disposable_1)variant).Value);
+                        yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
                         break;
                     case 2:
-                        yield return stream(((global::dotVariant._G.Foo.Variant_disposable_2)variant).Value);
+                        yield return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)variant).Value);
                         break;
                     default:
                         global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError();
@@ -1063,8 +1062,8 @@ namespace Foo
                 global::System.Func<int, TResult> i)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1),
-                _variant => i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 1),
+                _variant => i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="global::System.IO.Stream"/> element of an observable sequence
@@ -1080,8 +1079,8 @@ namespace Foo
                 global::System.Func<global::System.IO.Stream, TResult> stream)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2),
-                _variant => stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 2),
+                _variant => stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value));
         }
 
         /// <summary>
@@ -1101,9 +1100,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 }
                 else
                 {
@@ -1128,9 +1127,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
                 {
-                    return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                    return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                 }
                 else
                 {
@@ -1156,9 +1155,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 1)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                 }
                 else
                 {
@@ -1183,9 +1182,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N == 2)
+                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
                 {
-                    return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                    return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                 }
                 else
                 {
@@ -1210,14 +1209,14 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         return global::dotVariant._G.Foo.Variant_disposable.ThrowEmptyError<TResult>();
                     case 1:
-                        return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                        return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     case 2:
-                        return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                        return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                     default:
                         return global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError<TResult>();
                 }
@@ -1242,14 +1241,14 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         return _();
                     case 1:
-                        return i(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                        return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                     case 2:
-                        return stream(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                        return stream(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                     default:
                         return global::dotVariant._G.Foo.Variant_disposable.ThrowInternalError<TResult>();
                 }
@@ -1402,7 +1401,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant_disposable _variant)
             {
-                switch (((global::dotVariant._G.Foo.Variant_disposable_N)_variant).N)
+                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
                 {
                     case 0:
                         if (_accept0)
@@ -1415,10 +1414,10 @@ namespace Foo
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant._G.Foo.Variant_disposable_1)_variant).Value);
+                        Subject1.OnNext(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
                         break;
                     case 2:
-                        Subject2.OnNext(((global::dotVariant._G.Foo.Variant_disposable_2)_variant).Value);
+                        Subject2.OnNext(((global::dotVariant._Private.Accessor_2<global::System.IO.Stream>)_variant).Value);
                         break;
                     default:
                         OnError(global::dotVariant._G.Foo.Variant_disposable.MakeInternalError());

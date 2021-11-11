@@ -103,11 +103,11 @@ end
 
 storage_type = "global::dotVariant._G." + (Variant.Namespace ? (Variant.Namespace + ".") : "") + Variant.Name
 func get_value(param, expression = "_variant")
-    ret "((" + storage_type + "_" + param.Index + ")" + expression + ").Value"
+    ret "((global::dotVariant._Private.Accessor_" + param.Index + "<" + value_type param + ">)" + expression + ").Value"
 end
 
 func get_n(expression = "_variant")
-    ret "((" + storage_type + "_N)" + expression + ").N"
+    ret "((int)(global::dotVariant._Private.Discriminator)" + expression + ")"
 end
 
 func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Hint; end) | array.join ", "
@@ -120,6 +120,7 @@ needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.s
 
 readonly storage_type
 readonly get_value
+readonly get_n
 readonly func_params
 readonly action_params
 readonly method_modifiers
@@ -520,9 +521,11 @@ namespace {{ Variant.Namespace }}
         }
 
         {{~ ## INTERNAL ACCESS ## ~}}
-        public static explicit operator {{ storage_type }}_N({{ Variant.Name }} v) => ({{ storage_type }}_N)v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Discriminator({{ Variant.Name }} v) => (global::dotVariant._Private.Discriminator)v._variant;
         {{~ for $p in Params ~}}
-        public static explicit operator {{ storage_type }}_{{ $p.Index }}({{ Variant.Name }} v) => ({{ storage_type }}_{{ $p.Index }})v._variant;
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public static explicit operator global::dotVariant._Private.Accessor_{{ $p.Index }}<{{ value_type $p }}>({{ Variant.Name }} v) => (global::dotVariant._Private.Accessor_{{ $p.Index }}<{{ value_type $p }}>)v._variant;
         {{~ end ~}}
     }
 {{~ if Variant.Namespace ~}}
