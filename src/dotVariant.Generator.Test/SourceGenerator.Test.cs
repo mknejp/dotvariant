@@ -31,7 +31,7 @@ namespace dotVariant.Generator.Test
                     $"{typeof(SourceGenerator).FullName}",
                     $"{typeName}.cs");
             var output = outputs[file];
-            output = GetCopyrightHeader(input).ToString() + output;
+            output = _copyrightHeader + output;
             if (output != expected)
             {
                 // TODO: create diff
@@ -57,29 +57,7 @@ namespace dotVariant.Generator.Test
                         LoadSample($"{test.FileName}.out.cs"))
                     .SetName($"{nameof(Translation)}({test.FileName})"));
 
-        private static ReadOnlySpan<char> GetCopyrightHeader(ReadOnlySpan<char> input)
-        {
-            // The test file saved on disk contains a copyright header that is not
-            // produced by the generator. Extract it from the input so we can
-            // prepend it to the output for test comparison.
-
-            var start = input;
-            var header = 0;
-            var eol = 0;
-            do
-            {
-                eol = input.IndexOf(Environment.NewLine.AsSpan());
-                if (eol > 0 && input[0] != '/')
-                {
-                    break;
-                }
-                var line = eol + Environment.NewLine.Length;
-                header += line;
-                input = input[line..];
-            }
-            while (eol != -1);
-            return start.Slice(0, header);
-        }
+        private static readonly string _copyrightHeader = LoadSample("copyright.cs");
 
         [TestCaseSource(nameof(DiagnosticsCases))]
         public static void Diagnostics(string input)
