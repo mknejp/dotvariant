@@ -158,13 +158,8 @@ namespace dotVariant.Generator.Test
                 .Select(name =>
                 {
                     var match = testPattern.Match(name[prefix.Length..]);
-                    return (Name: match.Groups[1].Value, Input: Load());
-
-                    string Load()
-                    {
-                        using var stream = assembly.GetManifestResourceStream(name);
-                        return new StreamReader(stream!).ReadToEnd();
-                    }
+                    using var reader = new StreamReader(assembly.GetManifestResourceStream(name)!);
+                    return (Name: match.Groups[1].Value, Input: reader.ReadToEnd());
                 })
                 .Select(test =>
                     new TestCaseData(test.Input)
