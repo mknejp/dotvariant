@@ -33,7 +33,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ ## Match(IObservable<V>, Func<A, R>, R) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Projects each <see cref="{{ $p.Name }}"/> element of an observable sequence
+        /// Projects each <see cref="{{ cref $p.Name }}"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
@@ -64,7 +64,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ ## Match(IObservable<V>, Func<A, R>, Func<R>) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Projects each <see cref="{{ $p.Name }}"/> element of an observable sequence
+        /// Projects each <see cref="{{ cref $p.Name }}"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
@@ -99,7 +99,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </summary>
         /// <param name="source">An observable sequence whose elements to visit.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -131,7 +131,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </summary>
         /// <param name="source">An observable sequence whose elements to visit.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if an element is empty.</param>
         /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
@@ -176,7 +176,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </remarks>
         /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">Transform an observable sequence of <see cref="{{ $p.Name }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="{{ $p.Hint }}">Transform an observable sequence of <see cref="{{ cref $p.Name }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         {{~ end ~}}
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -208,7 +208,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </remarks>
         /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">Transform an observable sequence of <see cref="{{ $p.Name }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="{{ $p.Hint }}">Transform an observable sequence of <see cref="{{ cref $p.Name }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         {{~ end ~}}
         /// <param name="_">Transform a sequence of <see cref="global::System.Reactive.Unit"/> values (each representing an empty variant) into a sequence of <typeparamref name="TResult"/> values.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
