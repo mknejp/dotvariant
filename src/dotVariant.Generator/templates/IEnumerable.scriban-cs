@@ -21,7 +21,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="{{ $p.Name }}"/> and dropping all others.
+        /// containing a value of type <see cref="{{ cref $p.Name }}"/> and dropping all others.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
@@ -47,7 +47,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="{{ $p.Name }}"/> and replacing all others by a fallback value.
+        /// containing a value of type <see cref="{{ cref $p.Name }}"/> and replacing all others by a fallback value.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
@@ -79,7 +79,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ for $p in Params ~}}
         /// <summary>
         /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="{{ $p.Name }}"/> and replacing all others with the result of a fallback selector.
+        /// containing a value of type <see cref="{{ cref $p.Name }}"/> and replacing all others with the result of a fallback selector.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         /// <param name="{{ $p.Hint }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
@@ -115,7 +115,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <exception cref="global::System.InvalidOperationException">The sequence encountered an empty {{ Variant.Name }}.</exception>
@@ -152,7 +152,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if an element is empty.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>

@@ -110,6 +110,10 @@ func get_n(expression = "_variant")
     ret "((int)(global::dotVariant._Private.Discriminator)" + expression + ")"
 end
 
+func cref(name)
+    ret name | string.replace "<" "{" | string.replace ">" "}"
+end
+
 func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Hint; end) | array.join ", "
 action_params = Params | array.each @(do; ret (action_type $0) + " " + $0.Hint; end) | array.join ", "
 method_modifiers = !Variant.IsClass && Language.Version >= 800 ? "readonly " : ""
@@ -128,6 +132,7 @@ readonly param_modifiers
 readonly global_nullable
 readonly global_forgive
 readonly needs_dispose
+readonly cref
 ~}}
 {{~ if Language.Version >= 800 ~}}
 #nullable {{ Language.Nullable }}
@@ -151,7 +156,7 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT CONSTRUCTORS ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ $p.Name }}"/>.
+        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Name }}"/>.
         /// </summary>
         /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
         public {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
@@ -162,7 +167,7 @@ namespace {{ Variant.Namespace }}
         {{~ for $p in Params ~}}
         {{~ if $p.EmitImplicitCast ~}}
         /// <summary>
-        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ $p.Name }}"/>.
+        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Name }}"/>.
         /// </summary>
         /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
         public static implicit operator {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
@@ -173,7 +178,7 @@ namespace {{ Variant.Namespace }}
         {{~ ## STATIC CREATE FACTORIES ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ $p.Name }}"/>.
+        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Name }}"/>.
         /// </summary>
         /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
         public static {{ Variant.Name }} Create({{ value_type $p }} {{ $p.Hint }})
@@ -227,11 +232,11 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT Match(out T) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>,
+        /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>,
         /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ $p.Name }}"/></exception>
+        /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
         public {{ method_modifiers }}void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.Hint }})
         {
             if ({{ get_n }} == {{ $p.Index }})
@@ -248,10 +253,10 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT TryMatch(out T) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>.
+        /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
-        /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ $p.Name }}"/>.</returns>
+        /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Name }}"/>.</returns>
         public {{ method_modifiers }}bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
         {
             if ({{ get_n }} == {{ $p.Index }})
@@ -270,10 +275,10 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT TryMatch(Action<T>) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>.
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
-        /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ $p.Name }}"/>.</returns>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Name }}"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.Hint }})
         {
@@ -292,11 +297,11 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT Match(Action<T>) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>,
         /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ $p.Name }}"/></exception>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Hint }})
         {
@@ -314,10 +319,10 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT Match(Action<T>, Action) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/>,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>,
         /// otherwise invoke an alternative delegate.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
         public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Hint }}, global::System.Action _)
@@ -336,12 +341,12 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT Match(Func<T, R>) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/> and return the result,
         /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
         /// <returns>The value returned from invoking <paramref name="{{ $p.Hint }}"/>.</returns>
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ $p.Name }}"/></exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }})
         {
@@ -359,10 +364,10 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT Match(Func<T, R>, R) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/> and return the result,
         /// otherwise return a provided value.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
         /// <returns>The value returned from invoking <paramref name="{{ $p.Hint }}"/>, or <paramref name="default"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="other"> is rethrown.</exception>
@@ -382,12 +387,12 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT Match(Func<T, R>, Func<R>) ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ $p.Name }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/> and return the result,
         /// otherwise invoke an alternative delegate and return its result.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ cref $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
         public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, global::System.Func<TResult> _)
         {
             if ({{ get_n }} == {{ $p.Index }})
@@ -407,7 +412,7 @@ namespace {{ Variant.Namespace }}
         /// and throw an exception if {{ Variant.Name }} is empty.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
@@ -435,7 +440,7 @@ namespace {{ Variant.Namespace }}
         /// and invoke a special delegate if {{ Variant.Name }} is empty.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
@@ -463,7 +468,7 @@ namespace {{ Variant.Namespace }}
         /// and throw an exception if {{ Variant.Name }} is empty.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
@@ -489,7 +494,7 @@ namespace {{ Variant.Namespace }}
         /// and invoke a special delegate if {{ Variant.Name }} is empty and return its result.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ $p.Name }}"/>.</param>
+        /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
