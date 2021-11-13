@@ -14,142 +14,143 @@ using static dotVariant.Generator.Inspect;
 
 namespace dotVariant.Generator
 {
+    /// <summary>
+    /// Holds all the information required by Scriban to generate the variant's source.
+    /// </summary>
+    /// <param name="Language">Information about the language context we are generating code in.</param>
+    /// <param name="Options">Options specified externally (via MSBuild or attributes).</param>
+    /// <param name="Params">Properties of the parameters provided to <c>VariantOf</c>.</param>
+    /// <param name="Runtime">Information about the .NET runtime we are generating code for.</param>
+    /// <param name="Variant">Properties of the variant class.</param>
     public sealed record RenderInfo(
         RenderInfo.LanguageInfo Language,
         RenderInfo.OptionsInfo Options,
         ImmutableArray<RenderInfo.ParamInfo> Params,
         RenderInfo.RuntimeInfo Runtime,
         RenderInfo.VariantInfo Variant)
-    // TODO: emptiness possible?
-    // TODO: user-defined constructors
-    // TODO: user-defined ToString()
-    // TODO: user-defined Equals()
-    // TODO: user-defined GetHashCode()
-    // TODO: nested class
     {
+        /// <param name="Nullable">
+        /// Either <c>"enable"</c> or <c>"disable"</c>.
+        /// </param>
+        /// <param name="Version">
+        /// Integer of the form ABB where A=major and BB=minor version of the language (i.e. 703 -> 7.3)
+        /// </param>
         public sealed record LanguageInfo(
-            /// <summary>
-            /// Either <c>"enable"</c> or <c>"disable"</c>.
-            /// </summary>
             string Nullable,
-            /// <summary>
-            /// Integer of the form ABB where A=major and BB=minor version of the language (i.e. 703 -> 7.3)
-            /// </summary>
             int Version);
 
+        /// <param name="ExtensionClassNamespace">
+        /// The namespace in which to generate extension method implementations. If <see langword="null"/> use the global namespace.
+        /// </param>
         public sealed record OptionsInfo(
-            /// <summary>
-            /// The namespace in which to generate extension method implementations. If <see langword="null"/> use the global namespace.
-            /// </summary>
             string? ExtensionClassNamespace);
 
+        /// <param name="HasHashCode">
+        /// <see langword="true"/> if <see cref="System.HashCode"/> is found.
+        /// </param>
+        /// <param name="HasSystemReactiveLinq">
+        /// <see langword="true"/> if <see cref="System.Reactive.Linq"/> namespace is found.
+        /// </param>
         public sealed record RuntimeInfo(
-            /// <summary>
-            /// <see langword="true"/> if <see cref="System.HashCode"/> is found.
-            /// </summary>
             bool HasHashCode,
-            /// <summary>
-            /// <see langword="true"/> if <see cref="System.Reactive.Linq"/> namespace is found.
-            /// </summary>
             bool HasSystemReactiveLinq);
 
+        /// <param name="Accessibility">
+        /// The accessibility modifier of the variant class.
+        /// </param>
+        /// <param name="DiagName">
+        /// The fully qualified name of the type (without global:: alias, for diagnostic strings/messages).
+        /// </param>
+        /// <param name="ExtensionsAccessibility">
+        /// The accessibility to use for the class containing extension methods. <see langword="null"/> if extensions are impossible to define.
+        /// </param>
+        /// <param name="FullName">
+        /// The fully qualified name of the type.
+        /// </param>
+        /// <param name="IsClass">
+        /// <see langword="true"/> if this is an object type.
+        /// </param>
+        /// <param name="IsReadonly">
+        /// <see langword="true"/> if this type was declared with the <see langword="readonly"/> modifier.
+        /// </param>
+        /// <param name="Keyword">
+        /// The C# keyword used to define this type.
+        /// </param>
+        /// <param name="Namespace">
+        /// Namespace of the variant type, or <see langword="null"/> if in the global namespace.
+        /// </param>
+        /// <param name="Name">
+        /// Name of the variant type within the context of its namespace.
+        /// </param>
+        /// <param name="Nullability">
+        /// <c>"nonnull"</c> or <c>"nullable"</c>. For a class this determines if certain public methods need nullability annotations.
+        /// Always <c>"nonnull"</c> for a value type.
+        /// </param>
+        /// <param name="UserDefined">
+        /// Contains info about relevant members the user has defined.
+        /// </param>
         public sealed record VariantInfo(
-            /// <summary>
-            /// The accessibility modifier of the variant class.
-            /// </summary>
             string? Accessibility,
-            /// <summary>
-            /// The fully qualified name of the type (without global:: alias, for diagnostic strings/messages).
-            /// </summary>
             string DiagName,
-            /// <summary>
-            /// The accessibility to use for the class containing extension methods. <see langword="null"/> if extensions are impossible to define.
-            /// </summary>
             string? ExtensionsAccessibility,
-            /// <summary>
-            /// The fully qualified name of the type.
-            /// </summary>
             string FullName,
-            /// <summary>
-            /// <see langword="true"/> if this is an object type.
-            /// </summary>
             bool IsClass,
-            /// <summary>
-            /// <see langword="true"/> if this type was declared with the <see langword="readonly"/> modifier.
-            /// </summary>
             bool IsReadonly,
-            /// <summary>
-            /// The C# keyword used to define this type.
-            /// </summary>
             string Keyword,
-            /// <summary>
-            /// Namespace of the variant type, or <see langword="null"/> if in the global namespace.
-            /// </summary>
             string? Namespace,
-            /// <summary>
-            /// Name of the variant type within the context of its namespace.
-            /// </summary>
             string Name,
-            /// <summary>
-            /// <c>"nonnull"</c> or <c>"nullable"</c>. For a class this determines if certain public methods need nullability annotations.
-            /// Always <c>"nonnull"</c> for a value type.
-            /// </summary>
             string Nullability,
-            /// <summary>
-            /// Contains info about relevant members the user has defined.
-            /// </summary>
             VariantInfo.UserDefinitions UserDefined)
         {
+            /// <param name="Dispose">
+            /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
+            /// </param>
             public sealed record UserDefinitions(
-                /// <summary>
-                /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
-                /// </summary>
                 bool Dispose);
         }
 
-
+        /// <param name="DiagName">
+        /// A shorter type name (without global:: qualifier, for diagnostic strings/messages, may contain nullability annotation).
+        /// </param>
+        /// <param name="EmitImplicitCast">
+        /// <see langword="true"/> if the implicit cast from option to variant should be emitted for this type.
+        /// </param>
+        /// <param name="Hint">
+        /// The user-provided parameter name in <c>VariantOf</c>.
+        /// </param>
+        /// <param name="Index">
+        /// The 1-based index of the type within the variant.
+        /// </param>
+        /// <param name="IsClass">
+        /// <see langword="true"/> if this is an object type (or generic with class constraint).
+        /// </param>
+        /// <param name="IsDisposable">
+        /// <see langword="true"/> if this type implements <see cref="IDisposable"/>.
+        /// </param>
+        /// <param name="Name">
+        /// The fully qualified name of the type. Never contains a nullability annotation.
+        /// </param>
+        /// <param name="Nullability">
+        /// <c>"nonnull"</c> or <c>"nullable"</c>. Determines whether the parameter was originally annotated as nullable or null oblivious versus not nullable.
+        /// For class types this controls parameter and return type signatures.
+        /// For value types this only controls whether to null-coalesce ToString().
+        /// </param>
+        /// <param name="ObjectPadding">
+        /// The number of <see langword="object"/> padding fields required for this type.
+        /// </param>
+        /// <param name="ToStringNullability">
+        /// <c>"nonnull"</c> or <c>"nullable"</c> annotation of the parameters's <see cref="object.ToString()"/> return type.
+        /// </param>
         public sealed record ParamInfo(
-            /// <summary>
-            /// A shorter type name (without global:: qualifier, for diagnostic strings/messages, may contain nullability annotation).
-            /// </summary>
             string DiagName,
-            /// <summary>
-            /// <see langword="true"/> if the implicit cast from option to variant should be emitted for this type.
-            /// </summary>
             bool EmitImplicitCast,
-            /// <summary>
-            /// The user-provided parameter name in <c>VariantOf</c>.
-            /// </summary>
             string Hint,
-            /// <summary>
-            /// The 1-based index of the type within the variant.
-            /// </summary>
             int Index,
-            /// <summary>
-            /// <see langword="true"/> if this is an object type (or generic with class constraint).
-            /// </summary>
             bool IsClass,
-            /// <summary>
-            /// <see langword="true"/> if this type implements <see cref="IDisposable"/>.
-            /// </summary>
             bool IsDisposable,
-            /// <summary>
-            /// The fully qualified name of the type. Never contains a nullability annotation.
-            /// </summary>
             string Name,
-            /// <summary>
-            /// <c>"nonnull"</c> or <c>"nullable"</c>. Determines whether the parameter was originally annotated as nullable or null oblivious versus not nullable.
-            /// For class types this controls parameter and return type signatures.
-            /// For value types this only controls whether to null-coalesce ToString().
-            /// </summary>
             string Nullability,
-            /// <summary>
-            /// The number of <see langword="object"/> padding fields required for this type.
-            /// </summary>
             int ObjectPadding,
-            /// <summary>
-            /// <c>"nonnull"</c> or <c>"nullable"</c> annotation of the parameters's <see cref="object.ToString()"/> return type.
-            /// </summary>
             string ToStringNullability);
 
         public static RenderInfo FromDescriptor(
