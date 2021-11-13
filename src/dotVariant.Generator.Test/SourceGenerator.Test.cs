@@ -21,7 +21,7 @@ namespace dotVariant.Generator.Test
     internal static class SourceGenerator_Test
     {
         [TestCaseSource(nameof(TranslationCases))]
-        public static void Translation(string typeName, string input, string expected)
+        public static void Translation(string typeName, string fileName, string input, string expected)
         {
             var sources = SupportSources.Add("input", input);
             var outputs = GetGeneratedOutput<SourceGenerator>(sources);
@@ -34,9 +34,31 @@ namespace dotVariant.Generator.Test
             output = _copyrightHeader + output;
             if (output != expected)
             {
-                // TODO: create diff
+                //var commit = true;
+                var commit = false;
+#if CI
+                Assert.That(commit, Is.False);
+#endif
+                if (commit)
+                {
+                    WriteSample(fileName, output);
+                }
                 Assert.That(output, Is.EqualTo(expected));
             }
+        }
+
+        private static readonly string _samplesDir
+            = Assembly
+                .GetExecutingAssembly()
+                .GetCustomAttributes<AssemblyMetadataAttribute>()
+                .Single(a => a.Key == "SamplesDir")
+                .Value!;
+
+        private static void WriteSample(string name, string content)
+        {
+            var path = Path.Combine(_samplesDir, $"{name}.out.cs");
+            using var writer = new StreamWriter(path);
+            writer.Write(content);
         }
 
         public static IEnumerable<TestCaseData> TranslationCases()
@@ -53,6 +75,7 @@ namespace dotVariant.Generator.Test
                 .Select(
                     test => new TestCaseData(
                         test.TypeName,
+                        test.FileName,
                         LoadSample($"{test.FileName}.in.cs"),
                         LoadSample($"{test.FileName}.out.cs"))
                     .SetName($"{nameof(Translation)}({test.FileName})"));
