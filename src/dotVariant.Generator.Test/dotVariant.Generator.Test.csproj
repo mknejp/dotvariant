@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -35,6 +35,10 @@
       <Link>samples/%(RecursiveDir)%(Filename)%(Extension)</Link>
       <LogicalName>dotVariant.Generator.Test.samples.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="SamplesDir" Value="$(MSBuildThisFileDirectory)samples" />
   </ItemGroup>
 
 </Project>
