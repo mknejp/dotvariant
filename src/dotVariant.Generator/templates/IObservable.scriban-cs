@@ -113,13 +113,13 @@ namespace {{ Options.ExtensionClassNamespace }}
                 switch ({{ get_n }})
                 {
                     case 0:
-                        return {{ storage_type }}.ThrowEmptyError<TResult>();
+                        return {{ throw_empty_error "TResult" }};
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
                         return {{ $p.Hint }}({{ get_value $p }});
                     {{~ end ~}}
                     default:
-                        return {{ storage_type }}.ThrowInternalError<TResult>();
+                        return {{ throw_internal_error "TResult" }};
                 }
             });
         }
@@ -153,7 +153,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                         return {{ $p.Hint }}({{ get_value $p }});
                     {{~ end ~}}
                     default:
-                        return {{ storage_type }}.ThrowInternalError<TResult>();
+                        return {{ throw_internal_error "TResult" }};
                 }
             });
         }
@@ -323,7 +323,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                         }
                         else
                         {
-                            OnError({{ storage_type }}.MakeEmptyError());
+                            OnError({{ make_empty_error }});
                         }
                         break;
                     {{~ for $p in Params ~}}
@@ -332,7 +332,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                         break;
                     {{~ end ~}}
                     default:
-                        OnError({{ storage_type }}.MakeInternalError());
+                        OnError({{ make_internal_error }});
                         break;
                 }
             }

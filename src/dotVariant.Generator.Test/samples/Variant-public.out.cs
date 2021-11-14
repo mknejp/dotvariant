@@ -9,36 +9,38 @@ namespace Foo
 {
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
-    [global::System.Diagnostics.DebuggerNonUserCode]
     partial class Variant_public
         : global::System.IEquatable<Variant_public>
     {
-        [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly global::dotVariant._G.Foo.Variant_public _variant;
+        private readonly __VariantImpl _variant;
 
         /// <summary>
         /// Create a Variant_public with a value of type <see cref="int"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public Variant_public(int i)
-            => _variant = new global::dotVariant._G.Foo.Variant_public(i);
+            => _variant = new __VariantImpl(i);
         /// <summary>
         /// Create a Variant_public with a value of type <see cref="string"/>.
         /// </summary>
         /// <param name="s">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public Variant_public(string s)
-            => _variant = new global::dotVariant._G.Foo.Variant_public(s);
+            => _variant = new __VariantImpl(s);
 
         /// <summary>
         /// Create a Variant_public with a value of type <see cref="int"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static implicit operator Variant_public(int i)
             => new Variant_public(i);
         /// <summary>
         /// Create a Variant_public with a value of type <see cref="string"/>.
         /// </summary>
         /// <param name="s">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static implicit operator Variant_public(string s)
             => new Variant_public(s);
 
@@ -46,439 +48,149 @@ namespace Foo
         /// Create a Variant_public with a value of type <see cref="int"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static Variant_public Create(int i)
             => new Variant_public(i);
         /// <summary>
         /// Create a Variant_public with a value of type <see cref="string"/>.
         /// </summary>
         /// <param name="s">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static Variant_public Create(string s)
             => new Variant_public(s);
 
 
-        /// <summary>
-        /// <see langword="true"/> if Variant_public was constructed without a value.
-        /// </summary>
+        /// <inheritdoc cref="__VariantImpl.IsEmpty"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool IsEmpty
             => _variant.IsEmpty;
 
+        /// <inheritdoc/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public override bool Equals(object other)
             => other is Variant_public v && Equals(v);
 
+        /// <inheritdoc/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool Equals(Variant_public other)
             => !(other is null) && _variant.Equals(other._variant);
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant_public lhs, Variant_public rhs)
-            => lhs?.Equals(rhs) ?? (rhs is null);
+        => lhs?.Equals(rhs) ?? (rhs is null);
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant_public lhs, Variant_public rhs)
-            => !(lhs == rhs);
+        => !(lhs == rhs);
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public override int GetHashCode()
             => _variant.GetHashCode();
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public override string ToString()
-            => _variant.ValueString;
+            => _variant.ToString();
 
-        /// <summary>
-        /// Retrieve the value stored within Variant_public if it is of type <see cref="int"/>,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
-        public void Match(out int i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i = ((global::dotVariant._Private.Accessor_1<int>)_variant).Value;
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_public' (expected 'int', actual '{_variant.TypeString}').");
-            }
-        }
-        /// <summary>
-        /// Retrieve the value stored within Variant_public if it is of type <see cref="string"/>,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
-        public void Match(out string s)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                s = ((global::dotVariant._Private.Accessor_2<string>)_variant).Value;
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_public' (expected 'string', actual '{_variant.TypeString}').");
-            }
-        }
-
-        /// <summary>
-        /// Retrieve the value stored within Variant_public if it is of type <see cref="int"/>.
-        /// </summary>
-        /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
-        /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="int"/>.</returns>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(out int)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(out int i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i = ((global::dotVariant._Private.Accessor_1<int>)_variant).Value;
-                return true;
-            }
-            else
-            {
-                i = default;
-                return false;
-            }
-        }
-        /// <summary>
-        /// Retrieve the value stored within Variant_public if it is of type <see cref="string"/>.
-        /// </summary>
-        /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
-        /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="string"/>.</returns>
-        public bool TryMatch(out string s)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                s = ((global::dotVariant._Private.Accessor_2<string>)_variant).Value;
-                return true;
-            }
-            else
-            {
-                s = default;
-                return false;
-            }
-        }
+            => _variant.TryMatch(out i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/>.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="int"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{int})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(global::System.Action<int> i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/>.
-        /// </summary>
-        /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="string"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
-        public bool TryMatch(global::System.Action<string> s)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+            => _variant.TryMatch(i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/>,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match(out int)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public void Match(out int i)
+            => _variant.Match(out i);
+
+        /// <inheritdoc cref="__VariantImpl.Match(global::System.Action{int})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Match(global::System.Action<int> i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_public' (expected 'int', actual '{_variant.TypeString}').");
-            }
-        }
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/>,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
-        public void Match(global::System.Action<string> s)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_public' (expected 'string', actual '{_variant.TypeString}').");
-            }
-        }
+            => _variant.Match(i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/>,
-        /// otherwise invoke an alternative delegate.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match(global::System.Action{int}, global::System.Action)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Match(global::System.Action<int> i, global::System.Action _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-            }
-            else
-            {
-                _();
-            }
-        }
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/>,
-        /// otherwise invoke an alternative delegate.
-        /// </summary>
-        /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
-        public void Match(global::System.Action<string> s, global::System.Action _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-            }
-            else
-            {
-                _();
-            }
-        }
+            => _variant.Match(i, _);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/> and return the result,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{int, TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<int, TResult> i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_public' (expected 'int', actual '{_variant.TypeString}').");
-            }
-        }
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/> and return the result,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <returns>The value returned from invoking <paramref name="s"/>.</returns>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
-        public TResult Match<TResult>(global::System.Func<string, TResult> s)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_public' (expected 'string', actual '{_variant.TypeString}').");
-            }
-        }
+            => _variant.Match(i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/> and return the result,
-        /// otherwise return a provided value.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{int, TResult}, TResult)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-            }
-            else
-            {
-                return _;
-            }
-        }
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/> and return the result,
-        /// otherwise return a provided value.
-        /// </summary>
-        /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="s"/>, or <paramref name="default"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="other"> is rethrown.</exception>
-        public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-            }
-            else
-            {
-                return _;
-            }
-        }
+            => _variant.Match(i, _);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/> and return the result,
-        /// otherwise invoke an alternative delegate and return its result.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{int, TResult}, global::System.Func{TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-            }
-            else
-            {
-                return _();
-            }
-        }
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/> and return the result,
-        /// otherwise invoke an alternative delegate and return its result.
-        /// </summary>
-        /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
+            => _variant.Match(i, _);
+
+        /// <inheritdoc cref="__VariantImpl.TryMatch(out string)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public bool TryMatch(out string s)
+            => _variant.TryMatch(out s);
+
+        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{string})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public bool TryMatch(global::System.Action<string> s)
+            => _variant.TryMatch(s);
+
+        /// <inheritdoc cref="__VariantImpl.Match(out string)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public void Match(out string s)
+            => _variant.Match(out s);
+
+        /// <inheritdoc cref="__VariantImpl.Match(global::System.Action{string})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public void Match(global::System.Action<string> s)
+            => _variant.Match(s);
+
+        /// <inheritdoc cref="__VariantImpl.Match(global::System.Action{string}, global::System.Action)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public void Match(global::System.Action<string> s, global::System.Action _)
+            => _variant.Match(s, _);
+
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{string, TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public TResult Match<TResult>(global::System.Func<string, TResult> s)
+            => _variant.Match(s);
+
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{string, TResult}, TResult)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
+            => _variant.Match(s, _);
+
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{string, TResult}, global::System.Func{TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
-            {
-                return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-            }
-            else
-            {
-                return _();
-            }
-        }
+            => _variant.Match(s, _);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within Variant_public,
-        /// and throw an exception if Variant_public is empty.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
-        /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public is empty.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+
+        /// <inheritdoc cref="__VariantImpl.Visit(global::System.Action{int}, global::System.Action{string})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Visit(global::System.Action<int> i, global::System.Action<string> s)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    global::dotVariant._G.Foo.Variant_public.ThrowEmptyError();
-                    break;
-                case 1:
-                    i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-                    break;
-                case 2:
-                    s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-                    break;
-                default:
-                    global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
-                    break;
-            }
-        }
+            => _variant.Visit(i, s);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_public,
-        /// and invoke a special delegate if Variant_public is empty.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
-        /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-        /// <param name="_">The delegate to invoke if Variant_public is empty.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Visit(global::System.Action{int}, global::System.Action{string}, global::System.Action)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Visit(global::System.Action<int> i, global::System.Action<string> s, global::System.Action _)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    _();
-                    break;
-                case 1:
-                    i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-                    break;
-                case 2:
-                    s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-                    break;
-                default:
-                    global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
-                    break;
-            }
-        }
+            => _variant.Visit(i, s, _);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within Variant_public and return the result,
-        /// and throw an exception if Variant_public is empty.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
-        /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_public is empty.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        /// <inheritdoc cref="__VariantImpl.Visit{TResult}(global::System.Func{int, TResult}, global::System.Func{string, TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    return global::dotVariant._G.Foo.Variant_public.ThrowEmptyError<TResult>();
-                case 1:
-                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-                case 2:
-                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-                default:
-                    return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
-            }
-        }
+            => _variant.Visit(i, s);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_public and return the result,
-        /// and invoke a special delegate if Variant_public is empty and return its result.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
-        /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-        /// <param name="_">The delegate to invoke if Variant_public is empty.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        /// <inheritdoc cref="__VariantImpl.Visit{TResult}(global::System.Func{int, TResult}, global::System.Func{string, TResult}, global::System.Func{TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    return _();
-                case 1:
-                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
-                case 2:
-                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
-                default:
-                    return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
-            }
-        }
+            => _variant.Visit(i, s, _);
 
         private sealed class _VariantTypeProxy
         {
@@ -491,145 +203,123 @@ namespace Foo
         }
 
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public static explicit operator global::dotVariant._Private.Discriminator(Variant_public v) => (global::dotVariant._Private.Discriminator)v._variant;
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(Variant_public v)
+            => (global::dotVariant.GeneratorSupport.Discriminator)v._variant;
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public static explicit operator global::dotVariant._Private.Accessor_1<int>(Variant_public v) => (global::dotVariant._Private.Accessor_1<int>)v._variant;
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int>(Variant_public v)
+            => (global::dotVariant.GeneratorSupport.Accessor_1<int>)v._variant;
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public static explicit operator global::dotVariant._Private.Accessor_2<string>(Variant_public v) => (global::dotVariant._Private.Accessor_2<string>)v._variant;
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<string>(Variant_public v)
+            => (global::dotVariant.GeneratorSupport.Accessor_2<string>)v._variant;
     }
 }
 
-namespace dotVariant._G.Foo
+namespace Foo
 {
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_public
+    partial class Variant_public
     {
-        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-        private readonly struct Union
-        {
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_1 _1;
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_2 _2;
-
-            public Union(int value)
-            {
-                _2 = default;
-                _1 = new Value_1(value);
-            }
-            public Union(string value)
-            {
-                _1 = default;
-                _2 = new Value_2(value);
-            }
-        }
-
         [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_1
+        [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
+        private readonly struct __VariantImpl
         {
-            public readonly int Value;
-            public readonly object _dummy1;
-
-            public Value_1(int value)
+            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+            private readonly struct Union
             {
-                _dummy1 = null;
-                Value = value;
-            }
-        }
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_2
-        {
-            public readonly string Value;
+                [global::System.Runtime.InteropServices.FieldOffset(0)]
+                public readonly Value_1 _1;
+                [global::System.Runtime.InteropServices.FieldOffset(0)]
+                public readonly Value_2 _2;
 
-            public Value_2(string value)
-            {
-                Value = value;
-            }
-        }
-
-        private readonly Union _x;
-        private readonly byte _n;
-
-        public Variant_public(int i)
-        {
-            _n = 1;
-            _x = new Union(i);
-        }
-        public Variant_public(string s)
-        {
-            _n = 2;
-            _x = new Union(s);
-        }
-
-
-        public static explicit operator global::dotVariant._Private.Discriminator(Variant_public v)
-            => (global::dotVariant._Private.Discriminator)v._n;
-        public static explicit operator global::dotVariant._Private.Accessor_1<int>(in Variant_public v)
-            => new global::dotVariant._Private.Accessor_1<int>(v._x._1.Value);
-        public static explicit operator global::dotVariant._Private.Accessor_2<string>(in Variant_public v)
-            => new global::dotVariant._Private.Accessor_2<string>(v._x._2.Value);
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static void ThrowEmptyError()
-        {
-            throw MakeEmptyError();
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static T ThrowEmptyError<T>()
-        {
-            throw MakeEmptyError();
-        }
-
-        public static global::System.Exception MakeEmptyError()
-        {
-            return new global::System.InvalidOperationException("Variant_public is empty.");
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static void ThrowInternalError()
-        {
-            throw MakeInternalError();
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static T ThrowInternalError<T>()
-        {
-            throw MakeInternalError();
-        }
-
-        public static global::System.Exception MakeInternalError()
-        {
-            return new global::System.InvalidOperationException("Variant_public has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
-        }
-
-        public bool IsEmpty => _n == 0;
-
-        public string TypeString
-        {
-            get
-            {
-                switch (_n)
+                public Union(int value)
                 {
-                    case 0:
-                        return "<empty>";
-                    case 1:
-                        return "int";
-                    case 2:
-                        return "string";
-                    default:
-                        return ThrowInternalError<string>();
+                    _2 = default;
+                    _1 = new Value_1(value);
+                }
+                public Union(string value)
+                {
+                    _1 = default;
+                    _2 = new Value_2(value);
                 }
             }
-        }
 
-        public string ValueString
-        {
-            get
+            [global::System.Diagnostics.DebuggerNonUserCode]
+            private readonly struct Value_1
+            {
+                public readonly int Value;
+                public readonly object _dummy1;
+
+                public Value_1(int value)
+                {
+                    _dummy1 = null;
+                    Value = value;
+                }
+            }
+            [global::System.Diagnostics.DebuggerNonUserCode]
+            private readonly struct Value_2
+            {
+                public readonly string Value;
+
+                public Value_2(string value)
+                {
+                    Value = value;
+                }
+            }
+
+            private readonly Union _x;
+            private readonly byte _n;
+
+            public __VariantImpl(int i)
+            {
+                _n = 1;
+                _x = new Union(i);
+            }
+            public __VariantImpl(string s)
+            {
+                _n = 2;
+                _x = new Union(s);
+            }
+
+
+            public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in __VariantImpl v)
+                => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
+            public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int>(in __VariantImpl v)
+                => new global::dotVariant.GeneratorSupport.Accessor_1<int>(v._x._1.Value);
+            public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<string>(in __VariantImpl v)
+                => new global::dotVariant.GeneratorSupport.Accessor_2<string>(v._x._2.Value);
+
+            /// <summary>
+            /// <see langword="true"/> if Variant_public was constructed without a value.
+            /// </summary>
+            public bool IsEmpty => _n == 0;
+
+            /// <summary>
+            /// The string representation of the stored value's type.
+            /// </summary>
+            public string TypeString
+            {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0:
+                            return "<empty>";
+                        case 1:
+                            return "int";
+                        case 2:
+                            return "string";
+                        default:
+                            return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_public");
+                    }
+                }
+            }
+
+            /// <summary>
+            /// The stored value's <see cref="object.ToString()"/> result, or <c>""</c> if empty.
+            /// </summary>
+            public override string ToString()
             {
                 switch (_n)
                 {
@@ -640,51 +330,51 @@ namespace dotVariant._G.Foo
                     case 2:
                         return _x._2.Value?.ToString() ?? "null";
                     default:
-                        return ThrowInternalError<string>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_public");
                 }
             }
-        }
 
-        public object AsObject
-        {
-            get
+            /// <summary>
+            /// The stored value cast to type <see cref="object"/>.
+            /// </summary>
+            public object AsObject
             {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0:
+                            return null;
+                        case 1:
+                            return _x._1.Value;
+                        case 2:
+                            return _x._2.Value;
+                        default:
+                            return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object>("Foo.Variant_public");
+                    }
+                }
+            }
+
+            public bool Equals(in __VariantImpl other)
+            {
+                if (_n != other._n)
+                {
+                    return false;
+                }
                 switch (_n)
                 {
                     case 0:
-                        return null;
+                        return true;
                     case 1:
-                        return _x._1.Value;
+                        return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
                     case 2:
-                        return _x._2.Value;
+                        return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._2.Value, other._x._2.Value);
                     default:
-                        return ThrowInternalError<object>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<bool>("Foo.Variant_public");
                 }
             }
-        }
 
-        public bool Equals(in Variant_public other)
-        {
-            if (_n != other._n)
-            {
-                return false;
-            }
-            switch (_n)
-            {
-                case 0:
-                    return true;
-                case 1:
-                    return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
-                case 2:
-                    return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._2.Value, other._x._2.Value);
-                default:
-                    return ThrowInternalError<bool>();
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
+            public override int GetHashCode()
             {
                 switch (_n)
                 {
@@ -695,87 +385,351 @@ namespace dotVariant._G.Foo
                     case 2:
                         return global::System.HashCode.Combine(_x._2.Value);
                     default:
-                        return ThrowInternalError<int>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<int>("Foo.Variant_public");
                 }
             }
-        }
 
-        public bool TryMatch(out int i)
-        {
-            i = _n == 1 ? _x._1.Value : default;
-            return _n == 1;
-        }
-        public bool TryMatch(out string s)
-        {
-            s = _n == 2 ? _x._2.Value : default;
-            return _n == 2;
-        }
-
-        public void Visit(global::System.Action<int> i, global::System.Action<string> s, global::System.Action _)
-        {
-            switch (_n)
+            /// <summary>
+            /// Retrieve the value stored within Variant_public if it is of type <see cref="int"/>.
+            /// </summary>
+            /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
+            /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="int"/>.</returns>
+            public bool TryMatch(out int i)
             {
-                case 0:
+                i = _n == 1 ? _x._1.Value : default;
+                return _n == 1;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/>.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
+            /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="int"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            public bool TryMatch(global::System.Action<int> i)
+            {
+                if (_n == 1)
+                {
+                    i(_x._1.Value);
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Retrieve the value stored within Variant_public if it is of type <see cref="int"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
+            public void Match(out int i)
+            {
+                if (_n == 1)
+                {
+                    i = _x._1.Value;
+                    return;
+                }
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "int", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            public void Match(global::System.Action<int> i)
+            {
+                if (_n == 1)
+                {
+                    i(_x._1.Value);
+                    return;
+                }
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "int", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/>,
+            /// otherwise invoke an alternative delegate.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            public void Match(global::System.Action<int> i, global::System.Action _)
+            {
+                if (_n == 1)
+                {
+                    i(_x._1.Value);
+                }
+                else
+                {
                     _();
-                    break;
-                case 1:
-                    i(_x._1.Value);
-                    break;
-                case 2:
-                    s(_x._2.Value);
-                    break;
-                default:
-                    ThrowInternalError();
-                    break;
+                }
             }
-        }
 
-        public void Visit(global::System.Action<int> i, global::System.Action<string> s)
-        {
-            switch (_n)
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/> and return the result,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
+            /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<int, TResult> i)
             {
-                case 0:
-                    ThrowEmptyError();
-                    break;
-                case 1:
-                    i(_x._1.Value);
-                    break;
-                case 2:
-                    s(_x._2.Value);
-                    break;
-                default:
-                    ThrowInternalError();
-                    break;
-            }
-        }
-
-        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
-        {
-            switch (_n)
-            {
-                case 0:
-                    return _();
-                case 1:
+                if (_n == 1)
+                {
                     return i(_x._1.Value);
-                case 2:
-                    return s(_x._2.Value);
-                default:
-                    return ThrowInternalError<TResult>();
+                }
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "int", "{TypeString}");
             }
-        }
 
-        public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s)
-        {
-            switch (_n)
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/> and return the result,
+            /// otherwise return a provided value.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
+            /// <param name="_">The value to return if the stored value is of a different type.</param>
+            /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
             {
-                case 0:
-                    return ThrowEmptyError<TResult>();
-                case 1:
-                    return i(_x._1.Value);
-                case 2:
+                return _n == 1 ? i(_x._1.Value) : _;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="int"/> and return the result,
+            /// otherwise invoke an alternative delegate and return its result.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
+            {
+                return _n == 1 ? i(_x._1.Value) : _();
+            }
+            /// <summary>
+            /// Retrieve the value stored within Variant_public if it is of type <see cref="string"/>.
+            /// </summary>
+            /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
+            /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="string"/>.</returns>
+            public bool TryMatch(out string s)
+            {
+                s = _n == 2 ? _x._2.Value : default;
+                return _n == 2;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/>.
+            /// </summary>
+            /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
+            /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="string"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
+            public bool TryMatch(global::System.Action<string> s)
+            {
+                if (_n == 2)
+                {
+                    s(_x._2.Value);
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Retrieve the value stored within Variant_public if it is of type <see cref="string"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
+            public void Match(out string s)
+            {
+                if (_n == 2)
+                {
+                    s = _x._2.Value;
+                    return;
+                }
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "string", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
+            public void Match(global::System.Action<string> s)
+            {
+                if (_n == 2)
+                {
+                    s(_x._2.Value);
+                    return;
+                }
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "string", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/>,
+            /// otherwise invoke an alternative delegate.
+            /// </summary>
+            /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
+            public void Match(global::System.Action<string> s, global::System.Action _)
+            {
+                if (_n == 2)
+                {
+                    s(_x._2.Value);
+                }
+                else
+                {
+                    _();
+                }
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/> and return the result,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
+            /// <returns>The value returned from invoking <paramref name="s"/>.</returns>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<string, TResult> s)
+            {
+                if (_n == 2)
+                {
                     return s(_x._2.Value);
-                default:
-                    return ThrowInternalError<TResult>();
+                }
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "string", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/> and return the result,
+            /// otherwise return a provided value.
+            /// </summary>
+            /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
+            /// <param name="_">The value to return if the stored value is of a different type.</param>
+            /// <returns>The value returned from invoking <paramref name="s"/>, or <paramref name="default"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="other"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
+            {
+                return _n == 2 ? s(_x._2.Value) : _;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_public if it is of type <see cref="string"/> and return the result,
+            /// otherwise invoke an alternative delegate and return its result.
+            /// </summary>
+            /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+            {
+                return _n == 2 ? s(_x._2.Value) : _();
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_public,
+            /// and invoke a special delegate if Variant_public is empty.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
+            /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
+            /// <param name="_">The delegate to invoke if Variant_public is empty.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            public void Visit(global::System.Action<int> i, global::System.Action<string> s, global::System.Action _)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        _();
+                        break;
+                    case 1:
+                        i(_x._1.Value);
+                        break;
+                    case 2:
+                        s(_x._2.Value);
+                        break;
+                    default:
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_public");
+                        break;
+                }
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of the value stored within Variant_public,
+            /// and throw an exception if Variant_public is empty.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
+            /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public is empty.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            public void Visit(global::System.Action<int> i, global::System.Action<string> s)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_public");
+                        break;
+                    case 1:
+                        i(_x._1.Value);
+                        break;
+                    case 2:
+                        s(_x._2.Value);
+                        break;
+                    default:
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_public");
+                        break;
+                }
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_public and return the result,
+            /// and invoke a special delegate if Variant_public is empty and return its result.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
+            /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
+            /// <param name="_">The delegate to invoke if Variant_public is empty.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s, global::System.Func<TResult> _)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return _();
+                    case 1:
+                        return i(_x._1.Value);
+                    case 2:
+                        return s(_x._2.Value);
+                    default:
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_public");
+                }
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of the value stored within Variant_public and return the result,
+            /// and throw an exception if Variant_public is empty.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
+            /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public is empty.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+            public TResult Visit<TResult>(global::System.Func<int, TResult> i, global::System.Func<string, TResult> s)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_public");
+                    case 1:
+                        return i(_x._1.Value);
+                    case 2:
+                        return s(_x._2.Value);
+                    default:
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_public");
+                }
             }
         }
     }
@@ -802,9 +756,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
+                    yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)variant).Value);
                 }
             }
         }
@@ -824,9 +778,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
                 {
-                    yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
+                    yield return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)variant).Value);
                 }
             }
         }
@@ -849,9 +803,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
+                    yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)variant).Value);
                 }
                 else
                 {
@@ -877,9 +831,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
                 {
-                    yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
+                    yield return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)variant).Value);
                 }
                 else
                 {
@@ -906,9 +860,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
+                    yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)variant).Value);
                 }
                 else
                 {
@@ -934,9 +888,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 2)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
                 {
-                    yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
+                    yield return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)variant).Value);
                 }
                 else
                 {
@@ -964,19 +918,19 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
                 {
                     case 0:
-                        global::dotVariant._G.Foo.Variant_public.ThrowEmptyError();
+                        global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_public");
                         yield break;
                     case 1:
-                        yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
+                        yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)variant).Value);
                         break;
                     case 2:
-                        yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
+                        yield return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)variant).Value);
                         break;
                     default:
-                        global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_public");
                         yield break;
                 }
             }
@@ -1001,19 +955,19 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return i(((global::dotVariant._Private.Accessor_1<int>)variant).Value);
+                        yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)variant).Value);
                         break;
                     case 2:
-                        yield return s(((global::dotVariant._Private.Accessor_2<string>)variant).Value);
+                        yield return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)variant).Value);
                         break;
                     default:
-                        global::dotVariant._G.Foo.Variant_public.ThrowInternalError();
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_public");
                         yield break;
                 }
             }
@@ -1038,8 +992,8 @@ namespace Foo
                 global::System.Func<int, TResult> i)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 1),
-                _variant => i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1),
+                _variant => i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)_variant).Value));
         }
         /// <summary>
         /// Projects each <see cref="string"/> element of an observable sequence
@@ -1055,8 +1009,8 @@ namespace Foo
                 global::System.Func<string, TResult> s)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 2),
-                _variant => s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2),
+                _variant => s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)_variant).Value));
         }
 
         /// <summary>
@@ -1076,9 +1030,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
+                    return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)_variant).Value);
                 }
                 else
                 {
@@ -1103,9 +1057,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2)
                 {
-                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
+                    return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)_variant).Value);
                 }
                 else
                 {
@@ -1131,9 +1085,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
+                    return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)_variant).Value);
                 }
                 else
                 {
@@ -1158,9 +1112,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 2)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2)
                 {
-                    return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
+                    return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)_variant).Value);
                 }
                 else
                 {
@@ -1185,16 +1139,16 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
                 {
                     case 0:
-                        return global::dotVariant._G.Foo.Variant_public.ThrowEmptyError<TResult>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_public");
                     case 1:
-                        return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
+                        return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)_variant).Value);
                     case 2:
-                        return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
+                        return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)_variant).Value);
                     default:
-                        return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_public");
                 }
             });
         }
@@ -1217,16 +1171,16 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
                 {
                     case 0:
                         return _();
                     case 1:
-                        return i(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
+                        return i(((global::dotVariant.GeneratorSupport.Accessor_1<int>)_variant).Value);
                     case 2:
-                        return s(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
+                        return s(((global::dotVariant.GeneratorSupport.Accessor_2<string>)_variant).Value);
                     default:
-                        return global::dotVariant._G.Foo.Variant_public.ThrowInternalError<TResult>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_public");
                 }
             });
         }
@@ -1377,7 +1331,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant_public _variant)
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
                 {
                     case 0:
                         if (_accept0)
@@ -1386,17 +1340,17 @@ namespace Foo
                         }
                         else
                         {
-                            OnError(global::dotVariant._G.Foo.Variant_public.MakeEmptyError());
+                            OnError(global::dotVariant.GeneratorSupport.Errors.MakeEmptyError("Foo.Variant_public"));
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant._Private.Accessor_1<int>)_variant).Value);
+                        Subject1.OnNext(((global::dotVariant.GeneratorSupport.Accessor_1<int>)_variant).Value);
                         break;
                     case 2:
-                        Subject2.OnNext(((global::dotVariant._Private.Accessor_2<string>)_variant).Value);
+                        Subject2.OnNext(((global::dotVariant.GeneratorSupport.Accessor_2<string>)_variant).Value);
                         break;
                     default:
-                        OnError(global::dotVariant._G.Foo.Variant_public.MakeInternalError());
+                        OnError(global::dotVariant.GeneratorSupport.Errors.MakeInternalError("Foo.Variant_public"));
                         break;
                 }
             }

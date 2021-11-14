@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-namespace dotVariant._Private
+namespace dotVariant.GeneratorSupport
 {
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public readonly struct Accessor_1<T> { public readonly T Value; public Accessor_1(T value) => Value = value; }
