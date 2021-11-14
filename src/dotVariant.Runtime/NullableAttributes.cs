@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-namespace dotVariant._Private
+namespace System.Diagnostics.CodeAnalysis
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public enum Discriminator : byte { }
+    internal sealed class DoesNotReturn : Attribute
+    {
+    }
 }

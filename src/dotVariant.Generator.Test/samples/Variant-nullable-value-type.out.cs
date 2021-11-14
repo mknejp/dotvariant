@@ -9,24 +9,24 @@ namespace Foo
 {
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
-    [global::System.Diagnostics.DebuggerNonUserCode]
     partial class Variant_nullable_value_type
         : global::System.IEquatable<Variant_nullable_value_type>
     {
-        [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly global::dotVariant._G.Foo.Variant_nullable_value_type _variant;
+        private readonly __VariantImpl _variant;
 
         /// <summary>
         /// Create a Variant_nullable_value_type with a value of type <see cref="int?"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public Variant_nullable_value_type(int? i)
-            => _variant = new global::dotVariant._G.Foo.Variant_nullable_value_type(i);
+            => _variant = new __VariantImpl(i);
 
         /// <summary>
         /// Create a Variant_nullable_value_type with a value of type <see cref="int?"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static implicit operator Variant_nullable_value_type(int? i)
             => new Variant_nullable_value_type(i);
 
@@ -34,274 +34,102 @@ namespace Foo
         /// Create a Variant_nullable_value_type with a value of type <see cref="int?"/>.
         /// </summary>
         /// <param name="i">The value to initlaize the variant with.</param>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static Variant_nullable_value_type Create(int? i)
             => new Variant_nullable_value_type(i);
 
 
-        /// <summary>
-        /// <see langword="true"/> if Variant_nullable_value_type was constructed without a value.
-        /// </summary>
+        /// <inheritdoc cref="__VariantImpl.IsEmpty"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool IsEmpty
             => _variant.IsEmpty;
 
+        /// <inheritdoc/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public override bool Equals(object other)
             => other is Variant_nullable_value_type v && Equals(v);
 
+        /// <inheritdoc/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool Equals(Variant_nullable_value_type other)
             => !(other is null) && _variant.Equals(other._variant);
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant_nullable_value_type lhs, Variant_nullable_value_type rhs)
-            => lhs?.Equals(rhs) ?? (rhs is null);
+        => lhs?.Equals(rhs) ?? (rhs is null);
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant_nullable_value_type lhs, Variant_nullable_value_type rhs)
-            => !(lhs == rhs);
+        => !(lhs == rhs);
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public override int GetHashCode()
             => _variant.GetHashCode();
 
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public override string ToString()
-            => _variant.ValueString;
+            => _variant.ToString();
 
-        /// <summary>
-        /// Retrieve the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="i">Receives the stored value if it is of type <see cref="int?"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type does not contain a value of type <see cref="int?"/></exception>
-        public void Match(out int? i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i = ((global::dotVariant._Private.Accessor_1<int?>)_variant).Value;
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_nullable_value_type' (expected 'int?', actual '{_variant.TypeString}').");
-            }
-        }
-
-        /// <summary>
-        /// Retrieve the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>.
-        /// </summary>
-        /// <param name="i">Receives the stored value if it is of type <see cref="int?"/>.</param>
-        /// <returns><see langword="true"/> if Variant_nullable_value_type contained a value of type <see cref="int?"/>.</returns>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(out int?)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(out int? i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i = ((global::dotVariant._Private.Accessor_1<int?>)_variant).Value;
-                return true;
-            }
-            else
-            {
-                i = default;
-                return false;
-            }
-        }
+            => _variant.TryMatch(out i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
-        /// <returns><see langword="true"/> if Variant_nullable_value_type contained a value of type <see cref="int?"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{int?})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(global::System.Action<int?> i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+            => _variant.TryMatch(i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type does not contain a value of type <see cref="int?"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match(out int?)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public void Match(out int? i)
+            => _variant.Match(out i);
+
+        /// <inheritdoc cref="__VariantImpl.Match(global::System.Action{int?})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Match(global::System.Action<int?> i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_nullable_value_type' (expected 'int?', actual '{_variant.TypeString}').");
-            }
-        }
+            => _variant.Match(i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>,
-        /// otherwise invoke an alternative delegate.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
-        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match(global::System.Action{int?}, global::System.Action)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Match(global::System.Action<int?> i, global::System.Action _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-            }
-            else
-            {
-                _();
-            }
-        }
+            => _variant.Match(i, _);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/> and return the result,
-        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
-        /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
-        /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type does not contain a value of type <see cref="int?"/></exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{int?, TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<int?, TResult> i)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-            }
-            else
-            {
-                throw new global::System.InvalidOperationException($"Failed to match on 'Foo.Variant_nullable_value_type' (expected 'int?', actual '{_variant.TypeString}').");
-            }
-        }
+            => _variant.Match(i);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/> and return the result,
-        /// otherwise return a provided value.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
-        /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{int?, TResult}, TResult)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<int?, TResult> i, TResult _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-            }
-            else
-            {
-                return _;
-            }
-        }
+            => _variant.Match(i, _);
 
-        /// <summary>
-        /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/> and return the result,
-        /// otherwise invoke an alternative delegate and return its result.
-        /// </summary>
-        /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
-        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Match{TResult}(global::System.Func{int?, TResult}, global::System.Func{TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<int?, TResult> i, global::System.Func<TResult> _)
-        {
-            if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
-            {
-                return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-            }
-            else
-            {
-                return _();
-            }
-        }
+            => _variant.Match(i, _);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within Variant_nullable_value_type,
-        /// and throw an exception if Variant_nullable_value_type is empty.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type is empty.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+
+        /// <inheritdoc cref="__VariantImpl.Visit(global::System.Action{int?})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Visit(global::System.Action<int?> i)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowEmptyError();
-                    break;
-                case 1:
-                    i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-                    break;
-                default:
-                    global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError();
-                    break;
-            }
-        }
+            => _variant.Visit(i);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_nullable_value_type,
-        /// and invoke a special delegate if Variant_nullable_value_type is empty.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
-        /// <param name="_">The delegate to invoke if Variant_nullable_value_type is empty.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <inheritdoc cref="__VariantImpl.Visit(global::System.Action{int?}, global::System.Action)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public void Visit(global::System.Action<int?> i, global::System.Action _)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    _();
-                    break;
-                case 1:
-                    i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-                    break;
-                default:
-                    global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError();
-                    break;
-            }
-        }
+            => _variant.Visit(i, _);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within Variant_nullable_value_type and return the result,
-        /// and throw an exception if Variant_nullable_value_type is empty.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type is empty.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        /// <inheritdoc cref="__VariantImpl.Visit{TResult}(global::System.Func{int?, TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Visit<TResult>(global::System.Func<int?, TResult> i)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    return global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowEmptyError<TResult>();
-                case 1:
-                    return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-                default:
-                    return global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError<TResult>();
-            }
-        }
+            => _variant.Visit(i);
 
-        /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_nullable_value_type and return the result,
-        /// and invoke a special delegate if Variant_nullable_value_type is empty and return its result.
-        /// </summary>
-        /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
-        /// <param name="_">The delegate to invoke if Variant_nullable_value_type is empty.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        /// <inheritdoc cref="__VariantImpl.Visit{TResult}(global::System.Func{int?, TResult}, global::System.Func{TResult})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Visit<TResult>(global::System.Func<int?, TResult> i, global::System.Func<TResult> _)
-        {
-            switch (((int)(global::dotVariant._Private.Discriminator)_variant))
-            {
-                case 0:
-                    return _();
-                case 1:
-                    return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
-                default:
-                    return global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError<TResult>();
-            }
-        }
+            => _variant.Visit(i, _);
 
         private sealed class _VariantTypeProxy
         {
@@ -314,114 +142,90 @@ namespace Foo
         }
 
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public static explicit operator global::dotVariant._Private.Discriminator(Variant_nullable_value_type v) => (global::dotVariant._Private.Discriminator)v._variant;
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(Variant_nullable_value_type v)
+            => (global::dotVariant.GeneratorSupport.Discriminator)v._variant;
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public static explicit operator global::dotVariant._Private.Accessor_1<int?>(Variant_nullable_value_type v) => (global::dotVariant._Private.Accessor_1<int?>)v._variant;
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int?>(Variant_nullable_value_type v)
+            => (global::dotVariant.GeneratorSupport.Accessor_1<int?>)v._variant;
     }
 }
 
-namespace dotVariant._G.Foo
+namespace Foo
 {
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct Variant_nullable_value_type
+    partial class Variant_nullable_value_type
     {
-        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-        private readonly struct Union
-        {
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_1 _1;
-
-            public Union(int? value)
-            {
-                _1 = new Value_1(value);
-            }
-        }
-
         [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_1
+        [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
+        private readonly struct __VariantImpl
         {
-            public readonly int? Value;
-
-            public Value_1(int? value)
+            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+            private readonly struct Union
             {
-                Value = value;
-            }
-        }
+                [global::System.Runtime.InteropServices.FieldOffset(0)]
+                public readonly Value_1 _1;
 
-        private readonly Union _x;
-        private readonly byte _n;
-
-        public Variant_nullable_value_type(int? i)
-        {
-            _n = 1;
-            _x = new Union(i);
-        }
-
-
-        public static explicit operator global::dotVariant._Private.Discriminator(Variant_nullable_value_type v)
-            => (global::dotVariant._Private.Discriminator)v._n;
-        public static explicit operator global::dotVariant._Private.Accessor_1<int?>(in Variant_nullable_value_type v)
-            => new global::dotVariant._Private.Accessor_1<int?>(v._x._1.Value);
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static void ThrowEmptyError()
-        {
-            throw MakeEmptyError();
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static T ThrowEmptyError<T>()
-        {
-            throw MakeEmptyError();
-        }
-
-        public static global::System.Exception MakeEmptyError()
-        {
-            return new global::System.InvalidOperationException("Variant_nullable_value_type is empty.");
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static void ThrowInternalError()
-        {
-            throw MakeInternalError();
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        public static T ThrowInternalError<T>()
-        {
-            throw MakeInternalError();
-        }
-
-        public static global::System.Exception MakeInternalError()
-        {
-            return new global::System.InvalidOperationException("Variant_nullable_value_type has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
-        }
-
-        public bool IsEmpty => _n == 0;
-
-        public string TypeString
-        {
-            get
-            {
-                switch (_n)
+                public Union(int? value)
                 {
-                    case 0:
-                        return "<empty>";
-                    case 1:
-                        return "int?";
-                    default:
-                        return ThrowInternalError<string>();
+                    _1 = new Value_1(value);
                 }
             }
-        }
 
-        public string ValueString
-        {
-            get
+            [global::System.Diagnostics.DebuggerNonUserCode]
+            private readonly struct Value_1
+            {
+                public readonly int? Value;
+
+                public Value_1(int? value)
+                {
+                    Value = value;
+                }
+            }
+
+            private readonly Union _x;
+            private readonly byte _n;
+
+            public __VariantImpl(int? i)
+            {
+                _n = 1;
+                _x = new Union(i);
+            }
+
+
+            public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in __VariantImpl v)
+                => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
+            public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int?>(in __VariantImpl v)
+                => new global::dotVariant.GeneratorSupport.Accessor_1<int?>(v._x._1.Value);
+
+            /// <summary>
+            /// <see langword="true"/> if Variant_nullable_value_type was constructed without a value.
+            /// </summary>
+            public bool IsEmpty => _n == 0;
+
+            /// <summary>
+            /// The string representation of the stored value's type.
+            /// </summary>
+            public string TypeString
+            {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0:
+                            return "<empty>";
+                        case 1:
+                            return "int?";
+                        default:
+                            return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_nullable_value_type");
+                    }
+                }
+            }
+
+            /// <summary>
+            /// The stored value's <see cref="object.ToString()"/> result, or <c>""</c> if empty.
+            /// </summary>
+            public override string ToString()
             {
                 switch (_n)
                 {
@@ -430,47 +234,47 @@ namespace dotVariant._G.Foo
                     case 1:
                         return _x._1.Value?.ToString() ?? "null";
                     default:
-                        return ThrowInternalError<string>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_nullable_value_type");
                 }
             }
-        }
 
-        public object AsObject
-        {
-            get
+            /// <summary>
+            /// The stored value cast to type <see cref="object"/>.
+            /// </summary>
+            public object AsObject
             {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0:
+                            return null;
+                        case 1:
+                            return _x._1.Value;
+                        default:
+                            return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object>("Foo.Variant_nullable_value_type");
+                    }
+                }
+            }
+
+            public bool Equals(in __VariantImpl other)
+            {
+                if (_n != other._n)
+                {
+                    return false;
+                }
                 switch (_n)
                 {
                     case 0:
-                        return null;
+                        return true;
                     case 1:
-                        return _x._1.Value;
+                        return global::System.Collections.Generic.EqualityComparer<int?>.Default.Equals(_x._1.Value, other._x._1.Value);
                     default:
-                        return ThrowInternalError<object>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<bool>("Foo.Variant_nullable_value_type");
                 }
             }
-        }
 
-        public bool Equals(in Variant_nullable_value_type other)
-        {
-            if (_n != other._n)
-            {
-                return false;
-            }
-            switch (_n)
-            {
-                case 0:
-                    return true;
-                case 1:
-                    return global::System.Collections.Generic.EqualityComparer<int?>.Default.Equals(_x._1.Value, other._x._1.Value);
-                default:
-                    return ThrowInternalError<bool>();
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
+            public override int GetHashCode()
             {
                 switch (_n)
                 {
@@ -479,72 +283,217 @@ namespace dotVariant._G.Foo
                     case 1:
                         return global::System.HashCode.Combine(_x._1.Value);
                     default:
-                        return ThrowInternalError<int>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<int>("Foo.Variant_nullable_value_type");
                 }
             }
-        }
 
-        public bool TryMatch(out int? i)
-        {
-            i = _n == 1 ? _x._1.Value : default;
-            return _n == 1;
-        }
-
-        public void Visit(global::System.Action<int?> i, global::System.Action _)
-        {
-            switch (_n)
+            /// <summary>
+            /// Retrieve the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>.
+            /// </summary>
+            /// <param name="i">Receives the stored value if it is of type <see cref="int?"/>.</param>
+            /// <returns><see langword="true"/> if Variant_nullable_value_type contained a value of type <see cref="int?"/>.</returns>
+            public bool TryMatch(out int? i)
             {
-                case 0:
+                i = _n == 1 ? _x._1.Value : default;
+                return _n == 1;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
+            /// <returns><see langword="true"/> if Variant_nullable_value_type contained a value of type <see cref="int?"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            public bool TryMatch(global::System.Action<int?> i)
+            {
+                if (_n == 1)
+                {
+                    i(_x._1.Value);
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Retrieve the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="i">Receives the stored value if it is of type <see cref="int?"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type does not contain a value of type <see cref="int?"/></exception>
+            public void Match(out int? i)
+            {
+                if (_n == 1)
+                {
+                    i = _x._1.Value;
+                    return;
+                }
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_nullable_value_type", "int?", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type does not contain a value of type <see cref="int?"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            public void Match(global::System.Action<int?> i)
+            {
+                if (_n == 1)
+                {
+                    i(_x._1.Value);
+                    return;
+                }
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_nullable_value_type", "int?", "{TypeString}");
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/>,
+            /// otherwise invoke an alternative delegate.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            public void Match(global::System.Action<int?> i, global::System.Action _)
+            {
+                if (_n == 1)
+                {
+                    i(_x._1.Value);
+                }
+                else
+                {
                     _();
-                    break;
-                case 1:
-                    i(_x._1.Value);
-                    break;
-                default:
-                    ThrowInternalError();
-                    break;
+                }
             }
-        }
 
-        public void Visit(global::System.Action<int?> i)
-        {
-            switch (_n)
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/> and return the result,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
+            /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
+            /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type does not contain a value of type <see cref="int?"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<int?, TResult> i)
             {
-                case 0:
-                    ThrowEmptyError();
-                    break;
-                case 1:
-                    i(_x._1.Value);
-                    break;
-                default:
-                    ThrowInternalError();
-                    break;
-            }
-        }
-
-        public TResult Visit<TResult>(global::System.Func<int?, TResult> i, global::System.Func<TResult> _)
-        {
-            switch (_n)
-            {
-                case 0:
-                    return _();
-                case 1:
+                if (_n == 1)
+                {
                     return i(_x._1.Value);
-                default:
-                    return ThrowInternalError<TResult>();
+                }
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_nullable_value_type", "int?", "{TypeString}");
             }
-        }
 
-        public TResult Visit<TResult>(global::System.Func<int?, TResult> i)
-        {
-            switch (_n)
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/> and return the result,
+            /// otherwise return a provided value.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
+            /// <param name="_">The value to return if the stored value is of a different type.</param>
+            /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<int?, TResult> i, TResult _)
             {
-                case 0:
-                    return ThrowEmptyError<TResult>();
-                case 1:
-                    return i(_x._1.Value);
-                default:
-                    return ThrowInternalError<TResult>();
+                return _n == 1 ? i(_x._1.Value) : _;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within Variant_nullable_value_type if it is of type <see cref="int?"/> and return the result,
+            /// otherwise invoke an alternative delegate and return its result.
+            /// </summary>
+            /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int?"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            public TResult Match<TResult>(global::System.Func<int?, TResult> i, global::System.Func<TResult> _)
+            {
+                return _n == 1 ? i(_x._1.Value) : _();
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_nullable_value_type,
+            /// and invoke a special delegate if Variant_nullable_value_type is empty.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
+            /// <param name="_">The delegate to invoke if Variant_nullable_value_type is empty.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            public void Visit(global::System.Action<int?> i, global::System.Action _)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        _();
+                        break;
+                    case 1:
+                        i(_x._1.Value);
+                        break;
+                    default:
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_nullable_value_type");
+                        break;
+                }
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of the value stored within Variant_nullable_value_type,
+            /// and throw an exception if Variant_nullable_value_type is empty.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type is empty.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            public void Visit(global::System.Action<int?> i)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_nullable_value_type");
+                        break;
+                    case 1:
+                        i(_x._1.Value);
+                        break;
+                    default:
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_nullable_value_type");
+                        break;
+                }
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of type of the value stored within Variant_nullable_value_type and return the result,
+            /// and invoke a special delegate if Variant_nullable_value_type is empty and return its result.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
+            /// <param name="_">The delegate to invoke if Variant_nullable_value_type is empty.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+            public TResult Visit<TResult>(global::System.Func<int?, TResult> i, global::System.Func<TResult> _)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return _();
+                    case 1:
+                        return i(_x._1.Value);
+                    default:
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_nullable_value_type");
+                }
+            }
+
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of the value stored within Variant_nullable_value_type and return the result,
+            /// and throw an exception if Variant_nullable_value_type is empty.
+            /// </summary>
+            /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int?"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_nullable_value_type is empty.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+            public TResult Visit<TResult>(global::System.Func<int?, TResult> i)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_nullable_value_type");
+                    case 1:
+                        return i(_x._1.Value);
+                    default:
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_nullable_value_type");
+                }
             }
         }
     }
@@ -571,9 +520,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._Private.Accessor_1<int?>)variant).Value);
+                    yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)variant).Value);
                 }
             }
         }
@@ -596,9 +545,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._Private.Accessor_1<int?>)variant).Value);
+                    yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)variant).Value);
                 }
                 else
                 {
@@ -625,9 +574,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant._Private.Discriminator)variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
                 {
-                    yield return i(((global::dotVariant._Private.Accessor_1<int?>)variant).Value);
+                    yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)variant).Value);
                 }
                 else
                 {
@@ -654,16 +603,16 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
                 {
                     case 0:
-                        global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowEmptyError();
+                        global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_nullable_value_type");
                         yield break;
                     case 1:
-                        yield return i(((global::dotVariant._Private.Accessor_1<int?>)variant).Value);
+                        yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)variant).Value);
                         break;
                     default:
-                        global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError();
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_nullable_value_type");
                         yield break;
                 }
             }
@@ -687,16 +636,16 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return i(((global::dotVariant._Private.Accessor_1<int?>)variant).Value);
+                        yield return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)variant).Value);
                         break;
                     default:
-                        global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError();
+                        global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_nullable_value_type");
                         yield break;
                 }
             }
@@ -721,8 +670,8 @@ namespace Foo
                 global::System.Func<int?, TResult> i)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant._Private.Discriminator)_variant) == 1),
-                _variant => i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1),
+                _variant => i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)_variant).Value));
         }
 
         /// <summary>
@@ -742,9 +691,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
+                    return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)_variant).Value);
                 }
                 else
                 {
@@ -770,9 +719,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant._Private.Discriminator)_variant) == 1)
+                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
                 {
-                    return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
+                    return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)_variant).Value);
                 }
                 else
                 {
@@ -796,14 +745,14 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
                 {
                     case 0:
-                        return global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowEmptyError<TResult>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_nullable_value_type");
                     case 1:
-                        return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
+                        return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)_variant).Value);
                     default:
-                        return global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError<TResult>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_nullable_value_type");
                 }
             });
         }
@@ -825,14 +774,14 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
                 {
                     case 0:
                         return _();
                     case 1:
-                        return i(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
+                        return i(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)_variant).Value);
                     default:
-                        return global::dotVariant._G.Foo.Variant_nullable_value_type.ThrowInternalError<TResult>();
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_nullable_value_type");
                 }
             });
         }
@@ -951,7 +900,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant_nullable_value_type _variant)
             {
-                switch (((int)(global::dotVariant._Private.Discriminator)_variant))
+                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
                 {
                     case 0:
                         if (_accept0)
@@ -960,14 +909,14 @@ namespace Foo
                         }
                         else
                         {
-                            OnError(global::dotVariant._G.Foo.Variant_nullable_value_type.MakeEmptyError());
+                            OnError(global::dotVariant.GeneratorSupport.Errors.MakeEmptyError("Foo.Variant_nullable_value_type"));
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant._Private.Accessor_1<int?>)_variant).Value);
+                        Subject1.OnNext(((global::dotVariant.GeneratorSupport.Accessor_1<int?>)_variant).Value);
                         break;
                     default:
-                        OnError(global::dotVariant._G.Foo.Variant_nullable_value_type.MakeInternalError());
+                        OnError(global::dotVariant.GeneratorSupport.Errors.MakeInternalError("Foo.Variant_nullable_value_type"));
                         break;
                 }
             }

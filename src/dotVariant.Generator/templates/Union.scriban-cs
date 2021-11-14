@@ -119,169 +119,139 @@ func $storage(param)
 end
 ~}}
 {{~ ## STORAGE WRAPPER ## ~}}
-namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
+{{~ if Variant.Namespace ~}}
+namespace {{ Variant.Namespace }}
 {
-    [global::System.Diagnostics.DebuggerNonUserCode]
-    internal readonly struct {{ Variant.Name }}
-    {{~ if needs_dispose ~}}
-        : global::System.IDisposable
-    {{~ end ~}}
+{{~ end ~}}
+    partial {{ Variant.Keyword }} {{ Variant.Name }}
     {
-        {{~ ## UNION TYPE ## ~}}
-        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-        private readonly struct Union
-        {
-            {{~ ## UNION MEMBERS ## ~}}
-            {{~ for $p in Params ~}}
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_{{ $p.Index }} _{{ $p.Index }};
-            {{~ end ~}}
-
-            {{~ ## UNION CONSTRUCTORS ## ~}}
-            {{~ for $p in Params ~}}
-            public Union({{ value_type $p }} value)
-            {
-                {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
-                _{{ $other.Index }} = default;
-                {{~ end ~}}
-                _{{ $p.Index }} = new Value_{{ $p.Index }}(value);
-            }
-            {{~ end ~}}
-        }
-
-        {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
-        {{~ for $p in Params ~}}
         [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_{{ $p.Index }}
+        [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
+        private readonly struct __VariantImpl
+        {{~ if needs_dispose ~}}
+            : global::System.IDisposable
+        {{~ end ~}}
         {
-            public readonly {{ value_type $p }} Value;
-            {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-            public readonly object _dummy{{ $dummy }};
+            {{~ ## UNION TYPE ## ~}}
+            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+            private readonly struct Union
+            {
+                {{~ ## UNION MEMBERS ## ~}}
+                {{~ for $p in Params ~}}
+                [global::System.Runtime.InteropServices.FieldOffset(0)]
+                public readonly Value_{{ $p.Index }} _{{ $p.Index }};
+                {{~ end ~}}
+
+                {{~ ## UNION CONSTRUCTORS ## ~}}
+                {{~ for $p in Params ~}}
+                public Union({{ value_type $p }} value)
+                {
+                    {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
+                    _{{ $other.Index }} = default;
+                    {{~ end ~}}
+                    _{{ $p.Index }} = new Value_{{ $p.Index }}(value);
+                }
+                {{~ end ~}}
+            }
+
+            {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
+            {{~ for $p in Params ~}}
+            [global::System.Diagnostics.DebuggerNonUserCode]
+            private readonly struct Value_{{ $p.Index }}
+            {
+                public readonly {{ value_type $p }} Value;
+                {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+                public readonly object _dummy{{ $dummy }};
+                {{~ end ~}}
+
+                public Value_{{ $p.Index }}({{ value_type $p }} value)
+                {
+                    {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+                    _dummy{{ $dummy }} = null{{ global_forgive }};
+                    {{~ end ~}}
+                    Value = value;
+                }
+            }
             {{~ end ~}}
 
-            public Value_{{ $p.Index }}({{ value_type $p }} value)
+            private readonly Union _x;
+            private readonly byte _n;
+
+            {{~ ## STORAGE CONSTRUCTORS ## ~}}
+            {{~ for $p in Params ~}}
+            public __VariantImpl({{ value_type $p }} {{ $p.Hint }})
             {
-                {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-                _dummy{{ $dummy }} = null{{ global_forgive }};
-                {{~ end ~}}
-                Value = value;
+                _n = {{ $p.Index }};
+                _x = new Union({{ $p.Hint }});
             }
-        }
-        {{~ end ~}}
+            {{~ end ~}}
 
-        private readonly Union _x;
-        private readonly byte _n;
-
-        {{~ ## STORAGE CONSTRUCTORS ## ~}}
-        {{~ for $p in Params ~}}
-        public {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
-        {
-            _n = {{ $p.Index }};
-            _x = new Union({{ $p.Hint }});
-        }
-        {{~ end ~}}
-
-        {{~ if needs_dispose ~}}
-        public void Dispose()
-        {
-            switch (_n)
-            {
-                case 0:
-                    break;
-                {{~ for $p in Params ~}}
-                case {{ $p.Index }}:
-                    {{~ if $p.IsDisposable ~}}
-                    {{ coalesce $p ($storage $p) ".Dispose()" }};
-                    {{~ end ~}}
-                    break;
-                {{~ end ~}}
-                default:
-                    ThrowInternalError();
-                    break;
-            }
-        }
-        {{~ end ~}}
-
-        {{~ ## INTERNAL ACCESS ## ~}}
-        public static explicit operator global::dotVariant._Private.Discriminator({{ Variant.Name }} v)
-            => (global::dotVariant._Private.Discriminator)v._n;
-        {{~ for $p in Params ~}}
-        public static explicit operator global::dotVariant._Private.Accessor_{{ $p.Index }}<{{ value_type $p }}>(in {{ Variant.Name }} v)
-            => new global::dotVariant._Private.Accessor_{{ $p.Index }}<{{ value_type $p }}>(v._x._{{ $p.Index }}.Value);
-        {{~ end ~}}
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        {{~ if Language.Version >= 800 ~}}
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        {{~ end ~}}
-        public static void ThrowEmptyError()
-        {
-            throw MakeEmptyError();
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        {{~ if Language.Version >= 800 ~}}
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        {{~ end ~}}
-        public static T ThrowEmptyError<T>()
-        {
-            throw MakeEmptyError();
-        }
-
-        public static global::System.Exception MakeEmptyError()
-        {
-            return new global::System.InvalidOperationException("{{ Variant.Name }} is empty.");
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        {{~ if Language.Version >= 800 ~}}
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        {{~ end ~}}
-        public static void ThrowInternalError()
-        {
-            throw MakeInternalError();
-        }
-
-        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        {{~ if Language.Version >= 800 ~}}
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        {{~ end ~}}
-        public static T ThrowInternalError<T>()
-        {
-            throw MakeInternalError();
-        }
-
-        public static global::System.Exception MakeInternalError()
-        {
-            return new global::System.InvalidOperationException("{{ Variant.Name }} has encountered an internal error. Please file an issue at https://github.com/mknejp/dotvariant");
-        }
-
-        {{~ ## UNION IsEmpty ## ~}}
-        public bool IsEmpty => _n == 0;
-
-        {{~ ## UNION TypeString ## ~}}
-        public string TypeString
-        {
-            get
+            {{~ if needs_dispose ~}}
+            public void Dispose()
             {
                 switch (_n)
                 {
                     case 0:
-                        return "<empty>";
+                        break;
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
-                        return "{{ $p.DiagName }}";
+                        {{~ if $p.IsDisposable ~}}
+                        {{ coalesce $p ($storage $p) ".Dispose()" }};
+                        {{~ end ~}}
+                        break;
                     {{~ end ~}}
                     default:
-                        return ThrowInternalError<string>();
+                        {{ throw_internal_error }};
+                        break;
                 }
             }
-        }
+            {{~ end ~}}
 
-        {{~ ## UNION ValueString ## ~}}
-        public string ValueString
-        {
-            get
+            {{~ ## INTERNAL ACCESS ## ~}}
+            public static explicit operator {{ discriminator }}(in __VariantImpl v)
+                => ({{ discriminator }})v._n;
+            {{~ for $p in Params ~}}
+            public static explicit operator {{ accessor $p.Index (value_type $p) }}(in __VariantImpl v)
+                => new {{ accessor $p.Index (value_type $p) }}(v._x._{{ $p.Index }}.Value);
+            {{~ end ~}}
+
+            /// <summary>
+            /// <see langword="true"/> if {{ Variant.Name }} was constructed without a value.
+            /// </summary>
+            {{~ if !Variant.IsClass ~}}
+            /// <remarks>
+            /// Because {{ Variant.Name }} is a value type, its default constructor cannot be disabled.
+            /// A default-constructed {{ Variant.Name }} will always have a <see cref="IsEmpty"/> value of <see langword"true"/>
+            /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
+            /// </remarks>
+            {{~ end ~}}
+            public bool IsEmpty => _n == 0;
+
+            /// <summary>
+            /// The string representation of the stored value's type.
+            /// </summary>
+            public string TypeString
+            {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0:
+                            return "<empty>";
+                        {{~ for $p in Params ~}}
+                        case {{ $p.Index }}:
+                            return "{{ $p.DiagName }}";
+                        {{~ end ~}}
+                        default:
+                            return {{ throw_internal_error "string" }};
+                    }
+                }
+            }
+
+            /// <summary>
+            /// The stored value's <see cref="object.ToString()"/> result, or <c>""</c> if empty.
+            /// </summary>
+            public override string ToString()
             {
                 switch (_n)
                 {
@@ -292,55 +262,52 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                         return {{ coalesce_ToString $p ($storage $p) }};
                     {{~ end ~}}
                     default:
-                        return ThrowInternalError<string>();
+                        return {{ throw_internal_error "string" }};
                 }
             }
-        }
 
-        {{~ ## UNION AsObject ## ~}}
-        public object{{ global_nullable }} AsObject
-        {
-            get
+            /// <summary>
+            /// The stored value cast to type <see cref="object"/>.
+            /// </summary>
+            public object{{ global_nullable }} AsObject
             {
+                get
+                {
+                    switch (_n)
+                    {
+                        case 0:
+                            return null;
+                        {{~ for $p in Params ~}}
+                        case {{ $p.Index }}:
+                            return {{ $storage $p }};
+                        {{~ end ~}}
+                        default:
+                            return {{ throw_internal_error "object" + global_nullable }};
+                    }
+                }
+            }
+
+            public bool Equals(in __VariantImpl other)
+            {
+                if (_n != other._n)
+                {
+                    return false;
+                }
                 switch (_n)
                 {
                     case 0:
-                        return null;
+                        return true;
                     {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        return {{ $storage $p }};
+                    {{~ $i = $p.Index ~}}
+                    case {{ $i }}:
+                        return global::System.Collections.Generic.EqualityComparer<{{ $p.Name }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
                     {{~ end ~}}
                     default:
-                        return ThrowInternalError<object{{ global_nullable }}>();
+                        return {{ throw_internal_error "bool" }};
                 }
             }
-        }
 
-        {{~ ## UNION Equals ## ~}}
-        public bool Equals(in {{ Variant.Name }} other)
-        {
-            if (_n != other._n)
-            {
-                return false;
-            }
-            switch (_n)
-            {
-                case 0:
-                    return true;
-                {{~ for $p in Params ~}}
-                {{~ $i = $p.Index ~}}
-                case {{ $i }}:
-                    return global::System.Collections.Generic.EqualityComparer<{{ $p.Name }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
-                {{~ end ~}}
-                default:
-                    return ThrowInternalError<bool>();
-            }
-        }
-
-        {{~ ## UNION GetHashCode ## ~}}
-        public override int GetHashCode()
-        {
-            unchecked
+            public override int GetHashCode()
             {
                 switch (_n)
                 {
@@ -356,88 +323,244 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
                         {{~ end ~}}
                     {{~ end ~}}
                     default:
-                        return ThrowInternalError<int>();
+                        return {{ throw_internal_error "int" }};
+                }
+            }
+
+            {{~ for $p in Params ~}}
+            {{~ ## UNION TryMatch ## ~}}
+            /// <summary>
+            /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Name }}"/>.</returns>
+            public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
+            {
+                {{ $p.Hint }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
+                return _n == {{ $p.Index }};
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Name }}"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
+            public bool TryMatch({{ action_type $p }} {{ $p.Hint }})
+            {
+                if (_n == {{ $p.Index }})
+                {
+                    {{ $p.Hint }}({{ $storage $p }});
+                    return true;
+                }
+                return false;
+            }
+
+            {{~ ## UNION Match ## ~}}
+            /// <summary>
+            /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
+            public void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.Hint }})
+            {
+                if (_n == {{ $p.Index }})
+                {
+                    {{ $p.Hint }} = {{ $storage $p }};
+                    return;
+                }
+                throw {{ make_mismatch_error $p.DiagName "{TypeString}" }};
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
+            public void Match({{ action_type $p }} {{ $p.Hint }})
+            {
+                if (_n == {{ $p.Index }})
+                {
+                    {{ $p.Hint }}({{ $storage $p }});
+                    return;
+                }
+                {{ throw_mismatch_error $p.DiagName "{TypeString}" }};
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/>,
+            /// otherwise invoke an alternative delegate.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
+            public void Match({{ action_type $p }} {{ $p.Hint }}, global::System.Action _)
+            {
+                if (_n == {{ $p.Index }})
+                {
+                    {{ $p.Hint }}({{ $storage $p }});
+                }
+                else
+                {
+                    _();
+                }
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/> and return the result,
+            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <returns>The value returned from invoking <paramref name="{{ $p.Hint }}"/>.</returns>
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
+            public TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }})
+            {
+                if (_n == {{ $p.Index }})
+                {
+                    return {{ $p.Hint }}({{ $storage $p }});
+                }
+                return {{ throw_mismatch_error $p.DiagName "{TypeString}" "TResult" }};
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/> and return the result,
+            /// otherwise return a provided value.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <param name="_">The value to return if the stored value is of a different type.</param>
+            /// <returns>The value returned from invoking <paramref name="{{ $p.Hint }}"/>, or <paramref name="default"/>.</returns>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="other"> is rethrown.</exception>
+            public TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, TResult _)
+            {
+                return _n == {{ $p.Index }} ? {{ $p.Hint }}({{ $storage $p }}) : _;
+            }
+
+            /// <summary>
+            /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Name }}"/> and return the result,
+            /// otherwise invoke an alternative delegate and return its result.
+            /// </summary>
+            /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ cref $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
+            public TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, global::System.Func<TResult> _)
+            {
+                return _n == {{ $p.Index }} ? {{ $p.Hint }}({{ $storage $p }}) : _();
+            }
+            {{~ end ~}}
+
+            {{~ ## UNION Visit(Action) ## ~}}
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Name }},
+            /// and invoke a special delegate if {{ Variant.Name }} is empty.
+            /// </summary>
+            {{~ for $p in Params ~}}
+            /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            {{~ end ~}}
+            /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            public void Visit({{ action_params }}, global::System.Action _)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        _();
+                        break;
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        {{ $p.Hint }}({{ $storage $p }});
+                        break;
+                    {{~ end ~}}
+                    default:
+                        {{ throw_internal_error }};
+                        break;
+                }
+            }
+
+            {{~ ## UNION Visit(Action) ## ~}}
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Name }},
+            /// and throw an exception if {{ Variant.Name }} is empty.
+            /// </summary>
+            {{~ for $p in Params ~}}
+            /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            {{~ end ~}}
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            public void Visit({{ action_params }})
+            {
+                switch (_n)
+                {
+                    case 0:
+                        {{ throw_empty_error }};
+                        break;
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        {{ $p.Hint }}({{ $storage $p }});
+                        break;
+                    {{~ end ~}}
+                    default:
+                        {{ throw_internal_error }};
+                        break;
+                }
+            }
+
+            {{~ ## UNION Visit(Func) ## ~}}
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Name }} and return the result,
+            /// and invoke a special delegate if {{ Variant.Name }} is empty and return its result.
+            /// </summary>
+            {{~ for $p in Params ~}}
+            /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            {{~ end ~}}
+            /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+            public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return _();
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return {{ $p.Hint }}({{ $storage $p }});
+                    {{~ end ~}}
+                    default:
+                        return {{ throw_internal_error "TResult" }};
+                }
+            }
+
+            {{~ ## UNION Visit(Func) ## ~}}
+            /// <summary>
+            /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Name }} and return the result,
+            /// and throw an exception if {{ Variant.Name }} is empty.
+            /// </summary>
+            {{~ for $p in Params ~}}
+            /// <param name="{{ $p.Hint }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Name }}"/>.</param>
+            {{~ end ~}}
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+            public TResult Visit<TResult>({{ func_params }})
+            {
+                switch (_n)
+                {
+                    case 0:
+                        return {{ throw_empty_error "TResult" }};
+                    {{~ for $p in Params ~}}
+                    case {{ $p.Index }}:
+                        return {{ $p.Hint }}({{ $storage $p }});
+                    {{~ end ~}}
+                    default:
+                        return {{ throw_internal_error "TResult" }};
                 }
             }
         }
-
-        {{~ ## UNION TryMatch ## ~}}
-        {{~ for $p in Params ~}}
-        public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
-        {
-            {{ $p.Hint }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
-            return _n == {{ $p.Index }};
-        }
-        {{~ end ~}}
-
-        {{~ ## UNION Visit(Action) ## ~}}
-        public void Visit({{ action_params }}, global::System.Action _)
-        {
-            switch (_n)
-            {
-                case 0:
-                    _();
-                    break;
-                {{~ for $p in Params ~}}
-                case {{ $p.Index }}:
-                    {{ $p.Hint }}({{ $storage $p }});
-                    break;
-                {{~ end ~}}
-                default:
-                    ThrowInternalError();
-                    break;
-            }
-        }
-
-        {{~ ## UNION Visit(Action) ## ~}}
-        public void Visit({{ action_params }})
-        {
-            switch (_n)
-            {
-                case 0:
-                    ThrowEmptyError();
-                    break;
-                {{~ for $p in Params ~}}
-                case {{ $p.Index }}:
-                    {{ $p.Hint }}({{ $storage $p }});
-                    break;
-                    {{~ end ~}}
-                default:
-                    ThrowInternalError();
-                    break;
-            }
-        }
-
-        {{~ ## UNION Visit(Func) ## ~}}
-        public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
-        {
-            switch (_n)
-            {
-                case 0:
-                    return _();
-                {{~ for $p in Params ~}}
-                case {{ $p.Index }}:
-                    return {{ $p.Hint }}({{ $storage $p }});
-                {{~ end ~}}
-                default:
-                    return ThrowInternalError<TResult>();
-            }
-        }
-
-        {{~ ## UNION Visit(Func) ## ~}}
-        public TResult Visit<TResult>({{ func_params }})
-        {
-            switch (_n)
-            {
-                case 0:
-                    return ThrowEmptyError<TResult>();
-                {{~ for $p in Params ~}}
-                case {{ $p.Index }}:
-                    return {{ $p.Hint }}({{ $storage $p }});
-                {{~ end ~}}
-                default:
-                    return ThrowInternalError<TResult>();
-            }
-        }
     }
+{{~ if Variant.Namespace ~}}
 }
+{{~ end ~}}

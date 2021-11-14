@@ -131,7 +131,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                 switch ({{ $get_n }})
                 {
                     case 0:
-                        {{ storage_type }}.ThrowEmptyError();
+                        {{ throw_empty_error }};
                         yield break;
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
@@ -139,7 +139,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                         break;
                     {{~ end ~}}
                     default:
-                        {{ storage_type }}.ThrowInternalError();
+                        {{ throw_internal_error }};
                         yield break;
                 }
             }
@@ -177,7 +177,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                         break;
                     {{~ end ~}}
                     default:
-                        {{ storage_type }}.ThrowInternalError();
+                        {{ throw_internal_error }};
                         yield break;
                 }
             }
