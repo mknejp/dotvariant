@@ -61,7 +61,7 @@ namespace Foo
             => new Variant_disposable(stream);
 
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="__VariantImpl.Dispose()"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public void Dispose()
         {
@@ -104,7 +104,7 @@ namespace Foo
         public bool TryMatch(out int i)
             => _variant.TryMatch(out i);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{int})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{int})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(global::System.Action<int> i)
             => _variant.TryMatch(i);
@@ -144,7 +144,7 @@ namespace Foo
         public bool TryMatch(out global::System.IO.Stream stream)
             => _variant.TryMatch(out stream);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{global::System.IO.Stream})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{global::System.IO.Stream})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(global::System.Action<global::System.IO.Stream> stream)
             => _variant.TryMatch(stream);
@@ -291,6 +291,10 @@ namespace Foo
                 _x = new Union(stream);
             }
 
+            /// <summary>
+            /// If the stored value implements <see cref="global::System.IDisposable"/>,
+            /// call its <see cref="global::System.IDisposable.Dispose()"/> method.
+            /// </summary>
             public void Dispose()
             {
                 switch (_n)
@@ -446,7 +450,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/>.</exception>
             public void Match(out int i)
             {
                 if (_n == 1)
@@ -462,8 +466,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> is rethrown.</exception>
             public void Match(global::System.Action<int> i)
             {
                 if (_n == 1)
@@ -480,7 +484,7 @@ namespace Foo
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<int> i, global::System.Action _)
             {
                 if (_n == 1)
@@ -499,8 +503,8 @@ namespace Foo
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="int"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<int, TResult> i)
             {
                 if (_n == 1)
@@ -517,7 +521,7 @@ namespace Foo
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
             {
                 return _n == 1 ? i(_x._1.Value) : _;
@@ -529,7 +533,7 @@ namespace Foo
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
             {
                 return _n == 1 ? i(_x._1.Value) : _();
@@ -566,7 +570,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="stream">Receives the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/>.</exception>
             public void Match(out global::System.IO.Stream stream)
             {
                 if (_n == 2)
@@ -582,8 +586,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="stream">The delegate to invoke with the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"/> is rethrown.</exception>
             public void Match(global::System.Action<global::System.IO.Stream> stream)
             {
                 if (_n == 2)
@@ -600,7 +604,7 @@ namespace Foo
             /// </summary>
             /// <param name="stream">The delegate to invoke with the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<global::System.IO.Stream> stream, global::System.Action _)
             {
                 if (_n == 2)
@@ -619,8 +623,8 @@ namespace Foo
             /// </summary>
             /// <param name="stream">The delegate to invoke with the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
             /// <returns>The value returned from invoking <paramref name="stream"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_disposable does not contain a value of type <see cref="global::System.IO.Stream"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<global::System.IO.Stream, TResult> stream)
             {
                 if (_n == 2)
@@ -637,7 +641,7 @@ namespace Foo
             /// <param name="stream">The delegate to invoke with the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="stream"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<global::System.IO.Stream, TResult> stream, TResult _)
             {
                 return _n == 2 ? stream(_x._2.Value) : _;
@@ -649,7 +653,7 @@ namespace Foo
             /// </summary>
             /// <param name="stream">The delegate to invoke with the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<global::System.IO.Stream, TResult> stream, global::System.Func<TResult> _)
             {
                 return _n == 2 ? stream(_x._2.Value) : _();
@@ -926,7 +930,7 @@ namespace Foo
 
         /// <summary>
         /// Transform a Variant_disposable-based enumerable sequence by applying a selector function to each element
-        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException">
+        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException"/>
         /// if an element is empty.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>

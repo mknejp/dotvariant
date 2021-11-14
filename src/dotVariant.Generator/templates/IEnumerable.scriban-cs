@@ -110,7 +110,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ ## Visit(IEnumerable<V>, Func<A, R>, Func<B, R>, ...) ## ~}}
         /// <summary>
         /// Transform a {{ Variant.Name }}-based enumerable sequence by applying a selector function to each element
-        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException">
+        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException"/>
         /// if an element is empty.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>

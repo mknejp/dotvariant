@@ -66,7 +66,7 @@ namespace {{ Variant.Namespace }}
 
         {{~ ## DISPOSE ## ~}}
         {{~ if needs_dispose && !Variant.UserDefined.Dispose }}
-        /// <inheritdoc/>
+        /// <inheritdoc cref="{{ cref storage_type }}.Dispose()"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public void Dispose()
         {
@@ -116,7 +116,7 @@ namespace {{ Variant.Namespace }}
         public {{ method_modifiers }}bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
             => _variant.TryMatch(out {{ $p.Hint }});
 
-        /// <inheritdoc cref="{{ cref storage_type }}.TryMatch(out {{ cref (action_type $p) }})"/>
+        /// <inheritdoc cref="{{ cref storage_type }}.TryMatch({{ cref (action_type $p) }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.Hint }})
             => _variant.TryMatch({{ $p.Hint }});

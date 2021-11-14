@@ -96,7 +96,7 @@ namespace Foo
         public bool TryMatch(out int i)
             => _variant.TryMatch(out i);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{int})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{int})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(global::System.Action<int> i)
             => _variant.TryMatch(i);
@@ -136,7 +136,7 @@ namespace Foo
         public bool TryMatch(out string s)
             => _variant.TryMatch(out s);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{string})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{string})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(global::System.Action<string> s)
             => _variant.TryMatch(s);
@@ -421,7 +421,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="i">Receives the stored value if it is of type <see cref="int"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/>.</exception>
             public void Match(out int i)
             {
                 if (_n == 1)
@@ -437,8 +437,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> is rethrown.</exception>
             public void Match(global::System.Action<int> i)
             {
                 if (_n == 1)
@@ -455,7 +455,7 @@ namespace Foo
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<int> i, global::System.Action _)
             {
                 if (_n == 1)
@@ -474,8 +474,8 @@ namespace Foo
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <returns>The value returned from invoking <paramref name="i"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="int"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<int, TResult> i)
             {
                 if (_n == 1)
@@ -492,7 +492,7 @@ namespace Foo
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="i"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
             {
                 return _n == 1 ? i(_x._1.Value) : _;
@@ -504,7 +504,7 @@ namespace Foo
             /// </summary>
             /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
             {
                 return _n == 1 ? i(_x._1.Value) : _();
@@ -541,7 +541,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="s">Receives the stored value if it is of type <see cref="string"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/>.</exception>
             public void Match(out string s)
             {
                 if (_n == 2)
@@ -557,8 +557,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> is rethrown.</exception>
             public void Match(global::System.Action<string> s)
             {
                 if (_n == 2)
@@ -575,7 +575,7 @@ namespace Foo
             /// </summary>
             /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<string> s, global::System.Action _)
             {
                 if (_n == 2)
@@ -594,8 +594,8 @@ namespace Foo
             /// </summary>
             /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
             /// <returns>The value returned from invoking <paramref name="s"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_public does not contain a value of type <see cref="string"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<string, TResult> s)
             {
                 if (_n == 2)
@@ -612,7 +612,7 @@ namespace Foo
             /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="s"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
             {
                 return _n == 2 ? s(_x._2.Value) : _;
@@ -624,7 +624,7 @@ namespace Foo
             /// </summary>
             /// <param name="s">The delegate to invoke with the stored value if it is of type <see cref="string"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
             {
                 return _n == 2 ? s(_x._2.Value) : _();
@@ -901,7 +901,7 @@ namespace Foo
 
         /// <summary>
         /// Transform a Variant_public-based enumerable sequence by applying a selector function to each element
-        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException">
+        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException"/>
         /// if an element is empty.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
