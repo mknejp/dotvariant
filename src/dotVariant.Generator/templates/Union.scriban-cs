@@ -187,6 +187,10 @@ namespace {{ Variant.Namespace }}
             {{~ end ~}}
 
             {{~ if needs_dispose ~}}
+            /// <summary>
+            /// If the stored value implements <see cref="global::System.IDisposable"/>,
+            /// call its <see cref="global::System.IDisposable.Dispose()"/> method.
+            /// </summary>
             public void Dispose()
             {
                 switch (_n)
@@ -221,7 +225,7 @@ namespace {{ Variant.Namespace }}
             {{~ if !Variant.IsClass ~}}
             /// <remarks>
             /// Because {{ Variant.Name }} is a value type, its default constructor cannot be disabled.
-            /// A default-constructed {{ Variant.Name }} will always have a <see cref="IsEmpty"/> value of <see langword"true"/>
+            /// A default-constructed {{ Variant.Name }} will always have a <c>IsEmpty</c> value of <see langword="true"/>
             /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
             /// </remarks>
             {{~ end ~}}
@@ -362,7 +366,7 @@ namespace {{ Variant.Namespace }}
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="{{ $p.Hint }}">Receives the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/>.</exception>
             public void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.Hint }})
             {
                 if (_n == {{ $p.Index }})
@@ -378,8 +382,8 @@ namespace {{ Variant.Namespace }}
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"/> is rethrown.</exception>
             public void Match({{ action_type $p }} {{ $p.Hint }})
             {
                 if (_n == {{ $p.Index }})
@@ -396,7 +400,7 @@ namespace {{ Variant.Namespace }}
             /// </summary>
             /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match({{ action_type $p }} {{ $p.Hint }}, global::System.Action _)
             {
                 if (_n == {{ $p.Index }})
@@ -415,8 +419,8 @@ namespace {{ Variant.Namespace }}
             /// </summary>
             /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
             /// <returns>The value returned from invoking <paramref name="{{ $p.Hint }}"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Name }}"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"/> is rethrown.</exception>
             public TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }})
             {
                 if (_n == {{ $p.Index }})
@@ -433,7 +437,7 @@ namespace {{ Variant.Namespace }}
             /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="{{ $p.Hint }}"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, TResult _)
             {
                 return _n == {{ $p.Index }} ? {{ $p.Hint }}({{ $storage $p }}) : _;
@@ -445,7 +449,7 @@ namespace {{ Variant.Namespace }}
             /// </summary>
             /// <param name="{{ $p.Hint }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Name }}"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ cref $p.Hint }}"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Hint }}"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, global::System.Func<TResult> _)
             {
                 return _n == {{ $p.Index }} ? {{ $p.Hint }}({{ $storage $p }}) : _();

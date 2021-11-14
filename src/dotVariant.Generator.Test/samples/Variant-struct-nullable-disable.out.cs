@@ -110,7 +110,7 @@ namespace Foo
         public readonly bool TryMatch(out long l)
             => _variant.TryMatch(out l);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{long})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{long})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly bool TryMatch(global::System.Action<long> l)
             => _variant.TryMatch(l);
@@ -150,7 +150,7 @@ namespace Foo
         public readonly bool TryMatch(out double d)
             => _variant.TryMatch(out d);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{double})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{double})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly bool TryMatch(global::System.Action<double> d)
             => _variant.TryMatch(d);
@@ -190,7 +190,7 @@ namespace Foo
         public readonly bool TryMatch(out object o)
             => _variant.TryMatch(out o);
 
-        /// <inheritdoc cref="__VariantImpl.TryMatch(out global::System.Action{object})"/>
+        /// <inheritdoc cref="__VariantImpl.TryMatch(global::System.Action{object})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly bool TryMatch(global::System.Action<object> o)
             => _variant.TryMatch(o);
@@ -382,7 +382,7 @@ namespace Foo
             /// </summary>
             /// <remarks>
             /// Because Variant_struct_nullable_disable is a value type, its default constructor cannot be disabled.
-            /// A default-constructed Variant_struct_nullable_disable will always have a <see cref="IsEmpty"/> value of <see langword"true"/>
+            /// A default-constructed Variant_struct_nullable_disable will always have a <c>IsEmpty</c> value of <see langword="true"/>
             /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
             /// </remarks>
             public bool IsEmpty => _n == 0;
@@ -523,7 +523,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="l">Receives the stored value if it is of type <see cref="long"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/>.</exception>
             public void Match(out long l)
             {
                 if (_n == 1)
@@ -539,8 +539,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> is rethrown.</exception>
             public void Match(global::System.Action<long> l)
             {
                 if (_n == 1)
@@ -557,7 +557,7 @@ namespace Foo
             /// </summary>
             /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<long> l, global::System.Action _)
             {
                 if (_n == 1)
@@ -576,8 +576,8 @@ namespace Foo
             /// </summary>
             /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
             /// <returns>The value returned from invoking <paramref name="l"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="long"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<long, TResult> l)
             {
                 if (_n == 1)
@@ -594,7 +594,7 @@ namespace Foo
             /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="l"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<long, TResult> l, TResult _)
             {
                 return _n == 1 ? l(_x._1.Value) : _;
@@ -606,7 +606,7 @@ namespace Foo
             /// </summary>
             /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<long, TResult> l, global::System.Func<TResult> _)
             {
                 return _n == 1 ? l(_x._1.Value) : _();
@@ -643,7 +643,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="d">Receives the stored value if it is of type <see cref="double"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/>.</exception>
             public void Match(out double d)
             {
                 if (_n == 2)
@@ -659,8 +659,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
             public void Match(global::System.Action<double> d)
             {
                 if (_n == 2)
@@ -677,7 +677,7 @@ namespace Foo
             /// </summary>
             /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<double> d, global::System.Action _)
             {
                 if (_n == 2)
@@ -696,8 +696,8 @@ namespace Foo
             /// </summary>
             /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
             /// <returns>The value returned from invoking <paramref name="d"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="double"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<double, TResult> d)
             {
                 if (_n == 2)
@@ -714,7 +714,7 @@ namespace Foo
             /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="d"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<double, TResult> d, TResult _)
             {
                 return _n == 2 ? d(_x._2.Value) : _;
@@ -726,7 +726,7 @@ namespace Foo
             /// </summary>
             /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<double, TResult> d, global::System.Func<TResult> _)
             {
                 return _n == 2 ? d(_x._2.Value) : _();
@@ -763,7 +763,7 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="o">Receives the stored value if it is of type <see cref="object"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/></exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/>.</exception>
             public void Match(out object o)
             {
                 if (_n == 3)
@@ -779,8 +779,8 @@ namespace Foo
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
             /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> is rethrown.</exception>
             public void Match(global::System.Action<object> o)
             {
                 if (_n == 3)
@@ -797,7 +797,7 @@ namespace Foo
             /// </summary>
             /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<object> o, global::System.Action _)
             {
                 if (_n == 3)
@@ -816,8 +816,8 @@ namespace Foo
             /// </summary>
             /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
             /// <returns>The value returned from invoking <paramref name="o"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/></exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_disable does not contain a value of type <see cref="object"/>.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<object, TResult> o)
             {
                 if (_n == 3)
@@ -834,7 +834,7 @@ namespace Foo
             /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="o"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="other"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="other"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<object, TResult> o, TResult _)
             {
                 return _n == 3 ? o(_x._3.Value) : _;
@@ -846,7 +846,7 @@ namespace Foo
             /// </summary>
             /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> or <paramref name="_"> is rethrown.</exception>
+            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<object, TResult> o, global::System.Func<TResult> _)
             {
                 return _n == 3 ? o(_x._3.Value) : _();
@@ -1215,7 +1215,7 @@ namespace Foo
 
         /// <summary>
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to each element
-        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException">
+        /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException"/>
         /// if an element is empty.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
