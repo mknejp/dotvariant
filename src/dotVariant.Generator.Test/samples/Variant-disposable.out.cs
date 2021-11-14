@@ -458,7 +458,7 @@ namespace Foo
                     i = _x._1.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_disposable", "int", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_disposable", "int", TypeString);
             }
 
             /// <summary>
@@ -475,7 +475,7 @@ namespace Foo
                     i(_x._1.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_disposable", "int", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_disposable", "int", TypeString);
             }
 
             /// <summary>
@@ -511,7 +511,7 @@ namespace Foo
                 {
                     return i(_x._1.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_disposable", "int", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_disposable", "int", TypeString);
             }
 
             /// <summary>
@@ -578,7 +578,7 @@ namespace Foo
                     stream = _x._2.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_disposable", "System.IO.Stream", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_disposable", "System.IO.Stream", TypeString);
             }
 
             /// <summary>
@@ -595,7 +595,7 @@ namespace Foo
                     stream(_x._2.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_disposable", "System.IO.Stream", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_disposable", "System.IO.Stream", TypeString);
             }
 
             /// <summary>
@@ -631,7 +631,7 @@ namespace Foo
                 {
                     return stream(_x._2.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_disposable", "System.IO.Stream", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_disposable", "System.IO.Stream", TypeString);
             }
 
             /// <summary>

@@ -327,7 +327,7 @@ namespace Foo
                     i = _x._1.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_nullable_value_type", "int?", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_nullable_value_type", "int?", TypeString);
             }
 
             /// <summary>
@@ -344,7 +344,7 @@ namespace Foo
                     i(_x._1.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_nullable_value_type", "int?", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_nullable_value_type", "int?", TypeString);
             }
 
             /// <summary>
@@ -380,7 +380,7 @@ namespace Foo
                 {
                     return i(_x._1.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_nullable_value_type", "int?", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_nullable_value_type", "int?", TypeString);
             }
 
             /// <summary>
