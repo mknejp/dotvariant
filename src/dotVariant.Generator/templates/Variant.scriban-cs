@@ -21,8 +21,8 @@ namespace {{ Variant.Namespace }}
 {{~ end ~}}
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
-    partial {{ Variant.Keyword }} {{ Variant.Name }}
-        : global::System.IEquatable<{{ Variant.Name }}>
+    partial {{ Variant.Keyword }} {{ Variant.Type }}
+        : global::System.IEquatable<{{ Variant.Type }}>
         {{~ if needs_dispose ~}}
         , global::System.IDisposable
         {{~ end ~}}
@@ -32,36 +32,36 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT CONSTRUCTORS ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Name }}"/>.
+        /// Create a {{ Variant.Identifier }} with a value of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
+        /// <param name="{{ $p.Identifier }}">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
-            => _variant = new {{ storage_type }}({{ $p.Hint }});
+        public {{ Variant.Identifier }}({{ value_type $p }} {{ $p.Identifier }})
+            => _variant = new {{ storage_type }}({{ $p.Identifier }});
         {{~ end ~}}
 
         {{~ ## IMPLICIT CONVERSIONS ## ~}}
         {{~ for $p in Params ~}}
         {{~ if $p.EmitImplicitCast ~}}
         /// <summary>
-        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Name }}"/>.
+        /// Create a {{ Variant.Identifier }} with a value of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
+        /// <param name="{{ $p.Identifier }}">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public static implicit operator {{ Variant.Name }}({{ value_type $p }} {{ $p.Hint }})
-            => new {{ Variant.Name }}({{ $p.Hint }});
+        public static implicit operator {{ Variant.Type }}({{ value_type $p }} {{ $p.Identifier }})
+            => new {{ Variant.Identifier }}({{ $p.Identifier }});
         {{~ end ~}}
         {{~ end ~}}
 
         {{~ ## STATIC CREATE FACTORIES ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Name }}"/>.
+        /// Create a {{ Variant.Identifier }} with a value of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Hint }}">The value to initlaize the variant with.</param>
+        /// <param name="{{ $p.Identifier }}">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public static {{ Variant.Name }} Create({{ value_type $p }} {{ $p.Hint }})
-            => new {{ Variant.Name }}({{ $p.Hint }});
+        public static {{ Variant.Type }} Create({{ value_type $p }} {{ $p.Identifier }})
+            => new {{ Variant.Identifier }}({{ $p.Identifier }});
         {{~ end ~}}
 
         {{~ ## DISPOSE ## ~}}
@@ -84,7 +84,7 @@ namespace {{ Variant.Namespace }}
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public {{ method_modifiers }}override bool Equals(object{{ global_nullable }} other)
-            => other is {{ Variant.Name }} v && Equals(v);
+            => other is {{ Variant.Type }} v && Equals(v);
 
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -113,44 +113,44 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT TryMatch ## ~}}
         /// <inheritdoc cref="{{ cref storage_type }}.TryMatch(out {{ cref (outref_type $p) }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Hint }})
-            => _variant.TryMatch(out {{ $p.Hint }});
+        public {{ method_modifiers }}bool TryMatch({{ annotate_NotNullWhen $p }}out {{ outref_type $p }} {{ $p.Identifier }})
+            => _variant.TryMatch(out {{ $p.Identifier }});
 
         /// <inheritdoc cref="{{ cref storage_type }}.TryMatch({{ cref (action_type $p) }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.Hint }})
-            => _variant.TryMatch({{ $p.Hint }});
+        public {{ method_modifiers }}bool TryMatch({{ action_type $p }} {{ $p.Identifier }})
+            => _variant.TryMatch({{ $p.Identifier }});
 
         {{~ ## VARIANT Match ## ~}}
         /// <inheritdoc cref="{{ cref storage_type }}.Match(out {{ cref (outref_type $p) }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.Hint }})
-            => _variant.Match(out {{ $p.Hint }});
+        public {{ method_modifiers }}void Match({{ annotate_NotNull $p }}out {{ outref_type $p }} {{ $p.Identifier }})
+            => _variant.Match(out {{ $p.Identifier }});
 
         /// <inheritdoc cref="{{ cref storage_type }}.Match({{ cref (action_type $p) }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Hint }})
-            => _variant.Match({{ $p.Hint }});
+        public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Identifier }})
+            => _variant.Match({{ $p.Identifier }});
 
         /// <inheritdoc cref="{{ cref storage_type }}.Match({{ cref (action_type $p) }}, global::System.Action)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Hint }}, global::System.Action _)
-            => _variant.Match({{ $p.Hint }}, _);
+        public {{ method_modifiers }}void Match({{ action_type $p }} {{ $p.Identifier }}, global::System.Action _)
+            => _variant.Match({{ $p.Identifier }}, _);
 
         /// <inheritdoc cref="{{ cref storage_type }}.Match{TResult}({{ cref (func_type $p) }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }})
-            => _variant.Match({{ $p.Hint }});
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }})
+            => _variant.Match({{ $p.Identifier }});
 
         /// <inheritdoc cref="{{ cref storage_type }}.Match{TResult}({{ cref (func_type $p) }}, TResult)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, TResult _)
-            => _variant.Match({{ $p.Hint }}, _);
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, TResult _)
+            => _variant.Match({{ $p.Identifier }}, _);
 
         /// <inheritdoc cref="{{ cref storage_type }}.Match{TResult}({{ cref (func_type $p) }}, global::System.Func{TResult})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Hint }}, global::System.Func<TResult> _)
-            => _variant.Match({{ $p.Hint }}, _);
+        public {{ method_modifiers }}TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, global::System.Func<TResult> _)
+            => _variant.Match({{ $p.Identifier }}, _);
 
         {{~ end ~}}
 
@@ -178,7 +178,7 @@ namespace {{ Variant.Namespace }}
         private sealed class _VariantTypeProxy
         {
             public object{{ global_nullable }} Value { get; }
-            public _VariantTypeProxy({{ Variant.Name }} v)
+            public _VariantTypeProxy({{ Variant.Type }} v)
             {
                 Value = v._variant.AsObject;
                 {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}
@@ -189,12 +189,12 @@ namespace {{ Variant.Namespace }}
         {{~ ## INTERNAL ACCESS ## ~}}
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator {{ discriminator }}({{ Variant.Name }} v)
+        public static explicit operator {{ discriminator }}({{ Variant.Type }} v)
             => ({{ discriminator }})v._variant;
         {{~ for $p in Params ~}}
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator {{ accessor $p.Index (value_type $p) }}({{ Variant.Name }} v)
+        public static explicit operator {{ accessor $p.Index (value_type $p) }}({{ Variant.Type }} v)
             => ({{ accessor $p.Index (value_type $p) }})v._variant;
         {{~ end ~}}
     }

@@ -60,14 +60,45 @@ namespace dotVariant.Generator.Test
                     // VariantInfo properties
                     //
                     (
-                        "type name",
+                        "identifier",
                         @"
                         [dotVariant.Variant]
                         public partial class XyzVariant
                         {
                             static partial void VariantOf(int a, float b);
                         }",
-                        ri => Assert.That(ri.Variant.Name, Is.EqualTo("XyzVariant"))
+                        ri => Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"))
+                    ),
+                    (
+                        "type",
+                        @"
+                        [dotVariant.Variant]
+                        public partial class XyzVariant
+                        {
+                            static partial void VariantOf(int a, float b);
+                        }",
+                        ri => Assert.Multiple(() =>
+                        {
+                            Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant"));
+                            Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::XyzVariant"));
+                        })
+                    ),
+                    (
+                        "type with namespace",
+                        @"
+                        namespace Foo.Bar
+                        {
+                            [dotVariant.Variant]
+                            public partial class XyzVariant
+                            {
+                                static partial void VariantOf(int a, float b);
+                            }
+                        }",
+                        ri => Assert.Multiple(() =>
+                        {
+                            Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant"));
+                            Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::Foo.Bar.XyzVariant"));
+                        })
                     ),
                     (
                         "namespace name",
@@ -97,7 +128,17 @@ namespace dotVariant.Generator.Test
                         ri => Assert.That(ri.Variant.Namespace, Is.Null)
                     ),
                     (
-                        "diagnostic name",
+                        "diagnostic type",
+                        @"
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(int a, float b);
+                        }",
+                        ri => Assert.That(ri.Variant.DiagType, Is.EqualTo("Variant"))
+                    ),
+                    (
+                        "diagnostic type with namesapce",
                         @"
                         namespace Foo.Bar
                         {
@@ -107,7 +148,7 @@ namespace dotVariant.Generator.Test
                                 static partial void VariantOf(int a, float b);
                             }
                         }",
-                        ri => Assert.That(ri.Variant.DiagName, Is.EqualTo("Foo.Bar.Variant"))
+                        ri => Assert.That(ri.Variant.DiagType, Is.EqualTo("Foo.Bar.Variant"))
                     ),
                     (
                         "class type",
@@ -148,7 +189,7 @@ namespace dotVariant.Generator.Test
                         ri => Assert.That(ri.Variant.Nullability, Is.EqualTo("nullable"))
                     ),
                     (
-                        "struct are nonnull",
+                        "structs are nonnull",
                         @"
                         [dotVariant.Variant]
                         public partial struct Variant
@@ -306,54 +347,71 @@ namespace dotVariant.Generator.Test
                         })
                     ),
                     (
-                        "hint",
+                        "identifier",
                         @"
                         [dotVariant.Variant]
                         public partial class Variant
                         {
-                            static partial void VariantOf(int foobar);
+                            static partial void VariantOf(int a, double b, string c;
                         }",
-                        ri => Assert.That(ri.Params[0].Hint, Is.EqualTo("foobar"))
+                        ri => Assert.Multiple(() =>
+                        {
+                            Assert.That(ri.Params[0].Identifier, Is.EqualTo("a"));
+                            Assert.That(ri.Params[1].Identifier, Is.EqualTo("b"));
+                            Assert.That(ri.Params[2].Identifier, Is.EqualTo("c"));
+                        })
                     ),
                     (
-                        "fully qualified type name",
+                        "qualified type",
                         @"
+                        using System;
                         [dotVariant.Variant]
                         public partial class Variant
                         {
-                            static partial void VariantOf(System.TimeSpan a);
+                            static partial void VariantOf(TimeSpan a);
                         }",
-                        ri => Assert.That(ri.Params[0].Name, Is.EqualTo("global::System.TimeSpan"))
+                        ri => Assert.That(ri.Params[0].Type, Is.EqualTo("global::System.TimeSpan"))
                     ),
                     (
-                        "shortened specila type name",
+                        "shortened special type",
                         @"
                         [dotVariant.Variant]
                         public partial class Variant
                         {
                             static partial void VariantOf(int a);
                         }",
-                        ri => Assert.That(ri.Params[0].Name, Is.EqualTo("int"))
+                        ri => Assert.That(ri.Params[0].Type, Is.EqualTo("int"))
                     ),
                     (
-                        "diagnostic type name",
+                        "diagnostic type",
+                        @"
+                        using System;
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(TimeSpan a);
+                        }",
+                        ri => Assert.That(ri.Params[0].DiagType, Is.EqualTo("System.TimeSpan"))
+                    ),
+                    (
+                        "diagnostic type for nullable value type",
                         @"
                         [dotVariant.Variant]
                         public partial class Variant
                         {
-                            static partial void VariantOf(System.TimeStamp a);
+                            static partial void VariantOf(int? a);
                         }",
-                        ri => Assert.That(ri.Params[0].DiagName, Is.EqualTo("System.TimeStamp"))
+                        ri => Assert.That(ri.Params[0].DiagType, Is.EqualTo("int?"))
                     ),
                     (
-                        "diagnostic special type name",
+                        "diagnostic special type",
                         @"
                         [dotVariant.Variant]
                         public partial class Variant
                         {
                             static partial void VariantOf(int a);
                         }",
-                        ri => Assert.That(ri.Params[0].DiagName, Is.EqualTo("int"))
+                        ri => Assert.That(ri.Params[0].DiagType, Is.EqualTo("int"))
                     ),
                     (
                         "class type",
