@@ -19,7 +19,7 @@ readonly emit_nullability
 # Works with both "Params" and "Variant"
 func value_type(type, name = null)
     if (name == null)
-        name = type.Name
+        name = type.Type
     end
     if type.IsClass
         ret emit_nullability && type.Nullability == "nullable" ? (name + "?" ): name
@@ -33,7 +33,7 @@ readonly value_type
 # Works with both "Params" and "Variant"
 func outref_type(type, name = null)
     if (name == null)
-        name = type.Name
+        name = type.Type
     end
     if type.IsClass
         ret emit_nullability ? (name + "?") : name
@@ -108,36 +108,35 @@ end
 readonly annotate_NotNull
 
 func throw_mismatch_error(expected, actual, type = "")
-    ret "global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError" + (type == "" ? "" : "<" + type + ">") + "(" + ([Variant.DiagName, expected, actual] | array.join ", " @string.literal) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError" + (type == "" ? "" : "<" + type + ">") + "(" + ([Variant.DiagType, expected, actual] | array.join ", " @string.literal) + ")"
 end
 readonly throw_mismatch_error
 
 func throw_internal_error(type = "")
-    ret "global::dotVariant.GeneratorSupport.Errors.ThrowInternalError" + (type == "" ? "" : "<" + type + ">") + "(" + (string.literal Variant.DiagName) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.ThrowInternalError" + (type == "" ? "" : "<" + type + ">") + "(" + (string.literal Variant.DiagType) + ")"
 end
 readonly throw_internal_error
 
 func throw_empty_error(type = "")
-    ret "global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError" + (type == "" ? "" : "<" + type + ">") + "(" + (string.literal Variant.DiagName) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError" + (type == "" ? "" : "<" + type + ">") + "(" + (string.literal Variant.DiagType) + ")"
 end
 readonly throw_empty_error_error
 
 func make_mismatch_error(expected, actual)
-    ret "global::dotVariant.GeneratorSupport.Errors.MakeMismatchError(" + ([Variant.DiagName, expected, actual] | array.join ", " @string.literal) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.MakeMismatchError(" + ([Variant.DiagType, expected, actual] | array.join ", " @string.literal) + ")"
 end
 readonly make_mismatch_error
 
 func make_internal_error()
-    ret "global::dotVariant.GeneratorSupport.Errors.MakeInternalError(" + (string.literal Variant.DiagName) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.MakeInternalError(" + (string.literal Variant.DiagType) + ")"
 end
 readonly make_internal_error
 
 func make_empty_error()
-    ret "global::dotVariant.GeneratorSupport.Errors.MakeEmptyError(" + (string.literal Variant.DiagName) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.MakeEmptyError(" + (string.literal Variant.DiagType) + ")"
 end
 readonly make_empty_error_error
 
-#storage_type = "global::dotVariant._G." + (Variant.Namespace ? (Variant.Namespace + ".") : "") + Variant.Name
 storage_type = "__VariantImpl"
 readonly storage_type
 
@@ -162,15 +161,15 @@ end
 readonly accessor
 
 func_types = Params | array.each @(do; ret func_type $0; end) | array.join ", "
-func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Hint; end) | array.join ", "
+func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Identifier; end) | array.join ", "
 action_types = Params | array.each @(do; ret action_type $0; end) | array.join ", "
-action_params = Params | array.each @(do; ret (action_type $0) + " " + $0.Hint; end) | array.join ", "
+action_params = Params | array.each @(do; ret (action_type $0) + " " + $0.Identifier; end) | array.join ", "
 method_modifiers = !Variant.IsClass && Language.Version >= 800 ? "readonly " : ""
 param_modifiers = !Variant.IsClass && Variant.IsReadonly && Language.Version >= 702 ? "in " : ""
 global_nullable = emit_nullability ? "?" : ""
 global_forgive = emit_nullability ? "!" : ""
 needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0
-forward_params = Params | array.each @(do; ret $0.Hint; end) | array.join ", "
+forward_params = Params | array.each @(do; ret $0.Identifier; end) | array.join ", "
 discriminator = "global::dotVariant.GeneratorSupport.Discriminator"
 
 readonly func_types
