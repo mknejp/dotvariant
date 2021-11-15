@@ -531,7 +531,7 @@ namespace Foo
                     l = _x._1.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_struct_nullable_disable", "long", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_struct_nullable_disable", "long", TypeString);
             }
 
             /// <summary>
@@ -548,7 +548,7 @@ namespace Foo
                     l(_x._1.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_struct_nullable_disable", "long", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_struct_nullable_disable", "long", TypeString);
             }
 
             /// <summary>
@@ -584,7 +584,7 @@ namespace Foo
                 {
                     return l(_x._1.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_struct_nullable_disable", "long", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_struct_nullable_disable", "long", TypeString);
             }
 
             /// <summary>
@@ -651,7 +651,7 @@ namespace Foo
                     d = _x._2.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_struct_nullable_disable", "double", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_struct_nullable_disable", "double", TypeString);
             }
 
             /// <summary>
@@ -668,7 +668,7 @@ namespace Foo
                     d(_x._2.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_struct_nullable_disable", "double", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_struct_nullable_disable", "double", TypeString);
             }
 
             /// <summary>
@@ -704,7 +704,7 @@ namespace Foo
                 {
                     return d(_x._2.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_struct_nullable_disable", "double", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_struct_nullable_disable", "double", TypeString);
             }
 
             /// <summary>
@@ -771,7 +771,7 @@ namespace Foo
                     o = _x._3.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_struct_nullable_disable", "object", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_struct_nullable_disable", "object", TypeString);
             }
 
             /// <summary>
@@ -788,7 +788,7 @@ namespace Foo
                     o(_x._3.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_struct_nullable_disable", "object", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_struct_nullable_disable", "object", TypeString);
             }
 
             /// <summary>
@@ -824,7 +824,7 @@ namespace Foo
                 {
                     return o(_x._3.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_struct_nullable_disable", "object", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_struct_nullable_disable", "object", TypeString);
             }
 
             /// <summary>

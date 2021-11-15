@@ -108,7 +108,7 @@ end
 readonly annotate_NotNull
 
 func throw_mismatch_error(expected, actual, type = "")
-    ret "global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError" + (type == "" ? "" : "<" + type + ">") + "(" + ([Variant.DiagType, expected, actual] | array.join ", " @string.literal) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError" + (type == "" ? "" : "<" + type + ">") + "(" + ([string.literal Variant.DiagType, string.literal expected, actual] | array.join ", ") + ")"
 end
 readonly throw_mismatch_error
 
@@ -123,7 +123,7 @@ end
 readonly throw_empty_error_error
 
 func make_mismatch_error(expected, actual)
-    ret "global::dotVariant.GeneratorSupport.Errors.MakeMismatchError(" + ([Variant.DiagType, expected, actual] | array.join ", " @string.literal) + ")"
+    ret "global::dotVariant.GeneratorSupport.Errors.MakeMismatchError(" + ([string.literal Variant.DiagType, string.literal expected, actual] | array.join ", ") + ")"
 end
 readonly make_mismatch_error
 

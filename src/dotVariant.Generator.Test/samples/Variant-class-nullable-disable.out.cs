@@ -533,7 +533,7 @@ namespace Foo
                     i = _x._1.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_disable", "int", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_disable", "int", TypeString);
             }
 
             /// <summary>
@@ -550,7 +550,7 @@ namespace Foo
                     i(_x._1.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_disable", "int", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_disable", "int", TypeString);
             }
 
             /// <summary>
@@ -586,7 +586,7 @@ namespace Foo
                 {
                     return i(_x._1.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_disable", "int", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_disable", "int", TypeString);
             }
 
             /// <summary>
@@ -653,7 +653,7 @@ namespace Foo
                     f = _x._2.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_disable", "float", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_disable", "float", TypeString);
             }
 
             /// <summary>
@@ -670,7 +670,7 @@ namespace Foo
                     f(_x._2.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_disable", "float", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_disable", "float", TypeString);
             }
 
             /// <summary>
@@ -706,7 +706,7 @@ namespace Foo
                 {
                     return f(_x._2.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_disable", "float", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_disable", "float", TypeString);
             }
 
             /// <summary>
@@ -773,7 +773,7 @@ namespace Foo
                     s = _x._3.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_disable", "string", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_disable", "string", TypeString);
             }
 
             /// <summary>
@@ -790,7 +790,7 @@ namespace Foo
                     s(_x._3.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_disable", "string", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_disable", "string", TypeString);
             }
 
             /// <summary>
@@ -826,7 +826,7 @@ namespace Foo
                 {
                     return s(_x._3.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_disable", "string", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_disable", "string", TypeString);
             }
 
             /// <summary>

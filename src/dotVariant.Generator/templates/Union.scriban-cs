@@ -374,7 +374,7 @@ namespace {{ Variant.Namespace }}
                     {{ $p.Identifier }} = {{ $storage $p }};
                     return;
                 }
-                throw {{ make_mismatch_error $p.DiagType "{TypeString}" }};
+                throw {{ make_mismatch_error $p.DiagType "TypeString" }};
             }
 
             /// <summary>
@@ -391,7 +391,7 @@ namespace {{ Variant.Namespace }}
                     {{ $p.Identifier }}({{ $storage $p }});
                     return;
                 }
-                {{ throw_mismatch_error $p.DiagType "{TypeString}" }};
+                {{ throw_mismatch_error $p.DiagType "TypeString" }};
             }
 
             /// <summary>
@@ -427,7 +427,7 @@ namespace {{ Variant.Namespace }}
                 {
                     return {{ $p.Identifier }}({{ $storage $p }});
                 }
-                return {{ throw_mismatch_error $p.DiagType "{TypeString}" "TResult" }};
+                return {{ throw_mismatch_error $p.DiagType "TypeString" "TResult" }};
             }
 
             /// <summary>

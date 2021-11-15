@@ -429,7 +429,7 @@ namespace Foo
                     i = _x._1.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "int", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "int", TypeString);
             }
 
             /// <summary>
@@ -446,7 +446,7 @@ namespace Foo
                     i(_x._1.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "int", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "int", TypeString);
             }
 
             /// <summary>
@@ -482,7 +482,7 @@ namespace Foo
                 {
                     return i(_x._1.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "int", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "int", TypeString);
             }
 
             /// <summary>
@@ -549,7 +549,7 @@ namespace Foo
                     s = _x._2.Value;
                     return;
                 }
-                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "string", "{TypeString}");
+                throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "string", TypeString);
             }
 
             /// <summary>
@@ -566,7 +566,7 @@ namespace Foo
                     s(_x._2.Value);
                     return;
                 }
-                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "string", "{TypeString}");
+                global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "string", TypeString);
             }
 
             /// <summary>
@@ -602,7 +602,7 @@ namespace Foo
                 {
                     return s(_x._2.Value);
                 }
-                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "string", "{TypeString}");
+                return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "string", TypeString);
             }
 
             /// <summary>
