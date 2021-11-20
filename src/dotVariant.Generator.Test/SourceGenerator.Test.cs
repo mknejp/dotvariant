@@ -8,9 +8,11 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using static dotVariant.Generator.Test.GeneratorTools;
 
@@ -24,7 +26,7 @@ namespace dotVariant.Generator.Test
         public static void Translation(string typeName, string fileName, string input, string expected)
         {
             var sources = SupportSources.Add("input", input);
-            var outputs = GetGeneratedOutput<SourceGenerator>(sources);
+            var outputs = GetGeneratedOutput<SourceGenerator>(sources, true);
             var file =
                 Path.Combine(
                     $"{typeof(SourceGenerator).Assembly.GetName().Name}",
@@ -34,8 +36,8 @@ namespace dotVariant.Generator.Test
             output = _copyrightHeader + output;
             if (output != expected)
             {
-                //var commit = true;
-                var commit = false;
+                var commit = true;
+                //var commit = false;
 #if CI
                 Assert.That(commit, Is.False);
 #endif
@@ -57,7 +59,7 @@ namespace dotVariant.Generator.Test
         private static void WriteSample(string name, string content)
         {
             var path = Path.Combine(_samplesDir, $"{name}.out.cs");
-            using var writer = new StreamWriter(path);
+            using var writer = new StreamWriter(path, false, Encoding.UTF8);
             writer.Write(content);
         }
 
@@ -165,5 +167,44 @@ namespace dotVariant.Generator.Test
                     new TestCaseData(test.Input)
                     .SetName($"{nameof(Diagnostics)}({test.Name})"));
         }
+
+        public static void Foo(Action _) { }
+        public static bool TryFoo([NotNullWhen(true)] out Action? _)
+        {
+            //_ = () => { };
+            _ = null;
+            return false;
+        }
+
+        public static void Foo()
+        {
+            Foo(() => { });
+            _ = TryFoo(out var f);
+        }
     }
+
+    public interface IFoo { }
+
+    public class Foo<T> where T : struct
+    {
+        public Foo(T? _) { }
+    }
+
+    public class Bar
+    {
+    }
+
+    public class Baz : Bar
+    {
+        public int X => 1;
+    }
+
+    public struct S { }
+
+    public static class FooEx
+    {
+        //public static TResult Method<TResult, T>(this Foo<T> _) where T : class { return default; }
+    }
+
+    public enum E { }
 }

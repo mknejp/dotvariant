@@ -40,7 +40,7 @@ end
 readonly coalesce
 
 func coalesce_ToString(param, expression)
-    ret expression + (param.CanBeNull ? "?" : "") + ".ToString()" + (param.ToStringNullability == "nullable" || param.CanBeNull ? " ?? \"null\"" : "")
+    ret expression + (param.CanBeNull ? "?" : "") + ".ToString()" + (param.IsToStringNullable || param.CanBeNull ? " ?? \"null\"" : "")
 end
 readonly coalesce_ToString
 

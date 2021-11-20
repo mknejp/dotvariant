@@ -113,5 +113,36 @@ namespace dotVariant.Generator
             }
             return false;
         }
+
+        public static bool IsToStringNullable(ITypeSymbol type, NullableContext context)
+            => type switch
+            {
+                // These are known statically
+                { SpecialType: SpecialType.System_Object } => true,
+                { SpecialType: SpecialType.System_Nullable_T } => true,
+                { SpecialType: SpecialType.System_Enum } => false,
+                { SpecialType: SpecialType.System_Boolean } => false,
+                { SpecialType: SpecialType.System_Char } => false,
+                { SpecialType: SpecialType.System_SByte } => false,
+                { SpecialType: SpecialType.System_Byte } => false,
+                { SpecialType: SpecialType.System_Int16 } => false,
+                { SpecialType: SpecialType.System_UInt16 } => false,
+                { SpecialType: SpecialType.System_Int32 } => false,
+                { SpecialType: SpecialType.System_UInt32 } => false,
+                { SpecialType: SpecialType.System_Int64 } => false,
+                { SpecialType: SpecialType.System_UInt64 } => false,
+                { SpecialType: SpecialType.System_Decimal } => false,
+                { SpecialType: SpecialType.System_Single } => false,
+                { SpecialType: SpecialType.System_Double } => false,
+                { SpecialType: SpecialType.System_String } => false,
+                { SpecialType: SpecialType.System_IntPtr } => false,
+                { SpecialType: SpecialType.System_UIntPtr } => false,
+                { SpecialType: SpecialType.System_DateTime } => false,
+                // If nullable annotations are disabled assume nullable
+                _ when !context.HasFlag(NullableContext.AnnotationsEnabled) => true,
+                // Otherwise check the signature of ToString()
+                _ => FindMethod(type, m => m.Name == nameof(ToString) && m.Parameters.IsEmpty)
+                    ?.ReturnNullableAnnotation != NullableAnnotation.NotAnnotated,
+            };
     }
 }
