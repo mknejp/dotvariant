@@ -7,6 +7,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -58,6 +59,9 @@ namespace dotVariant.Generator
         /// <param name="Accessibility">
         /// The accessibility modifier of the variant class.
         /// </param>
+        /// <param name="CanBeNull">
+        /// <see langword="true"/> if <see langword="null"/> is a valid value for the variant type.
+        /// </param>
         /// <param name="DiagType">
         /// The fully qualified name of the type (without <c>global::</c> qualifier) used for diagnostic strings/messages.
         /// </param>
@@ -67,21 +71,17 @@ namespace dotVariant.Generator
         /// <param name="Identifier">
         /// The identifier of the type, i.e. without type parameters or enclsoing namespace/type qualifiers.
         /// </param>
-        /// <param name="IsClass">
-        /// <see langword="true"/> if this is an object type.
-        /// </param>
         /// <param name="IsReadonly">
         /// <see langword="true"/> if this type was declared with the <see langword="readonly"/> modifier.
+        /// </param>
+        /// <param name="IsReferenceType">
+        /// <see langword="true"/> if this is an object type.
         /// </param>
         /// <param name="Keyword">
         /// The C# keyword used to define this type.
         /// </param>
         /// <param name="Namespace">
         /// Namespace of the variant type, or <see langword="null"/> if in the global namespace.
-        /// </param>
-        /// <param name="Nullability">
-        /// <c>"nonnull"</c> or <c>"nullable"</c>. For a class this determines if certain public methods need nullability annotations.
-        /// Always <c>"nonnull"</c> for a value type.
         /// </param>
         /// <param name="QualifiedType">
         /// The fully qualified name of the type including type parameters.
@@ -94,25 +94,28 @@ namespace dotVariant.Generator
         /// </param>
         public sealed record VariantInfo(
             string? Accessibility,
+            bool CanBeNull,
             string DiagType,
             string? ExtensionsAccessibility,
             string Identifier,
-            bool IsClass,
             bool IsReadonly,
+            bool IsReferenceType,
             string Keyword,
             string? Namespace,
-            string Nullability,
             string QualifiedType,
             string Type,
             VariantInfo.UserDefinitions UserDefined)
         {
             /// <param name="Dispose">
-            /// <see langword="true"/> if a user-defined <see cref="System.IDisposable.Dispose()"/> exists.
+            /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
             /// </param>
             public sealed record UserDefinitions(
                 bool Dispose);
         }
 
+        /// <param name="CanBeNull">
+        /// <see langword="true"/> if <see langword="null"/> is a valid value for this parameter.
+        /// </param>
         /// <param name="DiagType">
         /// A shorter type name (without <c>global::</c> qualifier) for diagnostic strings/messages, may contain nullability annotation).
         /// </param>
@@ -125,35 +128,34 @@ namespace dotVariant.Generator
         /// <param name="Index">
         /// The 1-based index of the type within the variant.
         /// </param>
-        /// <param name="IsClass">
-        /// <see langword="true"/> if this is an object type (or generic with class constraint).
-        /// </param>
         /// <param name="IsDisposable">
         /// <see langword="true"/> if this type implements <see cref="IDisposable"/>.
         /// </param>
-        /// <param name="Nullability">
-        /// <c>"nonnull"</c> or <c>"nullable"</c>. Determines whether the parameter was originally annotated as nullable or null oblivious versus not nullable.
-        /// For class types this controls parameter and return type signatures.
-        /// For value types this only controls whether to null-coalesce ToString().
+        /// <param name="IsReferenceType">
+        /// <see langword="true"/> if this is an object type (or generic with class constraint).
         /// </param>
         /// <param name="ObjectPadding">
         /// The number of <see langword="object"/> padding fields required for this type.
         /// </param>
+        /// <param name="OutType">
+        /// The type to use for <c>out</c>-qualified function parameters.
+        /// </param>
         /// <param name="ToStringNullability">
-        /// <c>"nonnull"</c> or <c>"nullable"</c> annotation of the parameters's <see cref="object.ToString()"/> return type.
+        /// <c>"notnull"</c> or <c>"nullable"</c> annotation of the parameters's <see cref="object.ToString()"/> return type.
         /// </param>
         /// <param name="Type">
         /// The fully qualified name of the type including type parameter list, without nullability annotation.
         /// </param>
         public sealed record ParamInfo(
+            bool CanBeNull,
             string DiagType,
             bool EmitImplicitCast,
             string Identifier,
             int Index,
-            bool IsClass,
             bool IsDisposable,
-            string Nullability,
+            bool IsReferenceType,
             int ObjectPadding,
+            string OutType,
             string ToStringNullability,
             string Type);
 
@@ -165,27 +167,29 @@ namespace dotVariant.Generator
         {
             var maxObjects = desc.Options.Max(NumReferenceFields);
             var type = desc.Type;
+            var emitNullable = desc.NullableContext.HasFlag(NullableContext.Enabled);
 
             var paramDescriptors =
                 desc
                 .Options
                 .Select((p, i) => new ParamInfo(
+                    CanBeNull: CanBeNull(p),
                     DiagType: p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace("global::", ""),
-                    Identifier: p.Name,
-                    ObjectPadding: maxObjects - NumReferenceFields(p),
-                    Index: i + 1,
-                    IsClass: p.Type.IsReferenceType,
-                    IsDisposable: IsDisposable(p.Type, compilation),
-                    Nullability: p.Type.NullableAnnotation == NullableAnnotation.NotAnnotated ? "nonnull" : "nullable",
                     EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type)),
-                    ToStringNullability: IsToStringNullable(p.Type) ? "nullable" : "nonnull",
-                    Type: p.Type.WithNullableAnnotation(NullableAnnotation.None).ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
+                    Identifier: p.Name,
+                    Index: i + 1,
+                    IsDisposable: IsDisposable(p.Type, compilation),
+                    IsReferenceType: p.Type.IsReferenceType,
+                    ObjectPadding: maxObjects - NumReferenceFields(p),
+                    OutType: DetermineOutType(p, emitNullable),
+                    ToStringNullability: IsToStringNullable(p.Type) ? "nullable" : "notnull",
+                    Type: AppendNullable(p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), p.Type.IsReferenceType ? p.NullableAnnotation : NullableAnnotation.NotAnnotated)));
 
             var typeNamespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
 
             return new(
                 Language: new(
-                    Nullable: (desc.NullableContext & NullableContext.Enabled) != NullableContext.Disabled ? "enable" : "disable",
+                    Nullable: emitNullable ? "enable" : "disable",
                     Version: ConvertLanguageVersion(compilation.LanguageVersion)),
                 Options: new(
                     ExtensionClassNamespace: ExtensionsNamespace(options, typeNamespace)),
@@ -195,20 +199,38 @@ namespace dotVariant.Generator
                     HasSystemReactiveLinq: HasReactive(compilation)),
                 Variant: new(
                     Accessibility: VariantAccessibility(type),
+                    CanBeNull: type.IsReferenceType,
                     DiagType: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
                     Identifier: type.Name,
-                    IsClass: type.IsReferenceType,
+                    IsReferenceType: type.IsReferenceType,
                     IsReadonly: IsReadonly(type, token),
                     Keyword: desc.Syntax.Keyword.Text,
                     Namespace: typeNamespace,
-                    Nullability: type.IsReferenceType ? "nullable" : "nonnull",
                     QualifiedType: type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                     Type: type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace("global::", ""),
                     UserDefined: new(
                         // If the user defined any method named Dispose() bail out. Too risky!
                         Dispose: ImplementsDispose(type, compilation) || HasAnyDisposeMethod(type))));
         }
+
+        private static string DetermineOutType(IParameterSymbol p, bool emitNullable)
+        {
+            var type = p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            if (!emitNullable)
+            {
+                return type;
+            }
+
+            if (p.Type.IsReferenceType)
+            {
+                return AppendNullable(type, NullableAnnotation.Annotated);
+            }
+            return type;
+        }
+
+        private static string AppendNullable(string s, NullableAnnotation na)
+            => na == NullableAnnotation.Annotated ? s + "?" : s;
 
         private static string? ExtensionsAccessibility(ITypeSymbol type)
             => EffectiveAccessibility(type) switch
@@ -246,7 +268,7 @@ namespace dotVariant.Generator
         }
 
         private static bool IsToStringNullable(ITypeSymbol type)
-            => FindMethod(type, m => m.Name == "ToString" && m.Parameters.IsEmpty)?
+            => FindMethod(type, m => m.Name == nameof(ToString) && m.Parameters.IsEmpty)?
                 .ReturnNullableAnnotation != NullableAnnotation.NotAnnotated;
 
         private static string? ExtensionsNamespace(AnalyzerConfigOptionsProvider options, string? typeNamespace)

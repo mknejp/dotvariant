@@ -4,6 +4,7 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using System;
@@ -34,6 +35,14 @@ namespace dotVariant.Generator.Test
             check(ris[0]);
         }
 
+        [TestCaseSource(nameof(ParamTypeTestCases))]
+        public static void ParamType(string source, Action<RenderInfo.ParamInfo> check)
+        {
+            var ris = GetRenderInfoFromCompilation(source);
+            Assert.That(ris, Is.Not.Empty);
+            check(ris[0].Params[0]);
+        }
+
         [TestCaseSource(nameof(ExtensionClassNamespaceTestCases))]
         public static void ExtensionClassNamespace(string source, Dictionary<string, string> properties, Action<RenderInfo> check)
         {
@@ -49,7 +58,8 @@ namespace dotVariant.Generator.Test
             var driver = CSharpGeneratorDriver.Create(
                 new[] { generator },
                 optionsProvider: new AnalyzerConfigOptionsProvider(msBuildProperties));
-            _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var _, out var _);
+            _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var _, out var diagnostics);
+            Assert.That(diagnostics, Has.None.Matches((Diagnostic d) => d.Severity == DiagnosticSeverity.Error));
             return generator.RenderInfos;
         }
 
@@ -160,7 +170,8 @@ namespace dotVariant.Generator.Test
                         }",
                         ri => Assert.Multiple(() =>
                         {
-                            Assert.That(ri.Variant.IsClass, Is.True);
+                            Assert.That(ri.Variant.CanBeNull, Is.True);
+                            Assert.That(ri.Variant.IsReferenceType, Is.True);
                             Assert.That(ri.Variant.Keyword, Is.EqualTo("class"));
                         })
                     ),
@@ -174,29 +185,10 @@ namespace dotVariant.Generator.Test
                         }",
                         ri => Assert.Multiple(() =>
                         {
-                            Assert.That(ri.Variant.IsClass, Is.False);
+                            Assert.That(ri.Variant.CanBeNull, Is.False);
+                            Assert.That(ri.Variant.IsReferenceType, Is.False);
                             Assert.That(ri.Variant.Keyword, Is.EqualTo("struct"));
                         })
-                    ),
-                    (
-                        "classes are nullable",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int a, float b);
-                        }",
-                        ri => Assert.That(ri.Variant.Nullability, Is.EqualTo("nullable"))
-                    ),
-                    (
-                        "structs are nonnull",
-                        @"
-                        [dotVariant.Variant]
-                        public partial struct Variant
-                        {
-                            static partial void VariantOf(int a, float b);
-                        }",
-                        ri => Assert.That(ri.Variant.Nullability, Is.EqualTo("nonnull"))
                     ),
                     (
                         "non-readonly struct type",
@@ -302,7 +294,7 @@ namespace dotVariant.Generator.Test
             => new (string Name, string Source, Action<RenderInfo> Check)[]
                 {
                     (
-                        "parametrs: 1",
+                        "parameters: 1",
                         @"
                         [dotVariant.Variant]
                         public partial class Variant
@@ -362,83 +354,6 @@ namespace dotVariant.Generator.Test
                         })
                     ),
                     (
-                        "qualified type",
-                        @"
-                        using System;
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(TimeSpan a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Type, Is.EqualTo("global::System.TimeSpan"))
-                    ),
-                    (
-                        "shortened special type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Type, Is.EqualTo("int"))
-                    ),
-                    (
-                        "diagnostic type",
-                        @"
-                        using System;
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(TimeSpan a);
-                        }",
-                        ri => Assert.That(ri.Params[0].DiagType, Is.EqualTo("System.TimeSpan"))
-                    ),
-                    (
-                        "diagnostic type for nullable value type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int? a);
-                        }",
-                        ri => Assert.That(ri.Params[0].DiagType, Is.EqualTo("int?"))
-                    ),
-                    (
-                        "diagnostic special type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int a);
-                        }",
-                        ri => Assert.That(ri.Params[0].DiagType, Is.EqualTo("int"))
-                    ),
-                    (
-                        "class type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(string a);
-                        }",
-                        ri => Assert.That(ri.Params[0].IsClass, Is.True)
-                    ),
-                    (
-                        "struct type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(System.TimeSpan a, int b, System.AttributeTargets c);
-                        }",
-                        ri => Assert.Multiple(() =>
-                        {
-                            Assert.That(ri.Params[0].IsClass, Is.False);
-                            Assert.That(ri.Params[1].IsClass, Is.False);
-                            Assert.That(ri.Params[2].IsClass, Is.False);
-                        })
-                    ),
-                    (
                         "emit implicit cast",
                         @"
                         [dotVariant.Variant]
@@ -467,79 +382,6 @@ namespace dotVariant.Generator.Test
                             static partial void VariantOf(System.IDisposable a);
                         }",
                         ri => Assert.That(ri.Params[0].EmitImplicitCast, Is.False)
-                    ),
-                    (
-                        "disposable: false",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(object a);
-                        }",
-                        ri => Assert.That(ri.Params[0].IsDisposable, Is.False)
-                    ),
-                    (
-                        "disposable: true",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(System.IO.Stream a);
-                        }",
-                        ri => Assert.That(ri.Params[0].IsDisposable, Is.True)
-                    ),
-                    (
-                        "nonnull value type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Nullability, Is.EqualTo("nonnull"))
-                    ),
-                    (
-                        "nullable value type",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int? a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Nullability, Is.EqualTo("nullable"))
-                    ),
-                    (
-                        "nullable class type in nullable-disable context",
-                        @"
-                        #nullable disable
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(string a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Nullability, Is.EqualTo("nullable"))
-                    ),
-                    (
-                        "nullable class type in nullable-enable context",
-                        @"
-                        #nullable enable
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(string? a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Nullability, Is.EqualTo("nullable"))
-                    ),
-                    (
-                        "nonnull class type in nullable-enable context",
-                        @"
-                        #nullable enable
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(string a);
-                        }",
-                        ri => Assert.That(ri.Params[0].Nullability, Is.EqualTo("nonnull"))
                     ),
                     (
                         "object padding",
@@ -586,14 +428,14 @@ namespace dotVariant.Generator.Test
                         })
                     ),
                     (
-                        "ToString returns nonull string for most class types",
+                        "ToString returns notnull string for most class types",
                         @"
                         [dotVariant.Variant]
                         public partial class Variant
                         {
                             static partial void VariantOf(string a);
                         }",
-                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("nonnull"))
+                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("notnull"))
                     ),
                     (
                         "ToString returns nullable string for some class types",
@@ -607,7 +449,7 @@ namespace dotVariant.Generator.Test
                         ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("nullable"))
                     ),
                     (
-                        "ToString returns nonnull for struct types",
+                        "ToString returns notnull for struct types",
                         @"
                         #nullable enable
                         [dotVariant.Variant]
@@ -615,7 +457,7 @@ namespace dotVariant.Generator.Test
                         {
                             static partial void VariantOf(int a);
                         }",
-                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("nonnull"))
+                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("notnull"))
                     ),
                     (
                         "ToString returns nullable for nullable value types",
@@ -629,6 +471,257 @@ namespace dotVariant.Generator.Test
                     ),
                 }
                 .Select(test => new TestCaseData(test.Source, test.Check).SetName($"{nameof(Params)}({test.Name})"));
+
+        public static IEnumerable<TestCaseData> ParamTypeTestCases()
+            => new (string Name, string Source, Action<RenderInfo.ParamInfo> Check)[]
+                {
+                    (
+                        "struct",
+                        @"
+                        namespace N
+                        {
+                            struct S {}
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(S a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.False, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.S"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.S"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.S"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "special: int",
+                        @"
+                        namespace N
+                        {
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(System.Int32 a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.False, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("int"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("int"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("int"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "special: string",
+                        @"
+                        namespace N
+                        {
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(System.String a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("string"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("string"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("string"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "struct? - nullable disable",
+                        @"
+                        namespace N
+                        {
+                            struct S {}
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(S? a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.S?"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.S?"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.S?"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "struct? - nullable enable",
+                        @"
+                        namespace N
+                        {
+                            struct S {}
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(S? a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.S?"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.S?"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.S?"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "class - nullable disable",
+                        @"
+                        #nullable disable
+                        namespace N
+                        {
+                            class C {}
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(C a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.C"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.C"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.C"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "class - nullable enable",
+                        @"
+                        #nullable enable
+                        namespace N
+                        {
+                            class C {}
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(C a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.False, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.C"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.C?"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.C"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "class? - nullable enable",
+                        @"
+                        #nullable enable
+                        namespace N
+                        {
+                            class C {}
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(C? a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.C"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.C?"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.C?"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "delegate - nullable disable",
+                        @"
+                        #nullable disable
+                        namespace N
+                        {
+                            delegate void D();
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(D a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.D"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.D"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.D"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "delegate - nullable enable",
+                        @"
+                        #nullable enable
+                        namespace N
+                        {
+                            delegate void D();
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(D a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.False, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.D"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.D?"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.D"), nameof(p.Type));
+                        })
+                    ),
+                    (
+                        "delegate? - nullable enable",
+                        @"
+                        #nullable enable
+                        namespace N
+                        {
+                            delegate void D();
+
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {
+                                static partial void VariantOf(D? a);
+                            }
+                        }",
+                        p => Assert.Multiple(() =>
+                        {
+                            Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                            Assert.That(p.DiagType, Is.EqualTo("N.D"), nameof(p.DiagType));
+                            Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                            Assert.That(p.OutType, Is.EqualTo("global::N.D?"), nameof(p.OutType));
+                            Assert.That(p.Type, Is.EqualTo("global::N.D?"), nameof(p.Type));
+                        })
+                    ),
+                }
+                .Select(test =>
+                    new TestCaseData(test.Source, test.Check).SetName($"{nameof(ParamType)}({test.Name})"));
 
         public static IEnumerable<TestCaseData> ExtensionClassNamespaceTestCases()
             => new (string Name, string Source, string ExtensionClassNamespace, Action<RenderInfo> Check)[]
