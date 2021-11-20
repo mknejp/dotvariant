@@ -134,14 +134,14 @@ namespace dotVariant.Generator
         /// <param name="IsReferenceType">
         /// <see langword="true"/> if this is an object type (or generic with class constraint).
         /// </param>
+        /// <param name="IsToStringNullable">
+        /// <see langword="true"/> if the parameters's <see cref="object.ToString()"/> can return <see langword="null"/>.
+        /// </param>
         /// <param name="ObjectPadding">
         /// The number of <see langword="object"/> padding fields required for this type.
         /// </param>
         /// <param name="OutType">
         /// The type to use for <c>out</c>-qualified function parameters.
-        /// </param>
-        /// <param name="ToStringNullability">
-        /// <c>"notnull"</c> or <c>"nullable"</c> annotation of the parameters's <see cref="object.ToString()"/> return type.
         /// </param>
         /// <param name="Type">
         /// The fully qualified name of the type including type parameter list, without nullability annotation.
@@ -154,9 +154,9 @@ namespace dotVariant.Generator
             int Index,
             bool IsDisposable,
             bool IsReferenceType,
+            bool IsToStringNullable,
             int ObjectPadding,
             string OutType,
-            string ToStringNullability,
             string Type);
 
         public static RenderInfo FromDescriptor(
@@ -180,9 +180,9 @@ namespace dotVariant.Generator
                     Index: i + 1,
                     IsDisposable: IsDisposable(p.Type, compilation),
                     IsReferenceType: p.Type.IsReferenceType,
+                    IsToStringNullable: IsToStringNullable(p.Type, NullableContext.Enabled),
                     ObjectPadding: maxObjects - NumReferenceFields(p),
                     OutType: DetermineOutType(p, emitNullable),
-                    ToStringNullability: IsToStringNullable(p.Type) ? "nullable" : "notnull",
                     Type: AppendNullable(p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), p.Type.IsReferenceType ? p.NullableAnnotation : NullableAnnotation.NotAnnotated)));
 
             var typeNamespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
@@ -266,10 +266,6 @@ namespace dotVariant.Generator
             // Pass the script a unified numbering scheme
             return (int)v < 100 ? (int)v * 100 : (int)v;
         }
-
-        private static bool IsToStringNullable(ITypeSymbol type)
-            => FindMethod(type, m => m.Name == nameof(ToString) && m.Parameters.IsEmpty)?
-                .ReturnNullableAnnotation != NullableAnnotation.NotAnnotated;
 
         private static string? ExtensionsNamespace(AnalyzerConfigOptionsProvider options, string? typeNamespace)
         {

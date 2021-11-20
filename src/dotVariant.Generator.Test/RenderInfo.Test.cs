@@ -43,6 +43,14 @@ namespace dotVariant.Generator.Test
             check(ris[0].Params[0]);
         }
 
+        [TestCaseSource(nameof(IsToStringNullableCases))]
+        public static void IsToStringNullable(string source, bool expected)
+        {
+            var ris = GetRenderInfoFromCompilation(source);
+            Assert.That(ris, Is.Not.Empty);
+            Assert.That(ris[0].Params[0].IsToStringNullable, Is.EqualTo(expected));
+        }
+
         [TestCaseSource(nameof(ExtensionClassNamespaceTestCases))]
         public static void ExtensionClassNamespace(string source, Dictionary<string, string> properties, Action<RenderInfo> check)
         {
@@ -427,48 +435,6 @@ namespace dotVariant.Generator.Test
                             Assert.That(ri.Params[6].ObjectPadding, Is.EqualTo(2));
                         })
                     ),
-                    (
-                        "ToString returns notnull string for most class types",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(string a);
-                        }",
-                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("notnull"))
-                    ),
-                    (
-                        "ToString returns nullable string for some class types",
-                        @"
-                        #nullable enable
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(object a); // ToString() returns string?
-                        }",
-                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("nullable"))
-                    ),
-                    (
-                        "ToString returns notnull for struct types",
-                        @"
-                        #nullable enable
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int a);
-                        }",
-                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("notnull"))
-                    ),
-                    (
-                        "ToString returns nullable for nullable value types",
-                        @"
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int? a);
-                        }",
-                        ri => Assert.That(ri.Params[0].ToStringNullability, Is.EqualTo("nullable"))
-                    ),
                 }
                 .Select(test => new TestCaseData(test.Source, test.Check).SetName($"{nameof(Params)}({test.Name})"));
 
@@ -722,6 +688,160 @@ namespace dotVariant.Generator.Test
                 }
                 .Select(test =>
                     new TestCaseData(test.Source, test.Check).SetName($"{nameof(ParamType)}({test.Name})"));
+
+        public static IEnumerable<TestCaseData> IsToStringNullableCases()
+            => new (string Name, string Source, bool Nullable)[]
+                {
+                    (
+                        "class - nullable disable",
+                        @"
+                        #nullable disable
+
+                        public class C { public override string ToString() => """"; }
+
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(C a);
+                        }",
+                        true
+                    ),
+                    (
+                        "class - nullable enable",
+                        @"
+                        #nullable enable
+
+                        public class C { public override string ToString() => """"; }
+
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(C a);
+                        }",
+                        false
+                    ),
+                    (
+                        "class nullable - nullable enable",
+                        @"
+                        #nullable enable
+
+                        public class C { public override string? ToString() => """"; }
+
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(C a);
+                        }",
+                        true
+                    ),
+                    (
+                        "struct - nullable disable",
+                        @"
+                        #nullable disable
+
+                        public struct S { public override string ToString() => """"; }
+
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(S a);
+                        }",
+                        true
+                    ),
+                    (
+                        "struct - nullable enable",
+                        @"
+                        #nullable enable
+
+                        public struct S { public override string ToString() => """"; }
+
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(S a);
+                        }",
+                        false
+                    ),
+                    (
+                        "struct nullable - nullable enable",
+                        @"
+                        #nullable enable
+
+                        public struct S { public override string? ToString() => """"; }
+
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(S a);
+                        }",
+                        true
+                    ),
+                    (
+                        "object - nullable enable",
+                        @"
+                        #nullable enable
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(object a);
+                        }",
+                        true
+                    ),
+                    (
+                        "object - nullable disable",
+                        @"
+                        #nullable disable
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {
+                            static partial void VariantOf(object a);
+                        }",
+                        true
+                    ),
+                    (
+                        "int? - nullable enable",
+                        @"
+                        #nullable enable
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {   
+                            static partial void VariantOf(int? a);
+                        }",
+                        true
+                    ),
+                    (
+                        "int? - nullable disable",
+                        @"
+                        #nullable disable
+                        [dotVariant.Variant]
+                        public partial class Variant
+                        {   
+                            static partial void VariantOf(int? a);
+                        }",
+                        true
+                    ),
+                }
+                .Concat(
+                    new[]
+                    {
+                        "bool", "char", "byte", "sbyte", "short", "ushort", "int", "uint", "long", "ulong", "decimal",
+                        "float", "double",
+                        "string", "System.DateTime", "System.IntPtr", "System.UIntPtr"
+                    }
+                    .Select(t =>
+                    (
+                        Name: t,
+                        Source: @$"
+                            #nullable disable
+                            [dotVariant.Variant]
+                            public partial class Variant
+                            {{
+                                static partial void VariantOf({t} a);
+                            }}",
+                        Nullable: false
+                    )))
+                .Select(test =>
+                    new TestCaseData(test.Source, test.Nullable).SetName($"{nameof(IsToStringNullable)}({test.Name})"));
 
         public static IEnumerable<TestCaseData> ExtensionClassNamespaceTestCases()
             => new (string Name, string Source, string ExtensionClassNamespace, Action<RenderInfo> Check)[]
