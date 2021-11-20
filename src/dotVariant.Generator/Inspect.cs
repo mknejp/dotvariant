@@ -100,5 +100,18 @@ namespace dotVariant.Generator
                     .OfType<IFieldSymbol>() // Inludes backing fields of auto-properties
                     .Where(m => !m.IsStatic)
                     .Sum(m => NumReferenceFields(m.Type));
+
+        public static bool CanBeNull(IParameterSymbol p)
+        {
+            if (p.Type.IsReferenceType)
+            {
+                return p.NullableAnnotation != NullableAnnotation.NotAnnotated;
+            }
+            if (p.Type.IsValueType)
+            {
+                return p.NullableAnnotation == NullableAnnotation.Annotated;
+            }
+            return false;
+        }
     }
 }

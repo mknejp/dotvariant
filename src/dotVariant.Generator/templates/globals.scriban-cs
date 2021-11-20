@@ -16,58 +16,22 @@ emit_nullability = Language.Version >= 800 && Language.Nullable == "enable"
 readonly emit_nullability
 
 # The type to use for variables and function parameters
-# Works with both "Params" and "Variant"
-func value_type(type, name = null)
-    if (name == null)
-        name = type.Type
-    end
-    if type.IsClass
-        ret emit_nullability && type.Nullability == "nullable" ? (name + "?" ): name
-    else
-        ret name
-    end
-end
-readonly value_type
-
-# The type to use for out or ref parameters
-# Works with both "Params" and "Variant"
-func outref_type(type, name = null)
-    if (name == null)
-        name = type.Type
-    end
-    if type.IsClass
-        ret emit_nullability ? (name + "?") : name
-    else
-        ret name
-    end
-end
-readonly outref_type
+variant_nullable_param = emit_nullability && Variant.IsReferenceType ? (Variant.Type + "?" ) : Variant.Type
+readonly variant_nullable_param
 
 func func_type(param, result = "TResult")
-    ret "global::System.Func<" + (value_type param) + ", " + result + ">"
+    ret "global::System.Func<" + param.Type + ", " + result + ">"
 end
 readonly func_type
 
 func action_type(param)
-    ret "global::System.Action<" + (value_type param) + ">"
+    ret "global::System.Action<" + param.Type + ">"
 end
 readonly action_type
 
-# Conditionally append forgive-operator to an expression
-# Works with both "Params" and "Variant"
-func forgive(type, expression)
-    if type.IsClass
-        ret emit_nullability && type.Nullability == "nonnull" ? (expression + "!") : expression
-    else
-        ret expression
-    end
-end
-readonly forgive
-
 # Conditionally apply a null-caolescing member access with trailing null-expression after the ??
-# Works with both "Params" and "Variant"
 func coalesce(type, expression, sub_expression, null_expression = null)
-    if type.Nullability == "nullable"
+    if type.CanBeNull
         ret expression + "?" + sub_expression + (null_expression != null ? (" ?? " + null_expression) : "")
     else
         ret expression + sub_expression
@@ -75,23 +39,14 @@ func coalesce(type, expression, sub_expression, null_expression = null)
 end
 readonly coalesce
 
-func coalesce_ToString(type, expression)
-    if type.Nullability == "nonnull" && type.ToStringNullability == "nonnull"
-        ret expression + ".ToString()"
-    else
-        ret expression + (type.Nullability == "nullable" ? "?" : "") + ".ToString() ?? \"null\""
-    end
+func coalesce_ToString(param, expression)
+    ret expression + (param.CanBeNull ? "?" : "") + ".ToString()" + (param.ToStringNullability == "nullable" || param.CanBeNull ? " ?? \"null\"" : "")
 end
 readonly coalesce_ToString
 
-func param_hint(param)
-    ret param.Hint
-end
-readonly param_hint
-
 func annotate_NotNullWhen(param)
-    if param.IsClass && emit_nullability
-        ret param.Nullability == "nonnull" ? "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] " : ""
+    if param.IsReferenceType && emit_nullability
+        ret param.CanBeNull ? "" : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] "
     else
         ret ""
     end
@@ -99,8 +54,8 @@ end
 readonly annotate_NotNullWhen
 
 func annotate_NotNull(param)
-    if param.IsClass && emit_nullability
-        ret param.Nullability == "nonnull" ? "[global::System.Diagnostics.CodeAnalysis.NotNull] " : ""
+    if param.IsReferenceType && emit_nullability
+        ret param.CanBeNull ? "" : "[global::System.Diagnostics.CodeAnalysis.NotNull] "
     else
         ret ""
     end
@@ -141,7 +96,7 @@ storage_type = "__VariantImpl"
 readonly storage_type
 
 func get_value(param, expression = "_variant")
-    ret "((global::dotVariant.GeneratorSupport.Accessor_" + param.Index + "<" + value_type param + ">)" + expression + ").Value"
+    ret "((global::dotVariant.GeneratorSupport.Accessor_" + param.Index + "<" + param.Type + ">)" + expression + ").Value"
 end
 readonly get_value
 
@@ -164,8 +119,8 @@ func_types = Params | array.each @(do; ret func_type $0; end) | array.join ", "
 func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Identifier; end) | array.join ", "
 action_types = Params | array.each @(do; ret action_type $0; end) | array.join ", "
 action_params = Params | array.each @(do; ret (action_type $0) + " " + $0.Identifier; end) | array.join ", "
-method_modifiers = !Variant.IsClass && Language.Version >= 800 ? "readonly " : ""
-param_modifiers = !Variant.IsClass && Variant.IsReadonly && Language.Version >= 702 ? "in " : ""
+method_modifiers = !Variant.IsReferenceType && Language.Version >= 800 ? "readonly " : ""
+param_modifiers = !Variant.IsReferenceType && Variant.IsReadonly && Language.Version >= 702 ? "in " : ""
 global_nullable = emit_nullability ? "?" : ""
 global_forgive = emit_nullability ? "!" : ""
 needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0

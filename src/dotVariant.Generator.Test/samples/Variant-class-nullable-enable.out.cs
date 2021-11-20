@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright Miro Knejp 2021.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
@@ -36,7 +36,7 @@ namespace Foo
         public Variant_class_nullable_enable(string s)
             => _variant = new __VariantImpl(s);
         /// <summary>
-        /// Create a Variant_class_nullable_enable with a value of type <see cref="global::System.Array"/>.
+        /// Create a Variant_class_nullable_enable with a value of type <see cref="global::System.Array?"/>.
         /// </summary>
         /// <param name="a">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -65,7 +65,7 @@ namespace Foo
         public static implicit operator Variant_class_nullable_enable(string s)
             => new Variant_class_nullable_enable(s);
         /// <summary>
-        /// Create a Variant_class_nullable_enable with a value of type <see cref="global::System.Array"/>.
+        /// Create a Variant_class_nullable_enable with a value of type <see cref="global::System.Array?"/>.
         /// </summary>
         /// <param name="a">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -94,7 +94,7 @@ namespace Foo
         public static Variant_class_nullable_enable Create(string s)
             => new Variant_class_nullable_enable(s);
         /// <summary>
-        /// Create a Variant_class_nullable_enable with a value of type <see cref="global::System.Array"/>.
+        /// Create a Variant_class_nullable_enable with a value of type <see cref="global::System.Array?"/>.
         /// </summary>
         /// <param name="a">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -119,11 +119,11 @@ namespace Foo
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant_class_nullable_enable? lhs, Variant_class_nullable_enable? rhs)
-        => lhs?.Equals(rhs) ?? (rhs is null);
+            => lhs?.Equals(rhs) ?? (rhs is null);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant_class_nullable_enable? lhs, Variant_class_nullable_enable? rhs)
-        => !(lhs == rhs);
+            => !(lhs == rhs);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override int GetHashCode()
@@ -320,7 +320,10 @@ namespace Foo
             public _VariantTypeProxy(Variant_class_nullable_enable v)
             {
                 Value = v._variant.AsObject;
-                VariantOf(default, default, default!, default);
+                #pragma warning disable 8604 // Possible null reference argument for parameter
+                #pragma warning disable 8625 // Cannot convert null literal to non-nullable reference type
+                VariantOf(default, default, default, default);
+                #pragma warning restore 8604, 8625
             }
         }
 
@@ -572,7 +575,7 @@ namespace Foo
                     case 3:
                         return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._3.Value, other._x._3.Value);
                     case 4:
-                        return global::System.Collections.Generic.EqualityComparer<global::System.Array>.Default.Equals(_x._4.Value, other._x._4.Value);
+                        return global::System.Collections.Generic.EqualityComparer<global::System.Array?>.Default.Equals(_x._4.Value, other._x._4.Value);
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<bool>("Foo.Variant_class_nullable_enable");
                 }
@@ -958,10 +961,10 @@ namespace Foo
                 return _n == 3 ? s(_x._3.Value) : _();
             }
             /// <summary>
-            /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>.
+            /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/>.
             /// </summary>
-            /// <param name="a">Receives the stored value if it is of type <see cref="global::System.Array"/>.</param>
-            /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="global::System.Array"/>.</returns>
+            /// <param name="a">Receives the stored value if it is of type <see cref="global::System.Array?"/>.</param>
+            /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="global::System.Array?"/>.</returns>
             public bool TryMatch(out global::System.Array? a)
             {
                 a = _n == 4 ? _x._4.Value : default;
@@ -969,10 +972,10 @@ namespace Foo
             }
 
             /// <summary>
-            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>.
+            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/>.
             /// </summary>
-            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
-            /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="global::System.Array"/>.</returns>
+            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array?"/>.</param>
+            /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="global::System.Array?"/>.</returns>
             /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"> is rethrown.</exception>
             public bool TryMatch(global::System.Action<global::System.Array?> a)
             {
@@ -985,11 +988,11 @@ namespace Foo
             }
 
             /// <summary>
-            /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>,
+            /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/>,
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
-            /// <param name="a">Receives the stored value if it is of type <see cref="global::System.Array"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/>.</exception>
+            /// <param name="a">Receives the stored value if it is of type <see cref="global::System.Array?"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array?"/>.</exception>
             public void Match(out global::System.Array? a)
             {
                 if (_n == 4)
@@ -1001,11 +1004,11 @@ namespace Foo
             }
 
             /// <summary>
-            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>,
+            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/>,
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
-            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/>.</exception>
+            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array?"/>.</param>
+            /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array?"/>.</exception>
             /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> is rethrown.</exception>
             public void Match(global::System.Action<global::System.Array?> a)
             {
@@ -1018,10 +1021,10 @@ namespace Foo
             }
 
             /// <summary>
-            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/>,
+            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/>,
             /// otherwise invoke an alternative delegate.
             /// </summary>
-            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array?"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
             /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
             public void Match(global::System.Action<global::System.Array?> a, global::System.Action _)
@@ -1037,12 +1040,12 @@ namespace Foo
             }
 
             /// <summary>
-            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/> and return the result,
+            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/> and return the result,
             /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
             /// </summary>
-            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array?"/>.</param>
             /// <returns>The value returned from invoking <paramref name="a"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array"/>.</exception>
+            /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable does not contain a value of type <see cref="global::System.Array?"/>.</exception>
             /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<global::System.Array?, TResult> a)
             {
@@ -1054,10 +1057,10 @@ namespace Foo
             }
 
             /// <summary>
-            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/> and return the result,
+            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/> and return the result,
             /// otherwise return a provided value.
             /// </summary>
-            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array?"/>.</param>
             /// <param name="_">The value to return if the stored value is of a different type.</param>
             /// <returns>The value returned from invoking <paramref name="a"/>, or <paramref name="default"/>.</returns>
             /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="other"/> is rethrown.</exception>
@@ -1067,10 +1070,10 @@ namespace Foo
             }
 
             /// <summary>
-            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array"/> and return the result,
+            /// Invoke a delegate with the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/> and return the result,
             /// otherwise invoke an alternative delegate and return its result.
             /// </summary>
-            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="global::System.Array?"/>.</param>
             /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
             /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
             public TResult Match<TResult>(global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
@@ -1085,7 +1088,7 @@ namespace Foo
             /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
             /// <param name="f">The delegate to invoke if the stored value is of type <see cref="float"/>.</param>
             /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array?"/>.</param>
             /// <param name="_">The delegate to invoke if Variant_class_nullable_enable is empty.</param>
             /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
             public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a, global::System.Action _)
@@ -1120,7 +1123,7 @@ namespace Foo
             /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
             /// <param name="f">The delegate to invoke if the stored value is of type <see cref="float"/>.</param>
             /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array?"/>.</param>
             /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable is empty.</exception>
             /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
             public void Visit(global::System.Action<int> i, global::System.Action<float> f, global::System.Action<string> s, global::System.Action<global::System.Array?> a)
@@ -1155,7 +1158,7 @@ namespace Foo
             /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
             /// <param name="f">The delegate to invoke if the stored value is of type <see cref="float"/>.</param>
             /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array?"/>.</param>
             /// <param name="_">The delegate to invoke if Variant_class_nullable_enable is empty.</param>
             /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
             /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
@@ -1185,7 +1188,7 @@ namespace Foo
             /// <param name="i">The delegate to invoke if the stored value is of type <see cref="int"/>.</param>
             /// <param name="f">The delegate to invoke if the stored value is of type <see cref="float"/>.</param>
             /// <param name="s">The delegate to invoke if the stored value is of type <see cref="string"/>.</param>
-            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array"/>.</param>
+            /// <param name="a">The delegate to invoke if the stored value is of type <see cref="global::System.Array?"/>.</param>
             /// <exception cref="global::System.InvalidOperationException">Variant_class_nullable_enable is empty.</exception>
             /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
             /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
@@ -1284,7 +1287,7 @@ namespace Foo
         }
         /// <summary>
         /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="global::System.Array"/> and dropping all others.
+        /// containing a value of type <see cref="global::System.Array?"/> and dropping all others.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         /// <param name="a">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
@@ -1391,7 +1394,7 @@ namespace Foo
         }
         /// <summary>
         /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="global::System.Array"/> and replacing all others by a fallback value.
+        /// containing a value of type <see cref="global::System.Array?"/> and replacing all others by a fallback value.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         /// <param name="a">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
@@ -1504,7 +1507,7 @@ namespace Foo
         }
         /// <summary>
         /// Transform a Variant_class_nullable_enable-based enumerable sequence by applying a selector function to those elements
-        /// containing a value of type <see cref="global::System.Array"/> and replacing all others with the result of a fallback selector.
+        /// containing a value of type <see cref="global::System.Array?"/> and replacing all others with the result of a fallback selector.
         /// </summary>
         /// <param name="source">An enumerable sequence whose elements to match on.</param>
         /// <param name="a">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
@@ -1540,7 +1543,7 @@ namespace Foo
         /// <param name="i">The delegate to invoke if the element's value is of type <see cref="int"/>.</param>
         /// <param name="f">The delegate to invoke if the element's value is of type <see cref="float"/>.</param>
         /// <param name="s">The delegate to invoke if the element's value is of type <see cref="string"/>.</param>
-        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array"/>.</param>
+        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array?"/>.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <exception cref="global::System.InvalidOperationException">The sequence encountered an empty Variant_class_nullable_enable.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
@@ -1584,7 +1587,7 @@ namespace Foo
         /// <param name="i">The delegate to invoke if the element's value is of type <see cref="int"/>.</param>
         /// <param name="f">The delegate to invoke if the element's value is of type <see cref="float"/>.</param>
         /// <param name="s">The delegate to invoke if the element's value is of type <see cref="string"/>.</param>
-        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array"/>.</param>
+        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array?"/>.</param>
         /// <param name="_">The delegate to invoke if an element is empty.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
@@ -1678,7 +1681,7 @@ namespace Foo
                 _variant => s(((global::dotVariant.GeneratorSupport.Accessor_3<string>)_variant).Value));
         }
         /// <summary>
-        /// Projects each <see cref="global::System.Array"/> element of an observable sequence
+        /// Projects each <see cref="global::System.Array?"/> element of an observable sequence
         /// into a new form and drops all other elements.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
@@ -1777,7 +1780,7 @@ namespace Foo
             });
         }
         /// <summary>
-        /// Projects each <see cref="global::System.Array"/> element of an observable sequence
+        /// Projects each <see cref="global::System.Array?"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
@@ -1886,7 +1889,7 @@ namespace Foo
             });
         }
         /// <summary>
-        /// Projects each <see cref="global::System.Array"/> element of an observable sequence
+        /// Projects each <see cref="global::System.Array?"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
@@ -1921,7 +1924,7 @@ namespace Foo
         /// <param name="i">The delegate to invoke if the element's value is of type <see cref="int"/>.</param>
         /// <param name="f">The delegate to invoke if the element's value is of type <see cref="float"/>.</param>
         /// <param name="s">The delegate to invoke if the element's value is of type <see cref="string"/>.</param>
-        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array"/>.</param>
+        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array?"/>.</param>
         /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
@@ -1957,7 +1960,7 @@ namespace Foo
         /// <param name="i">The delegate to invoke if the element's value is of type <see cref="int"/>.</param>
         /// <param name="f">The delegate to invoke if the element's value is of type <see cref="float"/>.</param>
         /// <param name="s">The delegate to invoke if the element's value is of type <see cref="string"/>.</param>
-        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array"/>.</param>
+        /// <param name="a">The delegate to invoke if the element's value is of type <see cref="global::System.Array?"/>.</param>
         /// <param name="_">The delegate to invoke if an element is empty.</param>
         /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -2005,7 +2008,7 @@ namespace Foo
         /// <param name="i">Transform an observable sequence of <see cref="int"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="f">Transform an observable sequence of <see cref="float"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="s">Transform an observable sequence of <see cref="string"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
-        /// <param name="a">Transform an observable sequence of <see cref="global::System.Array"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="a">Transform an observable sequence of <see cref="global::System.Array?"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
@@ -2036,7 +2039,7 @@ namespace Foo
         /// <param name="i">Transform an observable sequence of <see cref="int"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="f">Transform an observable sequence of <see cref="float"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="s">Transform an observable sequence of <see cref="string"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
-        /// <param name="a">Transform an observable sequence of <see cref="global::System.Array"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="a">Transform an observable sequence of <see cref="global::System.Array?"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="_">Transform a sequence of <see cref="global::System.Reactive.Unit"/> values (each representing an empty variant) into a sequence of <typeparamref name="TResult"/> values.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>

@@ -60,7 +60,8 @@ namespace dotVariant.Generator.Test
             where TGenerator : ISourceGenerator, new()
             => GetGeneratorDiagnostics(sources, () => new TGenerator());
 
-        public static CSharpCompilation Compile(IDictionary<string, string> sources)
+        public static CSharpCompilation Compile(
+            IDictionary<string, string> sources)
             => CSharpCompilation.Create(
                 "test",
                 sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, path: s.Key)),

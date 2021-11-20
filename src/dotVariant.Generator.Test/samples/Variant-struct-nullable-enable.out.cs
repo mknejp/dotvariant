@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright Miro Knejp 2021.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
@@ -91,11 +91,11 @@ namespace Foo
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant_struct_nullable_enable lhs, Variant_struct_nullable_enable rhs)
-        => lhs.Equals(rhs);
+            => lhs.Equals(rhs);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant_struct_nullable_enable lhs, Variant_struct_nullable_enable rhs)
-        => !(lhs == rhs);
+            => !(lhs == rhs);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly override int GetHashCode()
@@ -252,7 +252,10 @@ namespace Foo
             public _VariantTypeProxy(Variant_struct_nullable_enable v)
             {
                 Value = v._variant.AsObject;
-                VariantOf(default, default, default!);
+                #pragma warning disable 8604 // Possible null reference argument for parameter
+                #pragma warning disable 8625 // Cannot convert null literal to non-nullable reference type
+                VariantOf(default, default, default);
+                #pragma warning restore 8604, 8625
             }
         }
 
