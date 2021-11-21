@@ -15,6 +15,21 @@ Global input variables are fed from C# RenderInfo members:
 emit_nullability = Language.Version >= 800 && Language.Nullable == "enable"
 readonly emit_nullability
 
+type_parameters = Variant.Generics | array.each @(do; ret $0.Identifier; end) | array.join ", "
+readonly type_parameters
+
+type_parameter_list = Variant.Generics == empty ? "" : "<" + type_parameters + ">"
+readonly type_parameter_list
+
+open_type_parameter_list = Variant.Generics == empty ? "" : "<" + (Variant.Generics | array.each @(do; ret ""; end) | array.join ",") + ">"
+readonly open_type_parameter_list
+
+appended_type_parameters = Variant.Generics == empty ? "" : ", " + type_parameters
+readonly appended_type_parameters
+
+constrained_type_parameters = Variant.Generics | array.filter @(do; ret $0.Constraints != empty; end)
+readonly constrained_type_parameters
+
 # The type to use for variables and function parameters
 variant_nullable_param = emit_nullability && Variant.IsReferenceType ? (Variant.Type + "?" ) : Variant.Type
 readonly variant_nullable_param
@@ -45,20 +60,12 @@ end
 readonly coalesce_ToString
 
 func annotate_NotNullWhen(param)
-    if param.IsReferenceType && emit_nullability
-        ret param.CanBeNull ? "" : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] "
-    else
-        ret ""
-    end
+    ret emit_nullability && !param.CanBeNull ? "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] " : ""
 end
 readonly annotate_NotNullWhen
 
 func annotate_NotNull(param)
-    if param.IsReferenceType && emit_nullability
-        ret param.CanBeNull ? "" : "[global::System.Diagnostics.CodeAnalysis.NotNull] "
-    else
-        ret ""
-    end
+    ret emit_nullability && !param.CanBeNull ? "[global::System.Diagnostics.CodeAnalysis.NotNull] " : ""
 end
 readonly annotate_NotNull
 
@@ -92,7 +99,7 @@ func make_empty_error()
 end
 readonly make_empty_error_error
 
-storage_type = "__VariantImpl"
+storage_type = "global::dotVariant._G." + (Variant.Namespace ? Variant.Namespace + "." : "") + Variant.Type
 readonly storage_type
 
 func get_value(param, expression = "_variant")
@@ -126,6 +133,8 @@ global_forgive = emit_nullability ? "!" : ""
 needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0
 forward_params = Params | array.each @(do; ret $0.Identifier; end) | array.join ", "
 discriminator = "global::dotVariant.GeneratorSupport.Discriminator"
+object_accessor = "global::dotVariant.GeneratorSupport.ObjectAccessor"
+is_generic = Variant.Generics != empty
 
 readonly func_types
 readonly func_params
@@ -138,4 +147,6 @@ readonly global_forgive
 readonly needs_dispose
 readonly forward_params
 readonly discriminator
+readonly object_accessor
+readonly is_generic
 ~}}

@@ -29,9 +29,12 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
-            Match<TResult>(
+            Match<TResult{{ appended_type_parameters }}>(
                 this global::System.Collections.Generic.IEnumerable<{{ Variant.QualifiedType }}> source,
                 {{ func_type $p }} {{ $p.Identifier }})
+        {{~ for $tp in constrained_type_parameters ~}}
+            where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
+        {{~ end ~}}
         {
             foreach (var variant in source)
             {
@@ -56,10 +59,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
-            Match<TResult>(
+            Match<TResult{{ appended_type_parameters }}>(
                 this global::System.Collections.Generic.IEnumerable<{{ Variant.QualifiedType }}> source,
                 {{ func_type $p }} {{ $p.Identifier }},
                 TResult _)
+        {{~ for $tp in constrained_type_parameters ~}}
+            where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
+        {{~ end ~}}
         {
             foreach (var variant in source)
             {
@@ -88,10 +94,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
-            Match<TResult>(
+            Match<TResult{{ appended_type_parameters }}>(
                 this global::System.Collections.Generic.IEnumerable<{{ Variant.QualifiedType }}> source,
                 {{ func_type $p }} {{ $p.Identifier }},
                 global::System.Func<TResult> _)
+        {{~ for $tp in constrained_type_parameters ~}}
+            where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
+        {{~ end ~}}
         {
             foreach (var variant in source)
             {
@@ -122,9 +131,12 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
-            Visit<TResult>(
+            Visit<TResult{{ appended_type_parameters }}>(
                 this global::System.Collections.Generic.IEnumerable<{{ Variant.QualifiedType }}> source,
                 {{ func_params }})
+        {{~ for $tp in constrained_type_parameters ~}}
+            where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
+        {{~ end ~}}
         {
             foreach (var variant in source)
             {
@@ -159,10 +171,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
-            Visit<TResult>(
+            Visit<TResult{{ appended_type_parameters }}>(
                 this global::System.Collections.Generic.IEnumerable<{{ Variant.QualifiedType }}> source,
                 {{ func_params }},
                 global::System.Func<TResult> _)
+        {{~ for $tp in constrained_type_parameters ~}}
+            where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
+        {{~ end ~}}
         {
             foreach (var variant in source)
             {

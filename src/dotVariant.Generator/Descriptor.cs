@@ -11,13 +11,13 @@ using System.Collections.Immutable;
 namespace dotVariant.Generator
 {
     public sealed record Descriptor(
-        ITypeSymbol Type,
+        INamedTypeSymbol Type,
         TypeDeclarationSyntax Syntax,
         ImmutableArray<IParameterSymbol> Options,
         NullableContext NullableContext)
     {
         public static Descriptor FromDeclaration(
-            ITypeSymbol type,
+            INamedTypeSymbol type,
             TypeDeclarationSyntax syntax,
             NullableContext nullability)
         {

@@ -8,7 +8,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -69,6 +68,12 @@ namespace dotVariant.Generator.Test
                     ("Variant-class-nullable-disable", "Foo.Variant_class_nullable_disable"),
                     ("Variant-class-nullable-enable", "Foo.Variant_class_nullable_enable"),
                     ("Variant-disposable", "Foo.Variant_disposable"),
+                    ("Variant-generic-class", "Foo.Variant{T}"),
+                    ("Variant-generic-class-nullable", "Foo.Variant{T}"),
+                    ("Variant-generic-multiple", "Foo.Variant{T1, T2, T3}"),
+                    ("Variant-generic-struct", "Foo.Variant{T}"),
+                    ("Variant-generic-notnull", "Foo.Variant{T}"),
+                    ("Variant-generic-unbounded", "Foo.Variant{T}"),
                     ("Variant-nullable-value-type", "Foo.Variant_nullable_value_type"),
                     ("Variant-public", "Foo.Variant_public"),
                     ("Variant-struct-nullable-disable", "Foo.Variant_struct_nullable_disable"),
@@ -167,44 +172,5 @@ namespace dotVariant.Generator.Test
                     new TestCaseData(test.Input)
                     .SetName($"{nameof(Diagnostics)}({test.Name})"));
         }
-
-        public static void Foo(Action _) { }
-        public static bool TryFoo([NotNullWhen(true)] out Action? _)
-        {
-            //_ = () => { };
-            _ = null;
-            return false;
-        }
-
-        public static void Foo()
-        {
-            Foo(() => { });
-            _ = TryFoo(out var f);
-        }
     }
-
-    public interface IFoo { }
-
-    public class Foo<T> where T : struct
-    {
-        public Foo(T? _) { }
-    }
-
-    public class Bar
-    {
-    }
-
-    public class Baz : Bar
-    {
-        public int X => 1;
-    }
-
-    public struct S { }
-
-    public static class FooEx
-    {
-        //public static TResult Method<TResult, T>(this Foo<T> _) where T : class { return default; }
-    }
-
-    public enum E { }
 }

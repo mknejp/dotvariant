@@ -115,456 +115,469 @@ it had to store all values side-by-side.
 ## ~}}
 {{~
 func $storage(param)
-    ret "_x._" + param.Index + ".Value"
+    ret is_generic ? "_x._" + param.Index : "_x._" + param.Index + ".Value";
 end
 ~}}
 {{~ ## STORAGE WRAPPER ## ~}}
-{{~ if Variant.Namespace ~}}
-namespace {{ Variant.Namespace }}
+namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 {
-{{~ end ~}}
-    partial {{ Variant.Keyword }} {{ Variant.Type }}
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
+    internal readonly struct {{ Variant.Type }}
+    {{~ if needs_dispose ~}}
+        : global::System.IDisposable
+    {{~ end ~}}
+    {{~ for $tp in constrained_type_parameters ~}}
+        where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
+    {{~ end ~}}
     {
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
-        private readonly struct __VariantImpl
-        {{~ if needs_dispose ~}}
-            : global::System.IDisposable
-        {{~ end ~}}
+        {{~ if !is_generic ~}}
+        {{~ ## NON-GENERIC UNION TYPE ## ~}}
+        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
+        private readonly struct Union
         {
-            {{~ ## UNION TYPE ## ~}}
-            [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
-            private readonly struct Union
-            {
-                {{~ ## UNION MEMBERS ## ~}}
-                {{~ for $p in Params ~}}
-                [global::System.Runtime.InteropServices.FieldOffset(0)]
-                public readonly Value_{{ $p.Index }} _{{ $p.Index }};
-                {{~ end ~}}
-
-                {{~ ## UNION CONSTRUCTORS ## ~}}
-                {{~ for $p in Params ~}}
-                public Union({{ $p.Type }} value)
-                {
-                    {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
-                    _{{ $other.Index }} = default;
-                    {{~ end ~}}
-                    _{{ $p.Index }} = new Value_{{ $p.Index }}(value);
-                }
-                {{~ end ~}}
-            }
-
-            {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
+            {{~ ## UNION MEMBERS ## ~}}
             {{~ for $p in Params ~}}
-            [global::System.Diagnostics.DebuggerNonUserCode]
-            private readonly struct Value_{{ $p.Index }}
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
+            public readonly Value_{{ $p.Index }} _{{ $p.Index }};
+            {{~ end ~}}
+
+            {{~ ## UNION CONSTRUCTORS ## ~}}
+            {{~ for $p in Params ~}}
+            public Union({{ $p.Type }} value)
             {
-                public readonly {{ $p.Type }} Value;
+                {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
+                _{{ $other.Index }} = default;
+                {{~ end ~}}
+                _{{ $p.Index }} = new Value_{{ $p.Index }}(value);
+            }
+            {{~ end ~}}
+        }
+
+        {{~ ## PER-TYPE WRAPPERS WITH PADDING ## ~}}
+        {{~ for $p in Params ~}}
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        private readonly struct Value_{{ $p.Index }}
+        {
+            public readonly {{ $p.Type }} Value;
+            {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
+            public readonly object _dummy{{ $dummy }};
+            {{~ end ~}}
+
+            public Value_{{ $p.Index }}({{ $p.Type }} value)
+            {
                 {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-                public readonly object _dummy{{ $dummy }};
+                _dummy{{ $dummy }} = null{{ global_forgive }};
                 {{~ end ~}}
-
-                public Value_{{ $p.Index }}({{ $p.Type }} value)
-                {
-                    {{~ for $dummy in (1..$p.ObjectPadding) limit:$p.ObjectPadding ~}}
-                    _dummy{{ $dummy }} = null{{ global_forgive }};
-                    {{~ end ~}}
-                    Value = value;
-                }
+                Value = value;
             }
-            {{~ end ~}}
-
-            private readonly Union _x;
-            private readonly byte _n;
-
-            {{~ ## STORAGE CONSTRUCTORS ## ~}}
+        }
+        {{~ end ~}}
+        {{~ else ~}}
+        {{~ ## GENERIC UNION TYPE ## ~}}
+        private readonly struct Union
+        {
             {{~ for $p in Params ~}}
-            public __VariantImpl({{ $p.Type }} {{ $p.Identifier }})
+            public readonly {{ $p.Type }} _{{ $p.Index }};
+            public Union({{ $p.Type }} value)
             {
-                _n = {{ $p.Index }};
-                _x = new Union({{ $p.Identifier }});
+                {{~ for $other in Params | array.remove_at ($p.Index - 1) ~}}
+                _{{ $other.Index }} = default{{ global_forgive }};
+                {{~ end ~}}
+                _{{ $p.Index }} = value;
             }
             {{~ end ~}}
+        }
+        {{~ end ~}}
 
-            {{~ if needs_dispose ~}}
-            /// <summary>
-            /// If the stored value implements <see cref="global::System.IDisposable"/>,
-            /// call its <see cref="global::System.IDisposable.Dispose()"/> method.
-            /// </summary>
-            public void Dispose()
+        private readonly Union _x;
+        private readonly byte _n;
+
+        {{~ ## STORAGE CONSTRUCTORS ## ~}}
+        {{~ for $p in Params ~}}
+        public {{ Variant.Identifier }}({{ $p.Type }} {{ $p.Identifier }})
+        {
+            _n = {{ $p.Index }};
+            _x = new Union({{ $p.Identifier }});
+        }
+        {{~ end ~}}
+
+        {{~ if needs_dispose ~}}
+        /// <summary>
+        /// If the stored value implements <see cref="global::System.IDisposable"/>,
+        /// call its <see cref="global::System.IDisposable.Dispose()"/> method.
+        /// </summary>
+        public void Dispose()
+        {
+            switch (_n)
+            {
+                case 0:
+                    break;
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{~ if $p.IsDisposable ~}}
+                    {{ coalesce $p ($storage $p) ".Dispose()" }};
+                    {{~ end ~}}
+                    break;
+                {{~ end ~}}
+                default:
+                    {{ throw_internal_error }};
+                    break;
+            }
+        }
+        {{~ end ~}}
+
+        {{~ ## INTERNAL ACCESS ## ~}}
+        public static explicit operator {{ discriminator }}(in {{ Variant.Type }} v)
+            => ({{ discriminator }})v._n;
+        {{~ for $p in Params ~}}
+        public static explicit operator {{ accessor $p.Index $p.Type }}(in {{ Variant.Type }} v)
+            => new {{ accessor $p.Index $p.Type }}(v.{{ $storage $p }});
+        {{~ end ~}}
+
+        /// <summary>
+        /// <see langword="true"/> if {{ Variant.Identifier }} was constructed without a value.
+        /// </summary>
+        {{~ if !Variant.IsReferenceType ~}}
+        /// <remarks>
+        /// Because {{ Variant.Identifier }} is a value type, its default constructor cannot be disabled.
+        /// A default-constructed {{ Variant.Identifier }} will always have a <c>IsEmpty</c> value of <see langword="true"/>
+        /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
+        /// </remarks>
+        {{~ end ~}}
+        public bool IsEmpty => _n == 0;
+
+        /// <summary>
+        /// The string representation of the stored value's type.
+        /// </summary>
+        public string TypeString
+        {
+            get
             {
                 switch (_n)
                 {
                     case 0:
-                        break;
+                        return "<empty>";
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
-                        {{~ if $p.IsDisposable ~}}
-                        {{ coalesce $p ($storage $p) ".Dispose()" }};
-                        {{~ end ~}}
-                        break;
-                    {{~ end ~}}
-                    default:
-                        {{ throw_internal_error }};
-                        break;
-                }
-            }
-            {{~ end ~}}
-
-            {{~ ## INTERNAL ACCESS ## ~}}
-            public static explicit operator {{ discriminator }}(in __VariantImpl v)
-                => ({{ discriminator }})v._n;
-            {{~ for $p in Params ~}}
-            public static explicit operator {{ accessor $p.Index $p.Type }}(in __VariantImpl v)
-                => new {{ accessor $p.Index $p.Type }}(v._x._{{ $p.Index }}.Value);
-            {{~ end ~}}
-
-            /// <summary>
-            /// <see langword="true"/> if {{ Variant.Identifier }} was constructed without a value.
-            /// </summary>
-            {{~ if !Variant.IsReferenceType ~}}
-            /// <remarks>
-            /// Because {{ Variant.Identifier }} is a value type, its default constructor cannot be disabled.
-            /// A default-constructed {{ Variant.Identifier }} will always have a <c>IsEmpty</c> value of <see langword="true"/>
-            /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
-            /// </remarks>
-            {{~ end ~}}
-            public bool IsEmpty => _n == 0;
-
-            /// <summary>
-            /// The string representation of the stored value's type.
-            /// </summary>
-            public string TypeString
-            {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return "<empty>";
-                        {{~ for $p in Params ~}}
-                        case {{ $p.Index }}:
-                            return "{{ $p.DiagType }}";
-                        {{~ end ~}}
-                        default:
-                            return {{ throw_internal_error "string" }};
-                    }
-                }
-            }
-
-            /// <summary>
-            /// The stored value's <see cref="object.ToString()"/> result, or <c>""</c> if empty.
-            /// </summary>
-            public override string ToString()
-            {
-                switch (_n)
-                {
-                    case 0:
-                        return "";
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        return {{ coalesce_ToString $p ($storage $p) }};
+                        return "{{ $p.DiagType }}";
                     {{~ end ~}}
                     default:
                         return {{ throw_internal_error "string" }};
                 }
             }
+        }
 
-            /// <summary>
-            /// The stored value cast to type <see cref="object"/>.
-            /// </summary>
-            public object{{ global_nullable }} AsObject
+        /// <summary>
+        /// The stored value's <see cref="object.ToString()"/> result, or <c>""</c> if empty.
+        /// </summary>
+        public override string ToString()
+        {
+            switch (_n)
             {
-                get
-                {
-                    switch (_n)
-                    {
-                        case 0:
-                            return null;
-                        {{~ for $p in Params ~}}
-                        case {{ $p.Index }}:
-                            return {{ $storage $p }};
-                        {{~ end ~}}
-                        default:
-                            return {{ throw_internal_error "object" + global_nullable }};
-                    }
-                }
+                case 0:
+                    return "";
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ coalesce_ToString $p ($storage $p) }};
+                {{~ end ~}}
+                default:
+                    return {{ throw_internal_error "string" }};
             }
+        }
 
-            public bool Equals(in __VariantImpl other)
-            {
-                if (_n != other._n)
-                {
-                    return false;
-                }
-                switch (_n)
-                {
-                    case 0:
-                        return true;
-                    {{~ for $p in Params ~}}
-                    {{~ $i = $p.Index ~}}
-                    case {{ $i }}:
-                        return global::System.Collections.Generic.EqualityComparer<{{ $p.Type }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
-                    {{~ end ~}}
-                    default:
-                        return {{ throw_internal_error "bool" }};
-                }
-            }
-
-            public override int GetHashCode()
+        /// <summary>
+        /// The stored value cast to type <see cref="object"/>.
+        /// </summary>
+        public object{{ global_nullable }} AsObject
+        {
+            get
             {
                 switch (_n)
                 {
                     case 0:
-                        return 0;
-                    {{~ for $p in Params ~}}
-                    {{~ $i = $p.Index ~}}
-                    case {{ $i }}:
-                        {{~ if Runtime.HasHashCode ~}}
-                        return global::System.HashCode.Combine({{ $storage $p }});
-                        {{~ else ~}}
-                        return {{ coalesce $p ($storage $p) ".GetHashCode()" "0"}};
-                        {{~ end ~}}
-                    {{~ end ~}}
-                    default:
-                        return {{ throw_internal_error "int" }};
-                }
-            }
-
-            {{~ for $p in Params ~}}
-            {{~ ## UNION TryMatch ## ~}}
-            /// <summary>
-            /// Retrieve the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <returns><see langword="true"/> if {{ Variant.Identifier }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
-            public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ $p.OutType }} {{ $p.Identifier }})
-            {
-                {{ $p.Identifier }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
-                return _n == {{ $p.Index }};
-            }
-
-            /// <summary>
-            /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <returns><see langword="true"/> if {{ Variant.Identifier }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"> is rethrown.</exception>
-            public bool TryMatch({{ action_type $p }} {{ $p.Identifier }})
-            {
-                if (_n == {{ $p.Index }})
-                {
-                    {{ $p.Identifier }}({{ $storage $p }});
-                    return true;
-                }
-                return false;
-            }
-
-            {{~ ## UNION Match ## ~}}
-            /// <summary>
-            /// Retrieve the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
-            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
-            public void Match({{ annotate_NotNull $p }}out {{ $p.OutType }} {{ $p.Identifier }})
-            {
-                if (_n == {{ $p.Index }})
-                {
-                    {{ $p.Identifier }} = {{ $storage $p }};
-                    return;
-                }
-                throw {{ make_mismatch_error $p.DiagType "TypeString" }};
-            }
-
-            /// <summary>
-            /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
-            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> is rethrown.</exception>
-            public void Match({{ action_type $p }} {{ $p.Identifier }})
-            {
-                if (_n == {{ $p.Index }})
-                {
-                    {{ $p.Identifier }}({{ $storage $p }});
-                    return;
-                }
-                {{ throw_mismatch_error $p.DiagType "TypeString" }};
-            }
-
-            /// <summary>
-            /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
-            /// otherwise invoke an alternative delegate.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
-            public void Match({{ action_type $p }} {{ $p.Identifier }}, global::System.Action _)
-            {
-                if (_n == {{ $p.Index }})
-                {
-                    {{ $p.Identifier }}({{ $storage $p }});
-                }
-                else
-                {
-                    _();
-                }
-            }
-
-            /// <summary>
-            /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
-            /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <returns>The value returned from invoking <paramref name="{{ $p.Identifier }}"/>.</returns>
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> is rethrown.</exception>
-            public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }})
-            {
-                if (_n == {{ $p.Index }})
-                {
-                    return {{ $p.Identifier }}({{ $storage $p }});
-                }
-                return {{ throw_mismatch_error $p.DiagType "TypeString" "TResult" }};
-            }
-
-            /// <summary>
-            /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
-            /// otherwise return a provided value.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <param name="_">The value to return if the stored value is of a different type.</param>
-            /// <returns>The value returned from invoking <paramref name="{{ $p.Identifier }}"/>, or <paramref name="default"/>.</returns>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="other"/> is rethrown.</exception>
-            public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, TResult _)
-            {
-                return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _;
-            }
-
-            /// <summary>
-            /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
-            /// otherwise invoke an alternative delegate and return its result.
-            /// </summary>
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
-            public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, global::System.Func<TResult> _)
-            {
-                return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _();
-            }
-            {{~ end ~}}
-
-            {{~ ## UNION Visit(Action) ## ~}}
-            /// <summary>
-            /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Identifier }},
-            /// and invoke a special delegate if {{ Variant.Identifier }} is empty.
-            /// </summary>
-            {{~ for $p in Params ~}}
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            {{~ end ~}}
-            /// <param name="_">The delegate to invoke if {{ Variant.Identifier }} is empty.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-            public void Visit({{ action_params }}, global::System.Action _)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        _();
-                        break;
+                        return null;
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
-                        {{ $p.Identifier }}({{ $storage $p }});
-                        break;
+                        return {{ $storage $p }};
                     {{~ end ~}}
                     default:
-                        {{ throw_internal_error }};
-                        break;
-                }
-            }
-
-            {{~ ## UNION Visit(Action) ## ~}}
-            /// <summary>
-            /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Identifier }},
-            /// and throw an exception if {{ Variant.Identifier }} is empty.
-            /// </summary>
-            {{~ for $p in Params ~}}
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            {{~ end ~}}
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} is empty.</exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-            public void Visit({{ action_params }})
-            {
-                switch (_n)
-                {
-                    case 0:
-                        {{ throw_empty_error }};
-                        break;
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        {{ $p.Identifier }}({{ $storage $p }});
-                        break;
-                    {{~ end ~}}
-                    default:
-                        {{ throw_internal_error }};
-                        break;
-                }
-            }
-
-            {{~ ## UNION Visit(Func) ## ~}}
-            /// <summary>
-            /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Identifier }} and return the result,
-            /// and invoke a special delegate if {{ Variant.Identifier }} is empty and return its result.
-            /// </summary>
-            {{~ for $p in Params ~}}
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            {{~ end ~}}
-            /// <param name="_">The delegate to invoke if {{ Variant.Identifier }} is empty.</param>
-            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-            public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
-            {
-                switch (_n)
-                {
-                    case 0:
-                        return _();
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        return {{ $p.Identifier }}({{ $storage $p }});
-                    {{~ end ~}}
-                    default:
-                        return {{ throw_internal_error "TResult" }};
-                }
-            }
-
-            {{~ ## UNION Visit(Func) ## ~}}
-            /// <summary>
-            /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Identifier }} and return the result,
-            /// and throw an exception if {{ Variant.Identifier }} is empty.
-            /// </summary>
-            {{~ for $p in Params ~}}
-            /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
-            {{~ end ~}}
-            /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} is empty.</exception>
-            /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
-            /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
-            public TResult Visit<TResult>({{ func_params }})
-            {
-                switch (_n)
-                {
-                    case 0:
-                        return {{ throw_empty_error "TResult" }};
-                    {{~ for $p in Params ~}}
-                    case {{ $p.Index }}:
-                        return {{ $p.Identifier }}({{ $storage $p }});
-                    {{~ end ~}}
-                    default:
-                        return {{ throw_internal_error "TResult" }};
+                        return {{ throw_internal_error "object" + global_nullable }};
                 }
             }
         }
+
+        public bool Equals(in {{ Variant.Type }} other)
+        {
+            if (_n != other._n)
+            {
+                return false;
+            }
+            switch (_n)
+            {
+                case 0:
+                    return true;
+                {{~ for $p in Params ~}}
+                {{~ $i = $p.Index ~}}
+                case {{ $i }}:
+                    return global::System.Collections.Generic.EqualityComparer<{{ $p.Type }}>.Default.Equals({{ $storage $p }}, other.{{ $storage $p }});
+                {{~ end ~}}
+                default:
+                    return {{ throw_internal_error "bool" }};
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            switch (_n)
+            {
+                case 0:
+                    return 0;
+                {{~ for $p in Params ~}}
+                {{~ $i = $p.Index ~}}
+                case {{ $i }}:
+                    {{~ if Runtime.HasHashCode ~}}
+                    return global::System.HashCode.Combine({{ $storage $p }});
+                    {{~ else ~}}
+                    return {{ coalesce $p ($storage $p) ".GetHashCode()" "0"}};
+                    {{~ end ~}}
+                {{~ end ~}}
+                default:
+                    return {{ throw_internal_error "int" }};
+            }
+        }
+
+        {{~ for $p in Params ~}}
+        {{~ ## UNION TryMatch ## ~}}
+        /// <summary>
+        /// Retrieve the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ Variant.Identifier }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
+        public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ $p.OutType }} {{ $p.Identifier }})
+        {
+            {{ $p.Identifier }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
+            return _n == {{ $p.Index }};
+        }
+
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ Variant.Identifier }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"> is rethrown.</exception>
+        public bool TryMatch({{ action_type $p }} {{ $p.Identifier }})
+        {
+            if (_n == {{ $p.Index }})
+            {
+                {{ $p.Identifier }}({{ $storage $p }});
+                return true;
+            }
+            return false;
+        }
+
+        {{~ ## UNION Match ## ~}}
+        /// <summary>
+        /// Retrieve the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
+        public void Match({{ annotate_NotNull $p }}out {{ $p.OutType }} {{ $p.Identifier }})
+        {
+            if (_n == {{ $p.Index }})
+            {
+                {{ $p.Identifier }} = {{ $storage $p }};
+                return;
+            }
+            throw {{ make_mismatch_error $p.DiagType "TypeString" }};
+        }
+
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> is rethrown.</exception>
+        public void Match({{ action_type $p }} {{ $p.Identifier }})
+        {
+            if (_n == {{ $p.Index }})
+            {
+                {{ $p.Identifier }}({{ $storage $p }});
+                return;
+            }
+            {{ throw_mismatch_error $p.DiagType "TypeString" }};
+        }
+
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
+        /// otherwise invoke an alternative delegate.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
+        public void Match({{ action_type $p }} {{ $p.Identifier }}, global::System.Action _)
+        {
+            if (_n == {{ $p.Index }})
+            {
+                {{ $p.Identifier }}({{ $storage $p }});
+            }
+            else
+            {
+                _();
+            }
+        }
+
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
+        /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <returns>The value returned from invoking <paramref name="{{ $p.Identifier }}"/>.</returns>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> is rethrown.</exception>
+        public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }})
+        {
+            if (_n == {{ $p.Index }})
+            {
+                return {{ $p.Identifier }}({{ $storage $p }});
+            }
+            return {{ throw_mismatch_error $p.DiagType "TypeString" "TResult" }};
+        }
+
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
+        /// otherwise return a provided value.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="_">The value to return if the stored value is of a different type.</param>
+        /// <returns>The value returned from invoking <paramref name="{{ $p.Identifier }}"/>, or <paramref name="default"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
+        public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, TResult _)
+        {
+            return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _;
+        }
+
+        /// <summary>
+        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
+        /// otherwise invoke an alternative delegate and return its result.
+        /// </summary>
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
+        public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, global::System.Func<TResult> _)
+        {
+            return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _();
+        }
+        {{~ end ~}}
+
+        {{~ ## UNION Visit(Action) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Identifier }},
+        /// and invoke a special delegate if {{ Variant.Identifier }} is empty.
+        /// </summary>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        {{~ end ~}}
+        /// <param name="_">The delegate to invoke if {{ Variant.Identifier }} is empty.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        public void Visit({{ action_params }}, global::System.Action _)
+        {
+            switch (_n)
+            {
+                case 0:
+                    _();
+                    break;
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{ $p.Identifier }}({{ $storage $p }});
+                    break;
+                {{~ end ~}}
+                default:
+                    {{ throw_internal_error }};
+                    break;
+            }
+        }
+
+        {{~ ## UNION Visit(Action) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Identifier }},
+        /// and throw an exception if {{ Variant.Identifier }} is empty.
+        /// </summary>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        {{~ end ~}}
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} is empty.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        public void Visit({{ action_params }})
+        {
+            switch (_n)
+            {
+                case 0:
+                    {{ throw_empty_error }};
+                    break;
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    {{ $p.Identifier }}({{ $storage $p }});
+                    break;
+                {{~ end ~}}
+                default:
+                    {{ throw_internal_error }};
+                    break;
+            }
+        }
+
+        {{~ ## UNION Visit(Func) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Identifier }} and return the result,
+        /// and invoke a special delegate if {{ Variant.Identifier }} is empty and return its result.
+        /// </summary>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        {{~ end ~}}
+        /// <param name="_">The delegate to invoke if {{ Variant.Identifier }} is empty.</param>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
+        {
+            switch (_n)
+            {
+                case 0:
+                    return _();
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ $p.Identifier }}({{ $storage $p }});
+                {{~ end ~}}
+                default:
+                    return {{ throw_internal_error "TResult" }};
+            }
+        }
+
+        {{~ ## UNION Visit(Func) ## ~}}
+        /// <summary>
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Identifier }} and return the result,
+        /// and throw an exception if {{ Variant.Identifier }} is empty.
+        /// </summary>
+        {{~ for $p in Params ~}}
+        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        {{~ end ~}}
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} is empty.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
+        /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
+        public TResult Visit<TResult>({{ func_params }})
+        {
+            switch (_n)
+            {
+                case 0:
+                    return {{ throw_empty_error "TResult" }};
+                {{~ for $p in Params ~}}
+                case {{ $p.Index }}:
+                    return {{ $p.Identifier }}({{ $storage $p }});
+                {{~ end ~}}
+                default:
+                    return {{ throw_internal_error "TResult" }};
+            }
+        }
     }
-{{~ if Variant.Namespace ~}}
 }
-{{~ end ~}}

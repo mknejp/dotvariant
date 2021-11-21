@@ -61,9 +61,6 @@ namespace dotVariant.Generator
                 .OfType<IMethodSymbol>()
                 .FirstOrDefault(pred);
 
-        public static IMethodSymbol? FindNullaryToString(ITypeSymbol type)
-            => FindMethod(type, m => m.MethodKind == MethodKind.Ordinary && m.Name == "ToString()" && m.Parameters.IsEmpty);
-
         public static Accessibility EffectiveAccessibility(ITypeSymbol type)
             => type.DeclaredAccessibility;
 
@@ -82,11 +79,19 @@ namespace dotVariant.Generator
                 .OfType<IMethodSymbol>()
                 .Any(m => m.Name == nameof(IDisposable.Dispose));
 
-        public static bool IsDisposable(ITypeSymbol type, CSharpCompilation compilation)
+        public static bool Implements(ITypeSymbol type, INamedTypeSymbol interfaceSymbol)
         {
-            var disposable = compilation.GetTypeByMetadataName($"{nameof(System)}.{nameof(IDisposable)}")!;
-            return SymbolEqualityComparer.Default.Equals(type, disposable)
-                || type.AllInterfaces.Contains(disposable, SymbolEqualityComparer.Default);
+            return SymbolEqualityComparer.Default.Equals(type, interfaceSymbol)
+                || type.AllInterfaces.Contains(interfaceSymbol, SymbolEqualityComparer.Default);
+        }
+
+        public static bool Implements(IParameterSymbol param, INamedTypeSymbol interfaceSymbol)
+        {
+            if (param.Type is ITypeParameterSymbol tp)
+            {
+                return tp.ConstraintTypes.Any(t => Implements(t, interfaceSymbol));
+            }
+            return Implements(param.Type, interfaceSymbol);
         }
 
         public static int NumReferenceFields(IParameterSymbol param)
@@ -101,8 +106,26 @@ namespace dotVariant.Generator
                     .Where(m => !m.IsStatic)
                     .Sum(m => NumReferenceFields(m.Type));
 
-        public static bool CanBeNull(IParameterSymbol p)
+        public static bool CanBeNull(IParameterSymbol p, NullableContext nullable)
         {
+            if (p.Type is ITypeParameterSymbol tp)
+            {
+                if (tp.HasNotNullConstraint || tp.HasValueTypeConstraint || tp.HasUnmanagedTypeConstraint)
+                {
+                    return false;
+                }
+                if (tp.HasReferenceTypeConstraint)
+                {
+                    return nullable.HasFlag(NullableContext.Enabled)
+                        ? tp.ReferenceTypeConstraintNullableAnnotation != NullableAnnotation.NotAnnotated
+                        : true;
+                }
+                if (tp.ConstraintTypes.Any())
+                {
+                    return tp.ConstraintNullableAnnotations.All(a => a != NullableAnnotation.NotAnnotated);
+                }
+                return true;
+            }
             if (p.Type.IsReferenceType)
             {
                 return p.NullableAnnotation != NullableAnnotation.NotAnnotated;

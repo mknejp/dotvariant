@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -68,6 +69,9 @@ namespace dotVariant.Generator
         /// <param name="ExtensionsAccessibility">
         /// The accessibility to use for the class containing extension methods. <see langword="null"/> if extensions are impossible to define.
         /// </param>
+        /// <param name="Generics">
+        /// The generic parameters of the variant, empty if it has none.
+        /// </param>
         /// <param name="Identifier">
         /// The identifier of the type, i.e. without type parameters or enclsoing namespace/type qualifiers.
         /// </param>
@@ -97,6 +101,7 @@ namespace dotVariant.Generator
             bool CanBeNull,
             string DiagType,
             string? ExtensionsAccessibility,
+            ImmutableArray<VariantInfo.GenericInfo> Generics,
             string Identifier,
             bool IsReadonly,
             bool IsReferenceType,
@@ -111,6 +116,16 @@ namespace dotVariant.Generator
             /// </param>
             public sealed record UserDefinitions(
                 bool Dispose);
+
+            /// <param name="Constraints">
+            /// List of string-ified constraints for this type parameter
+            /// </param>
+            /// <param name="Identifier">
+            /// Identifier of the generic parameter.
+            /// </param>
+            public sealed record GenericInfo(
+                ImmutableArray<string> Constraints,
+                string Identifier);
         }
 
         /// <param name="CanBeNull">
@@ -130,6 +145,9 @@ namespace dotVariant.Generator
         /// </param>
         /// <param name="IsDisposable">
         /// <see langword="true"/> if this type implements <see cref="IDisposable"/>.
+        /// </param>
+        /// <param name="IsGeneric">
+        /// <see langword="true"/> if this type is comes from a generic parameter within the current context.
         /// </param>
         /// <param name="IsReferenceType">
         /// <see langword="true"/> if this is an object type (or generic with class constraint).
@@ -153,6 +171,7 @@ namespace dotVariant.Generator
             string Identifier,
             int Index,
             bool IsDisposable,
+            bool IsGeneric,
             bool IsReferenceType,
             bool IsToStringNullable,
             int ObjectPadding,
@@ -167,22 +186,24 @@ namespace dotVariant.Generator
         {
             var maxObjects = desc.Options.Max(NumReferenceFields);
             var type = desc.Type;
-            var emitNullable = desc.NullableContext.HasFlag(NullableContext.Enabled);
+            var emitNullable = desc.NullableContext.HasFlag(NullableContext.AnnotationsEnabled);
+            var disposable = compilation.GetTypeByMetadataName(typeof(IDisposable).FullName)!;
 
             var paramDescriptors =
                 desc
                 .Options
                 .Select((p, i) => new ParamInfo(
-                    CanBeNull: CanBeNull(p),
+                    CanBeNull: CanBeNull(p, desc.NullableContext),
                     DiagType: p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace("global::", ""),
                     EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type)),
                     Identifier: p.Name,
                     Index: i + 1,
-                    IsDisposable: IsDisposable(p.Type, compilation),
+                    IsDisposable: Implements(p, disposable),
+                    IsGeneric: p.Type is ITypeParameterSymbol,
                     IsReferenceType: p.Type.IsReferenceType,
                     IsToStringNullable: IsToStringNullable(p.Type, NullableContext.Enabled),
                     ObjectPadding: maxObjects - NumReferenceFields(p),
-                    OutType: DetermineOutType(p, emitNullable),
+                    OutType: DetermineOutType(p, emitNullable, compilation.LanguageVersion, desc.NullableContext),
                     Type: AppendNullable(p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), p.Type.IsReferenceType ? p.NullableAnnotation : NullableAnnotation.NotAnnotated)));
 
             var typeNamespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
@@ -202,6 +223,7 @@ namespace dotVariant.Generator
                     CanBeNull: type.IsReferenceType,
                     DiagType: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
+                    Generics: GenericsFromType(type),
                     Identifier: type.Name,
                     IsReferenceType: type.IsReferenceType,
                     IsReadonly: IsReadonly(type, token),
@@ -214,19 +236,79 @@ namespace dotVariant.Generator
                         Dispose: ImplementsDispose(type, compilation) || HasAnyDisposeMethod(type))));
         }
 
-        private static string DetermineOutType(IParameterSymbol p, bool emitNullable)
+        private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version, NullableContext nullable)
         {
             var type = p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             if (!emitNullable)
             {
                 return type;
             }
+            var contextBasedAnnotation = nullable.HasFlag(NullableContext.AnnotationsEnabled) ? NullableAnnotation.Annotated : NullableAnnotation.NotAnnotated;
 
+            if (p.Type is ITypeParameterSymbol tp)
+            {
+                if (tp.HasNotNullConstraint)
+                {
+                    return AppendNullable(type, contextBasedAnnotation);
+                }
+                if (tp.HasValueTypeConstraint || tp.HasUnmanagedTypeConstraint)
+                {
+                    return type;
+                }
+                if (tp.HasReferenceTypeConstraint || tp.ConstraintTypes.Any())
+                {
+                    return AppendNullable(type, contextBasedAnnotation);
+                }
+                return version == LanguageVersion.CSharp8 ? type : AppendNullable(type, contextBasedAnnotation);
+            }
             if (p.Type.IsReferenceType)
             {
                 return AppendNullable(type, NullableAnnotation.Annotated);
             }
             return type;
+        }
+
+        private static ImmutableArray<VariantInfo.GenericInfo> GenericsFromType(INamedTypeSymbol type)
+        {
+            return type
+                .TypeParameters
+                .Select(
+                    tp => new VariantInfo.GenericInfo(
+                        Constraints: ComputeConstraints(tp),
+                        Identifier: tp.Name))
+                .ToImmutableArray();
+
+            ImmutableArray<string> ComputeConstraints(ITypeParameterSymbol tp)
+            {
+                var constraints = new List<string>();
+                // class/struct/unmanaged must be first
+                if (tp.HasReferenceTypeConstraint)
+                {
+                    constraints.Add(AppendNullable("class", tp.ReferenceTypeConstraintNullableAnnotation));
+                }
+                if (tp.HasValueTypeConstraint)
+                {
+                    // unmanaged implies struct, but they can't be combined
+                    constraints.Add(tp.HasUnmanagedTypeConstraint ? "unmanaged" : "struct");
+                }
+                if (tp.HasNotNullConstraint)
+                {
+                    constraints.Add("notnull");
+                }
+                constraints.AddRange(
+                    Enumerable
+                    .Range(0, tp.ConstraintTypes.Length)
+                    .Select(
+                        i => AppendNullable(
+                            tp.ConstraintTypes[i].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                            tp.ConstraintNullableAnnotations[i])));
+
+                if (tp.HasConstructorConstraint)
+                {
+                    constraints.Add("new()"); // Must be last
+                }
+                return constraints.ToImmutableArray();
+            }
         }
 
         private static string AppendNullable(string s, NullableAnnotation na)

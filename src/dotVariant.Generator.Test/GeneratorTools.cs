@@ -61,10 +61,11 @@ namespace dotVariant.Generator.Test
             => GetGeneratorDiagnostics(sources, () => new TGenerator());
 
         public static CSharpCompilation Compile(
-            IDictionary<string, string> sources)
+            IDictionary<string, string> sources,
+            LanguageVersion version = LanguageVersion.Default)
             => CSharpCompilation.Create(
                 "test",
-                sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, path: s.Key)),
+                sources.Select(s => CSharpSyntaxTree.ParseText(s.Value, new CSharpParseOptions(version), path: s.Key)),
                 new[]
                 {
                     MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location),

@@ -4,7 +4,6 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-using NUnit.Framework;
 using System;
 
 namespace dotVariant.Test.Variants
@@ -95,34 +94,65 @@ namespace dotVariant.Test.Variants
         static partial void VariantOf(int a, string b);
     }
 
-    public static class TypeLoadTest
+    [Variant]
+    public sealed partial class Generic<T>
     {
-        [Test]
-        public static void Load()
-        {
-            Assert.That(
-                () => new object[]
-                {
-                    // Make sure we don't get any TypeLoadException
-                    new Class_int_float_string("s"),
-                    new Class_int_float_object(new Helper()),
-                    new Struct_int_float_object(new Helper()),
-                    new Struct_int_float_string("s"),
-                    new Class_with_default_ctor(),
-#if NULLABLE_ENABLED
-                    new Class_int_float_nullable(default(Helper?)),
-#endif
-                    new Class_int(1),
-                    new DisposableVariant(new Disposable(() => { })),
-                    new DisposableVariantWithImpl(new Disposable(() => { })),
-                    new GlobalVariant(1),
-                    new NullableValueType(1),
-                    new InternalVariant(1),
-                    new PublicVariant(1),
-                },
-                Throws.Nothing);
-        }
+        static partial void VariantOf(T value);
     }
+
+    [Variant]
+    public sealed partial class Generic<T1, T2>
+    {
+        static partial void VariantOf(T1 a, T2 b);
+    }
+
+    [Variant]
+    public sealed partial class Generic_class<T>
+        where T : class
+    {
+        static partial void VariantOf(T value);
+    }
+
+    [Variant]
+    public sealed partial class Generic_struct<T>
+        where T : struct
+    {
+        static partial void VariantOf(T value);
+    }
+
+    [Variant]
+    public sealed partial class Generic_unmanaged<T>
+        where T : unmanaged
+    {
+        static partial void VariantOf(T value);
+    }
+
+    [Variant]
+    public sealed partial class Generic_multiple<T1, T2, T3>
+        where T1 : unmanaged
+        where T2 : class, IDisposable
+        where T3 : struct
+    {
+        static partial void VariantOf(T1 a, T2 b, T3 c);
+    }
+
+#if NULLABLE_ENABLED
+
+    [Variant]
+    public sealed partial class Generic_class_nullable<T>
+        where T : class?
+    {
+        static partial void VariantOf(T value);
+    }
+
+    [Variant]
+    public sealed partial class Generic_notnull<T>
+        where T : notnull
+    {
+        static partial void VariantOf(T value);
+    }
+
+#endif
 }
 
 [dotVariant.Variant]
