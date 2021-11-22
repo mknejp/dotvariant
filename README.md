@@ -155,10 +155,19 @@ partial class Variant2 // code generated with #nullable enable
     static partial void VariantOf(int a, string? s); // s is nullable in all generated code
 }
 
+[Variant]
+partial class Variant3<T> // code generated with #nullable enable
+    where T : class
+{
+    // Even though T is cosntrained to not-null reference types,
+    // the actual value in the variant is nullable.
+    static partial void VariantOf(int i, T? t);
+}
+
 #nullable disable
 
 [Variant]
-partial class Variant3 // code generated with #nullable disable
+partial class Variant4 // code generated with #nullable disable
 {
     static partial void VariantOf(int a, string s); // s is nullable in all generated code
 }
