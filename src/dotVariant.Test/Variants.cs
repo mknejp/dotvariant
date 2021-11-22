@@ -152,6 +152,17 @@ namespace dotVariant.Test.Variants
         static partial void VariantOf(T value);
     }
 
+    [Variant]
+    public sealed partial class Generic_nullable_VariantOf<T1, T2, T3, T4, T5, T6>
+        where T1 : class
+        where T2 : struct
+        where T3 : class?
+        where T4 : unmanaged
+        where T5 : notnull
+    {
+        static partial void VariantOf(T1? a, T2? b, T3? c, T4? d, T5? e, T6? f);
+    }
+
 #endif
 }
 

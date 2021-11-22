@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#nullable disable
+#nullable enable
 namespace Foo
 {
     [global::System.Diagnostics.DebuggerTypeProxy(typeof(Variant_nullable_value_type.__DebuggerTypeProxy))]
@@ -46,21 +46,21 @@ namespace Foo
 
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
             => other is Variant_nullable_value_type v
             && Equals(v);
 
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public bool Equals(Variant_nullable_value_type other)
+        public bool Equals(Variant_nullable_value_type? other)
             => !(other is null) && _variant.Equals(other._variant);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public static bool operator ==(Variant_nullable_value_type lhs, Variant_nullable_value_type rhs)
+        public static bool operator ==(Variant_nullable_value_type? lhs, Variant_nullable_value_type? rhs)
             => lhs?.Equals(rhs) ?? (rhs is null);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
-        public static bool operator !=(Variant_nullable_value_type lhs, Variant_nullable_value_type rhs)
+        public static bool operator !=(Variant_nullable_value_type? lhs, Variant_nullable_value_type? rhs)
             => !(lhs == rhs);
 
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -134,7 +134,7 @@ namespace Foo
 
         private sealed class __DebuggerTypeProxy
         {
-            public object Value { get; }
+            public object? Value { get; }
             public __DebuggerTypeProxy(Variant_nullable_value_type v)
             {
                 Value = v._variant.AsObject;
@@ -243,7 +243,7 @@ namespace dotVariant._G.Foo
         /// <summary>
         /// The stored value cast to type <see cref="object"/>.
         /// </summary>
-        public object AsObject
+        public object? AsObject
         {
             get
             {
@@ -254,7 +254,7 @@ namespace dotVariant._G.Foo
                     case 1:
                         return _x._1.Value;
                     default:
-                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object>("Foo.Variant_nullable_value_type");
+                        return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object?>("Foo.Variant_nullable_value_type");
                 }
             }
         }

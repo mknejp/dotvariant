@@ -194,7 +194,7 @@ namespace dotVariant.Generator
                 .Options
                 .Select((p, i) => new ParamInfo(
                     CanBeNull: CanBeNull(p, desc.NullableContext),
-                    DiagType: p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace("global::", ""),
+                    DiagType: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(DiagFormat),
                     EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type)),
                     Identifier: p.Name,
                     Index: i + 1,
@@ -203,8 +203,8 @@ namespace dotVariant.Generator
                     IsReferenceType: p.Type.IsReferenceType,
                     IsToStringNullable: IsToStringNullable(p.Type, NullableContext.Enabled),
                     ObjectPadding: maxObjects - NumReferenceFields(p),
-                    OutType: DetermineOutType(p, emitNullable, compilation.LanguageVersion, desc.NullableContext),
-                    Type: AppendNullable(p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), p.Type.IsReferenceType ? p.NullableAnnotation : NullableAnnotation.NotAnnotated)));
+                    OutType: DetermineOutType(p, emitNullable, compilation.LanguageVersion),
+                    Type: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(QualifiedTypeFormat)));
 
             var typeNamespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
 
@@ -221,7 +221,7 @@ namespace dotVariant.Generator
                 Variant: new(
                     Accessibility: VariantAccessibility(type),
                     CanBeNull: type.IsReferenceType,
-                    DiagType: type.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+                    DiagType: type.ToDisplayString(DiagFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
                     Generics: GenericsFromType(type),
                     Identifier: type.Name,
@@ -229,43 +229,28 @@ namespace dotVariant.Generator
                     IsReadonly: IsReadonly(type, token),
                     Keyword: desc.Syntax.Keyword.Text,
                     Namespace: typeNamespace,
-                    QualifiedType: type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                    Type: type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace("global::", ""),
+                    QualifiedType: type.ToDisplayString(QualifiedTypeFormat),
+                    Type: type.ToDisplayString(TopLevelTypeFormat),
                     UserDefined: new(
                         // If the user defined any method named Dispose() bail out. Too risky!
                         Dispose: ImplementsDispose(type, compilation) || HasAnyDisposeMethod(type))));
         }
 
-        private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version, NullableContext nullable)
+        private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version)
         {
-            var type = p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             if (!emitNullable)
             {
-                return type;
+                return p.Type.ToDisplayString(QualifiedTypeFormat);
             }
-            var contextBasedAnnotation = nullable.HasFlag(NullableContext.AnnotationsEnabled) ? NullableAnnotation.Annotated : NullableAnnotation.NotAnnotated;
-
-            if (p.Type is ITypeParameterSymbol tp)
+            if (p.Type is ITypeParameterSymbol tp && version == LanguageVersion.CSharp8)
             {
-                if (tp.HasNotNullConstraint)
+                // Special case in C# 8: unbounded type parameters cannot be declared as T?
+                if (!tp.IsReferenceType && !tp.IsValueType)
                 {
-                    return AppendNullable(type, contextBasedAnnotation);
+                    return p.Type.ToDisplayString(QualifiedTypeFormat);
                 }
-                if (tp.HasValueTypeConstraint || tp.HasUnmanagedTypeConstraint)
-                {
-                    return type;
-                }
-                if (tp.HasReferenceTypeConstraint || tp.ConstraintTypes.Any())
-                {
-                    return AppendNullable(type, contextBasedAnnotation);
-                }
-                return version == LanguageVersion.CSharp8 ? type : AppendNullable(type, contextBasedAnnotation);
             }
-            if (p.Type.IsReferenceType)
-            {
-                return AppendNullable(type, NullableAnnotation.Annotated);
-            }
-            return type;
+            return p.Type.WithNullableAnnotation(NullableAnnotation.Annotated).ToDisplayString(QualifiedTypeFormat);
         }
 
         private static ImmutableArray<VariantInfo.GenericInfo> GenericsFromType(INamedTypeSymbol type)
@@ -359,5 +344,35 @@ namespace dotVariant.Generator
 
         private static bool HasReactive(CSharpCompilation compilation)
             => compilation.GetTypeByMetadataName("System.Reactive.Linq.Observable") is not null;
+
+        public static readonly SymbolDisplayFormat TopLevelTypeFormat = new(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
+                | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier
+                | SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays
+                | SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+        public static readonly SymbolDisplayFormat QualifiedTypeFormat = new(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
+                | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier
+                | SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays
+                | SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+        public static readonly SymbolDisplayFormat DiagFormat = new(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
+                | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier
+                | SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays
+                | SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
     }
 }

@@ -210,7 +210,7 @@ namespace dotVariant.Generator.Test
                     p => Assert.Multiple(() =>
                     {
                         Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
-                        Assert.That(p.DiagType, Is.EqualTo("N.C"), nameof(p.DiagType));
+                        Assert.That(p.DiagType, Is.EqualTo("N.C?"), nameof(p.DiagType));
                         Assert.That(p.IsGeneric, Is.False, nameof(p.IsGeneric));
                         Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("global::N.C?"), nameof(p.OutType));
@@ -285,7 +285,7 @@ namespace dotVariant.Generator.Test
                     p => Assert.Multiple(() =>
                     {
                         Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
-                        Assert.That(p.DiagType, Is.EqualTo("N.D"), nameof(p.DiagType));
+                        Assert.That(p.DiagType, Is.EqualTo("N.D?"), nameof(p.DiagType));
                         Assert.That(p.IsGeneric, Is.False, nameof(p.IsGeneric));
                         Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("global::N.D?"), nameof(p.OutType));
@@ -362,6 +362,30 @@ namespace dotVariant.Generator.Test
                     })
                 ),
                 (
+                    "generic: unbounded as T? - nullable enable",
+                    LanguageVersion.Latest,
+                    @"
+                    #nullable enable
+                    namespace N
+                    {
+                        [dotVariant.Variant]
+                        public partial class Variant<T>
+                        {
+                            // T is already nullable so this is redundant
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        Assert.That(p.IsGeneric, Is.True, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
+                    })
+                ),
+                (
                     "generic: class - nullable disable",
                     LanguageVersion.Latest,
                     @"
@@ -405,6 +429,29 @@ namespace dotVariant.Generator.Test
                         Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
                         Assert.That(p.Type, Is.EqualTo("T"), nameof(p.Type));
+                    })
+                ),
+                (
+                    "generic: class as T? - nullable enable",
+                    LanguageVersion.Latest,
+                    @"
+                    #nullable enable
+                    namespace N
+                    {
+                        [dotVariant.Variant]
+                        public partial class Variant<T> where T : class
+                        {
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        Assert.That(p.IsGeneric, Is.True, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
                     })
                 ),
                 (
@@ -453,6 +500,30 @@ namespace dotVariant.Generator.Test
                     })
                 ),
                 (
+                    "generic: struct as T?",
+                    LanguageVersion.Latest,
+                    @"
+                    #nullable enable
+                    namespace N
+                    {
+                        [dotVariant.Variant]
+                        public partial class Variant<T> where T : struct
+                        {
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        // Technically not generic because we know it's System.Nullable<T>
+                        Assert.That(p.IsGeneric, Is.False, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
+                    })
+                ),
+                (
                     "generic: unmanaged",
                     LanguageVersion.Latest,
                     @"
@@ -472,6 +543,29 @@ namespace dotVariant.Generator.Test
                         Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("T"), nameof(p.OutType));
                         Assert.That(p.Type, Is.EqualTo("T"), nameof(p.Type));
+                    })
+                ),
+                (
+                    "generic: unmanaged as T?",
+                    LanguageVersion.Latest,
+                    @"
+                    namespace N
+                    {
+                        [dotVariant.Variant]
+                        public partial class Variant<T> where T : unmanaged
+                        {
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        // Technically not generic because we know it's System.Nullable<T>
+                        Assert.That(p.IsGeneric, Is.False, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
                     })
                 ),
                 (
@@ -518,6 +612,30 @@ namespace dotVariant.Generator.Test
                         Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
                         Assert.That(p.Type, Is.EqualTo("T"), nameof(p.Type));
+                    })
+                ),
+                (
+                    "generic: notnull as T? - nullable enable",
+                    LanguageVersion.Latest,
+                    @"
+                    #nullable enable
+                    namespace N
+                    {
+                        [dotVariant.Variant]
+                        public partial class Variant<T> where T : notnull
+                        {
+                            // No idea why someone would do this but it's allowed so support it
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        Assert.That(p.IsGeneric, Is.True, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
                     })
                 ),
                 (
@@ -568,6 +686,31 @@ namespace dotVariant.Generator.Test
                         Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
                         Assert.That(p.Type, Is.EqualTo("T"), nameof(p.Type));
+                    })
+                ),
+                (
+                    "generic: base class as T? - nullable enable",
+                    LanguageVersion.Latest,
+                    @"
+                    #nullable enable
+                    namespace N
+                    {
+                        class C { }
+
+                        [dotVariant.Variant]
+                        public partial class Variant<T> where T : C
+                        {
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        Assert.That(p.IsGeneric, Is.True, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.True, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
                     })
                 ),
                 (
@@ -643,6 +786,31 @@ namespace dotVariant.Generator.Test
                         Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
                         Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
                         Assert.That(p.Type, Is.EqualTo("T"), nameof(p.Type));
+                    })
+                ),
+                (
+                    "generic: interface as T? - nullable enable",
+                    LanguageVersion.Latest,
+                    @"
+                    #nullable enable
+                    namespace N
+                    {
+                        interface I { }
+
+                        [dotVariant.Variant]
+                        public partial class Variant<T> where T : I
+                        {
+                            static partial void VariantOf(T? a);
+                        }
+                    }",
+                    p => Assert.Multiple(() =>
+                    {
+                        Assert.That(p.CanBeNull, Is.True, nameof(p.CanBeNull));
+                        Assert.That(p.DiagType, Is.EqualTo("T?"), nameof(p.DiagType));
+                        Assert.That(p.IsGeneric, Is.True, nameof(p.IsGeneric));
+                        Assert.That(p.IsReferenceType, Is.False, nameof(p.IsReferenceType));
+                        Assert.That(p.OutType, Is.EqualTo("T?"), nameof(p.OutType));
+                        Assert.That(p.Type, Is.EqualTo("T?"), nameof(p.Type));
                     })
                 ),
                 (

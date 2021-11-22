@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-#nullable disable
+#nullable enable
 namespace Foo
 {
     [dotVariant.Variant]

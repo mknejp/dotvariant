@@ -108,6 +108,10 @@ namespace dotVariant.Generator
 
         public static bool CanBeNull(IParameterSymbol p, NullableContext nullable)
         {
+            if (p.NullableAnnotation == NullableAnnotation.Annotated)
+            {
+                return true;
+            }
             if (p.Type is ITypeParameterSymbol tp)
             {
                 if (tp.HasNotNullConstraint || tp.HasValueTypeConstraint || tp.HasUnmanagedTypeConstraint)

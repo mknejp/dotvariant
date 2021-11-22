@@ -503,7 +503,7 @@ namespace dotVariant._G.Foo
                     case 3:
                         return "string";
                     case 4:
-                        return "System.Array";
+                        return "System.Array?";
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_class_nullable_enable");
                 }
@@ -999,7 +999,7 @@ namespace dotVariant._G.Foo
                 a = _x._4.Value;
                 return;
             }
-            throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_enable", "System.Array", TypeString);
+            throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_enable", "System.Array?", TypeString);
         }
 
         /// <summary>
@@ -1016,7 +1016,7 @@ namespace dotVariant._G.Foo
                 a(_x._4.Value);
                 return;
             }
-            global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_enable", "System.Array", TypeString);
+            global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_enable", "System.Array?", TypeString);
         }
 
         /// <summary>
@@ -1052,7 +1052,7 @@ namespace dotVariant._G.Foo
             {
                 return a(_x._4.Value);
             }
-            return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_enable", "System.Array", TypeString);
+            return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_enable", "System.Array?", TypeString);
         }
 
         /// <summary>
