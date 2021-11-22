@@ -159,7 +159,7 @@ partial class Variant2 // code generated with #nullable enable
 partial class Variant3<T> // code generated with #nullable enable
     where T : class
 {
-    // Even though T is cosntrained to not-null reference types,
+    // Even though T is constrained to not-null reference types,
     // the actual value in the variant is nullable.
     static partial void VariantOf(int i, T? t);
 }
