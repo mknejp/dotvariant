@@ -43,7 +43,13 @@ namespace dotVariant.Generator
 
             Enumerable
                 .Zip(Descriptors, RenderInfos, (desc, ri) => (desc, ri))
-                .ForEach(v => context.AddSource(v.desc.Type.ToDisplayString(), Renderer.Render(v.ri)));
+                .ForEach(v => context.AddSource(SanitizeName(v.desc.Type.ToDisplayString()), Renderer.Render(v.ri)));
+
+            static string SanitizeName(string name)
+                => name
+                // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
+                .Replace('<', '{')
+                .Replace('>', '}');
         }
 
         public ImmutableArray<Descriptor> Descriptors { get; private set; }
@@ -56,7 +62,7 @@ namespace dotVariant.Generator
 
         private sealed class SyntaxReceiver : ISyntaxContextReceiver
         {
-            public List<(ITypeSymbol Symbol, TypeDeclarationSyntax Syntax, NullableContext Nullable)> VariantDecls { get; } = new();
+            public List<(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax, NullableContext Nullable)> VariantDecls { get; } = new();
 
             public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
             {
@@ -67,7 +73,7 @@ namespace dotVariant.Generator
 
                 var sema = context.SemanticModel;
 
-                if (sema.GetDeclaredSymbol(tds) is not ITypeSymbol symbol)
+                if (sema.GetDeclaredSymbol(tds) is not INamedTypeSymbol symbol)
                 {
                     return;
                 }

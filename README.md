@@ -25,12 +25,17 @@ using dotVariant;
 
 namespace MyNamespace
 {
-    [Variant] // required attribute
-    partial class MyVariant // "partial" is mandatory
-    {
-        // "static partial" is mandatory. Do not implement!
-        static partial void VariantOf(int a, double d, string s);
-    }
+  [Variant] // required attribute
+  partial class MyVariant // "partial" is mandatory
+  {
+      // "static partial" is mandatory. Do not implement!
+      static partial void VariantOf(int a, double d, string s);
+  }
+  [Variant]
+  partial class MyVariant<A, B, C> // Variants can have type parameters
+  {
+      static partial void VariantOf(A a, B b, C c);
+  }
 }
 ```
 You are not restricted to just `class`. You can also use `struct`, `readonly struct`, `ref struct`, and so on. Only `record` is currently not supported and probably never will, but that should not stop you, as variants are immutable and have by-value comparison, just like records.
@@ -38,6 +43,10 @@ You are not restricted to just `class`. You can also use `struct`, `readonly str
 The `VariantOf` method is how you tell the generator what the possible values of this variant are. Anything that is a valid parameter and field is also a valid option here and the parameter names will be used as hints throughout the generated interface. Do not use `out`, `in` or `ref` modifiers, as those are reserved for future use.
 
 `MyVariant` will receive a rich set of public properties and methods for you to enjoy. In addition you will find a private `_variant` field which hides away all the implementation details. If you chose to add your own custom members to `MyVariant` you may safely access this field.
+
+Any constraints you put on the type parameters will be taken into consideration and affect the generated code.
+
+**Note**: The .NET runtime forbids layout manipulation on generic types, so in the above example `MyVariant` will occupy less memory than `MyVariant<int, double, string>` despite seemingly having the same content. Be aware of this when using generic variants and try to use concrete types whenever possible.
 
 ### Using a Variant
 With the above declaration, you are ready to use your new variant:
@@ -146,10 +155,19 @@ partial class Variant2 // code generated with #nullable enable
     static partial void VariantOf(int a, string? s); // s is nullable in all generated code
 }
 
+[Variant]
+partial class Variant3<T> // code generated with #nullable enable
+    where T : class
+{
+    // Even though T is constrained to not-null reference types,
+    // the actual value in the variant is nullable.
+    static partial void VariantOf(int i, T? t);
+}
+
 #nullable disable
 
 [Variant]
-partial class Variant3 // code generated with #nullable disable
+partial class Variant4 // code generated with #nullable disable
 {
     static partial void VariantOf(int a, string s); // s is nullable in all generated code
 }
@@ -188,7 +206,7 @@ variant.Match(
 The generated implemenation provides some additional features depending on the types you provide it, or third-party libraries available to you.
 
 ### `IDisposable` Support
-If _at least one_ of the types included in the `VariantOf()` parameters implements `System.IDisposable` then the generated variant will also implement this interface and provide a public `Dispose()` member which delegates to the stored value's `Dispose()` if applicable.
+If _at least one_ of the types included in the `VariantOf()` parameters implements `System.IDisposable`, or is a type parameter with a transitive `System.IDisposable` constraint, then the generated variant will also implement this interface and provide a public `Dispose()` member which delegates to the stored value's `Dispose()` if applicable.
 
 If there already exists an implementation of `IDisposable.Dispose()` (either you defined one, or it is present in a base class) then the public `Dispose()` method is _not_ generated and it is your responsibility to take care of calling the private `_variant.Dispose()`.
 

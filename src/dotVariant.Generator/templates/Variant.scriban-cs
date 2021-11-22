@@ -19,7 +19,7 @@ Global input variables are fed from C# RenderInfo members:
 namespace {{ Variant.Namespace }}
 {
 {{~ end ~}}
-    [global::System.Diagnostics.DebuggerTypeProxy(typeof(_VariantTypeProxy))]
+    [global::System.Diagnostics.DebuggerTypeProxy(typeof({{ Variant.Identifier; open_type_parameter_list }}.__DebuggerTypeProxy))]
     [global::System.Diagnostics.DebuggerDisplay("{_variant.AsObject}", Type = "{_variant.TypeString,nq}")]
     partial {{ Variant.Keyword }} {{ Variant.Type }}
         : global::System.IEquatable<{{ Variant.Type }}>
@@ -84,7 +84,8 @@ namespace {{ Variant.Namespace }}
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public {{ method_modifiers }}override bool Equals(object{{ global_nullable }} other)
-            => other is {{ Variant.Type }} v && Equals(v);
+            => other is {{ Variant.Type }} v
+            && Equals(v);
 
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -175,10 +176,10 @@ namespace {{ Variant.Namespace }}
         public {{ method_modifiers }}TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
             => _variant.Visit({{ forward_params }}, _);
 
-        private sealed class _VariantTypeProxy
+        private sealed class __DebuggerTypeProxy
         {
             public object{{ global_nullable }} Value { get; }
-            public _VariantTypeProxy({{ Variant.Type }} v)
+            public __DebuggerTypeProxy({{ Variant.Type }} v)
             {
                 Value = v._variant.AsObject;
                 {{~ # Force a reference to the VariantOf function so the user doesn't get IDE0051 "Private member 'VariantOf' is unused." ~}}

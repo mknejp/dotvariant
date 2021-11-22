@@ -8,8 +8,11 @@
 namespace Foo
 {
     [dotVariant.Variant]
-    public partial class Variant_nullable_value_type
+    public partial class Variant<T1, T2, T3>
+        where T1 : class, System.IDisposable
+        where T2 : notnull
+        where T3 : struct
     {
-        static partial void VariantOf(int? i);
+        static partial void VariantOf(T1 a, T2 b, T3 c);
     }
 }
