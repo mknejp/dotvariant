@@ -269,7 +269,7 @@ namespace dotVariant.Generator
                 // class/struct/unmanaged must be first
                 if (tp.HasReferenceTypeConstraint)
                 {
-                    constraints.Add(AppendNullable("class", tp.ReferenceTypeConstraintNullableAnnotation));
+                    constraints.Add(tp.ReferenceTypeConstraintNullableAnnotation == NullableAnnotation.Annotated ? "class?" : "class");
                 }
                 if (tp.HasValueTypeConstraint)
                 {
@@ -283,10 +283,8 @@ namespace dotVariant.Generator
                 constraints.AddRange(
                     Enumerable
                     .Range(0, tp.ConstraintTypes.Length)
-                    .Select(
-                        i => AppendNullable(
-                            tp.ConstraintTypes[i].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                            tp.ConstraintNullableAnnotations[i])));
+                    .Select(i => tp.ConstraintTypes[i].WithNullableAnnotation(tp.ConstraintNullableAnnotations[i]))
+                    .Select(t => t.ToDisplayString(QualifiedTypeFormat)));
 
                 if (tp.HasConstructorConstraint)
                 {
@@ -295,9 +293,6 @@ namespace dotVariant.Generator
                 return constraints.ToImmutableArray();
             }
         }
-
-        private static string AppendNullable(string s, NullableAnnotation na)
-            => na == NullableAnnotation.Annotated ? s + "?" : s;
 
         private static string? ExtensionsAccessibility(ITypeSymbol type)
             => EffectiveAccessibility(type) switch
