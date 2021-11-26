@@ -49,7 +49,9 @@ namespace dotVariant.Generator
                 => name
                 // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
                 .Replace('<', '{')
-                .Replace('>', '}');
+                .Replace('>', '}')
+                // Escaped names like @class or @event aren't supported either
+                .Replace('@', '.');
         }
 
         public ImmutableArray<Descriptor> Descriptors { get; private set; }

@@ -42,7 +42,8 @@ namespace dotVariant.Generator
             int Version);
 
         /// <param name="ExtensionClassNamespace">
-        /// The namespace in which to generate extension method implementations. If <see langword="null"/> use the global namespace.
+        /// The namespace in which to generate extension method implementations.
+        /// If <see langword="null"/> use the global namespace.
         /// </param>
         public sealed record OptionsInfo(
             string? ExtensionClassNamespace);
@@ -67,13 +68,15 @@ namespace dotVariant.Generator
         /// The fully qualified name of the type (without <c>global::</c> qualifier) used for diagnostic strings/messages.
         /// </param>
         /// <param name="ExtensionsAccessibility">
-        /// The accessibility to use for the class containing extension methods. <see langword="null"/> if extensions are impossible to define.
+        /// The accessibility to use for the class containing extension methods.
+        /// <see langword="null"/> if extensions are impossible to define.
         /// </param>
         /// <param name="Generics">
         /// The generic parameters of the variant, empty if it has none.
         /// </param>
         /// <param name="Identifier">
-        /// The identifier of the type, i.e. without type parameters or enclsoing namespace/type qualifiers.
+        /// The identifier of the type, i.e. without type parameters or enclsoing namespace/type qualifiers,
+        /// escaped as necessary to be a valid C# identifier.
         /// </param>
         /// <param name="IsReadonly">
         /// <see langword="true"/> if this type was declared with the <see langword="readonly"/> modifier.
@@ -83,6 +86,9 @@ namespace dotVariant.Generator
         /// </param>
         /// <param name="Keyword">
         /// The C# keyword used to define this type.
+        /// </param>
+        /// <param name="Name">
+        /// The unescaped name of the variant for documentation and similar.
         /// </param>
         /// <param name="Namespace">
         /// Namespace of the variant type, or <see langword="null"/> if in the global namespace.
@@ -106,6 +112,7 @@ namespace dotVariant.Generator
             bool IsReadonly,
             bool IsReferenceType,
             string Keyword,
+            string Name,
             string? Namespace,
             string QualifiedType,
             string Type,
@@ -132,13 +139,14 @@ namespace dotVariant.Generator
         /// <see langword="true"/> if <see langword="null"/> is a valid value for this parameter.
         /// </param>
         /// <param name="DiagType">
-        /// A shorter type name (without <c>global::</c> qualifier) for diagnostic strings/messages, may contain nullability annotation).
+        /// A shorter type name (without <c>global::</c> qualifier) for diagnostic strings/messages,
+        /// may contain nullability annotation).
         /// </param>
         /// <param name="EmitImplicitCast">
         /// <see langword="true"/> if the implicit cast from option to variant should be emitted for this type.
         /// </param>
         /// <param name="Identifier">
-        /// The user-provided parameter name in <c>VariantOf</c>.
+        /// The user-provided parameter name in <c>VariantOf</c> escaped as necessary to be a valid C# identifier.
         /// </param>
         /// <param name="Index">
         /// The 1-based index of the type within the variant.
@@ -154,6 +162,9 @@ namespace dotVariant.Generator
         /// </param>
         /// <param name="IsToStringNullable">
         /// <see langword="true"/> if the parameters's <see cref="object.ToString()"/> can return <see langword="null"/>.
+        /// </param>
+        /// <param name="Name">
+        /// The unescaped name of the parameter for documentation and similar.
         /// </param>
         /// <param name="ObjectPadding">
         /// The number of <see langword="object"/> padding fields required for this type.
@@ -174,6 +185,7 @@ namespace dotVariant.Generator
             bool IsGeneric,
             bool IsReferenceType,
             bool IsToStringNullable,
+            string Name,
             int ObjectPadding,
             string OutType,
             string Type);
@@ -196,12 +208,13 @@ namespace dotVariant.Generator
                     CanBeNull: CanBeNull(p, desc.NullableContext),
                     DiagType: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(DiagFormat),
                     EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type)),
-                    Identifier: p.Name,
+                    Identifier: p.ToDisplayString(IdentifierFormat),
                     Index: i + 1,
                     IsDisposable: Implements(p, disposable),
                     IsGeneric: p.Type is ITypeParameterSymbol,
                     IsReferenceType: p.Type.IsReferenceType,
                     IsToStringNullable: IsToStringNullable(p.Type, NullableContext.Enabled),
+                    Name: p.Name,
                     ObjectPadding: maxObjects - NumReferenceFields(p),
                     OutType: DetermineOutType(p, emitNullable, compilation.LanguageVersion),
                     Type: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(QualifiedTypeFormat)));
@@ -224,10 +237,11 @@ namespace dotVariant.Generator
                     DiagType: type.ToDisplayString(DiagFormat),
                     ExtensionsAccessibility: ExtensionsAccessibility(type),
                     Generics: GenericsFromType(type),
-                    Identifier: type.Name,
+                    Identifier: type.ToDisplayString(IdentifierFormat),
                     IsReferenceType: type.IsReferenceType,
                     IsReadonly: IsReadonly(type, token),
                     Keyword: desc.Syntax.Keyword.Text,
+                    Name: type.Name,
                     Namespace: typeNamespace,
                     QualifiedType: type.ToDisplayString(QualifiedTypeFormat),
                     Type: type.ToDisplayString(TopLevelTypeFormat),
@@ -364,6 +378,16 @@ namespace dotVariant.Generator
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier
+                | SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays
+                | SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+        public static readonly SymbolDisplayFormat IdentifierFormat = new(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+            parameterOptions: SymbolDisplayParameterOptions.IncludeName,
+            genericsOptions: SymbolDisplayGenericsOptions.None,
             miscellaneousOptions:
                 SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
                 | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier

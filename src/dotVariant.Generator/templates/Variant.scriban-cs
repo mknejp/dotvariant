@@ -32,9 +32,9 @@ namespace {{ Variant.Namespace }}
         {{~ ## VARIANT CONSTRUCTORS ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Create a {{ Variant.Identifier }} with a value of type <see cref="{{ cref $p.Type }}"/>.
+        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The value to initlaize the variant with.</param>
+        /// <param name="{{ $p.Name }}">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public {{ Variant.Identifier }}({{ $p.Type }} {{ $p.Identifier }})
             => _variant = new {{ storage_type }}({{ $p.Identifier }});
@@ -44,9 +44,9 @@ namespace {{ Variant.Namespace }}
         {{~ for $p in Params ~}}
         {{~ if $p.EmitImplicitCast ~}}
         /// <summary>
-        /// Create a {{ Variant.Identifier }} with a value of type <see cref="{{ cref $p.Type }}"/>.
+        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The value to initlaize the variant with.</param>
+        /// <param name="{{ $p.Name }}">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static implicit operator {{ Variant.Type }}({{ $p.Type }} {{ $p.Identifier }})
             => new {{ Variant.Type }}({{ $p.Identifier }});
@@ -56,9 +56,9 @@ namespace {{ Variant.Namespace }}
         {{~ ## STATIC CREATE FACTORIES ## ~}}
         {{~ for $p in Params ~}}
         /// <summary>
-        /// Create a {{ Variant.Identifier }} with a value of type <see cref="{{ cref $p.Type }}"/>.
+        /// Create a {{ Variant.Name }} with a value of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The value to initlaize the variant with.</param>
+        /// <param name="{{ $p.Name }}">The value to initlaize the variant with.</param>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static {{ Variant.Type }} Create({{ $p.Type }} {{ $p.Identifier }})
             => new {{ Variant.Type }}({{ $p.Identifier }});

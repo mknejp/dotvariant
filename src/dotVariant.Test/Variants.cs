@@ -94,6 +94,14 @@ namespace dotVariant.Test.Variants
         static partial void VariantOf(int a, string b);
     }
 
+#pragma warning disable IDE1006 // Naming Styles
+    [Variant]
+    public sealed partial class @class
+    {
+        static partial void VariantOf(int @event, string b);
+    }
+#pragma warning restore IDE1006 // Naming Styles
+
     [Variant]
     public sealed partial class Generic<T>
     {
