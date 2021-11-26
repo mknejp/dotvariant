@@ -127,7 +127,7 @@ namespace dotVariant.Generator
                         location);
                 }
 
-                bool IsUnique() => type.GetMembers("VariantOf").Count() == 1;
+                bool IsUnique() => type.GetMembers("VariantOf").Length == 1;
                 bool IsStatic(IMethodSymbol m) => m.IsStatic;
                 bool IsUnimplemented(IMethodSymbol m) => m.PartialImplementationPart == null;
                 bool IsPartial(IMethodSymbol m) => Inspect.IsPartial(m, token);
@@ -140,7 +140,7 @@ namespace dotVariant.Generator
                 ImmutableArray<IParameterSymbol> options,
                 CancellationToken token)
             {
-                if (options.Count() < 1)
+                if (options.IsEmpty)
                 {
                     yield return MakeError(
                         nameof(HasAtLeastOneOption),
@@ -157,12 +157,14 @@ namespace dotVariant.Generator
                 ImmutableArray<IParameterSymbol> options,
                 CancellationToken token)
             {
-                if (options.Count() > byte.MaxValue)
+                const int max = byte.MaxValue;
+
+                if (options.Count() > max)
                 {
                     yield return MakeError(
                         nameof(NotTooManyOptions),
-                        $"'VariantOf()' must not have more than {byte.MaxValue} parameters.",
-                        $"Variant types must not have more than {byte.MaxValue} parameters in their 'VariantOf()' method.",
+                        $"'VariantOf()' must not have more than {max} parameters.",
+                        $"Variant types must not have more than {max} parameters in their 'VariantOf()' method.",
                         LocationOfFirstToken(syntax, SyntaxKind.IdentifierToken));
                 }
             }
@@ -179,7 +181,7 @@ namespace dotVariant.Generator
                     .Select(p => p.Type)
                     .Distinct(SymbolEqualityComparer.Default);
 
-                if (distinctOptions.Count() < options.Count())
+                if (distinctOptions.Count() < options.Length)
                 {
                     yield return MakeError(
                         nameof(HasNoDuplicateOptions),
