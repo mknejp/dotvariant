@@ -162,26 +162,12 @@ namespace dotVariant._G.Foo
     [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
     internal readonly struct Variant_nullable_value_type
     {
-        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
         private readonly struct Union
         {
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_1 _1;
-
+            public readonly int? _1;
             public Union(int? value)
             {
-                _1 = new Value_1(value);
-            }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_1
-        {
-            public readonly int? Value;
-
-            public Value_1(int? value)
-            {
-                Value = value;
+                _1 = value;
             }
         }
 
@@ -198,7 +184,7 @@ namespace dotVariant._G.Foo
         public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in Variant_nullable_value_type v)
             => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int?>(in Variant_nullable_value_type v)
-            => new global::dotVariant.GeneratorSupport.Accessor_1<int?>(v._x._1.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_1<int?>(v._x._1);
 
         /// <summary>
         /// <see langword="true"/> if Variant_nullable_value_type was constructed without a value.
@@ -234,7 +220,7 @@ namespace dotVariant._G.Foo
                 case 0:
                     return "";
                 case 1:
-                    return _x._1.Value?.ToString() ?? "null";
+                    return _x._1?.ToString() ?? "null";
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_nullable_value_type");
             }
@@ -252,7 +238,7 @@ namespace dotVariant._G.Foo
                     case 0:
                         return null;
                     case 1:
-                        return _x._1.Value;
+                        return _x._1;
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object?>("Foo.Variant_nullable_value_type");
                 }
@@ -270,7 +256,7 @@ namespace dotVariant._G.Foo
                 case 0:
                     return true;
                 case 1:
-                    return global::System.Collections.Generic.EqualityComparer<int?>.Default.Equals(_x._1.Value, other._x._1.Value);
+                    return global::System.Collections.Generic.EqualityComparer<int?>.Default.Equals(_x._1, other._x._1);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<bool>("Foo.Variant_nullable_value_type");
             }
@@ -283,7 +269,7 @@ namespace dotVariant._G.Foo
                 case 0:
                     return 0;
                 case 1:
-                    return global::System.HashCode.Combine(_x._1.Value);
+                    return global::System.HashCode.Combine(_x._1);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<int>("Foo.Variant_nullable_value_type");
             }
@@ -296,7 +282,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_nullable_value_type contained a value of type <see cref="int?"/>.</returns>
         public bool TryMatch(out int? i)
         {
-            i = _n == 1 ? _x._1.Value : default;
+            i = _n == 1 ? _x._1 : default;
             return _n == 1;
         }
 
@@ -310,7 +296,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
                 return true;
             }
             return false;
@@ -326,7 +312,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i = _x._1.Value;
+                i = _x._1;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_nullable_value_type", "int?", TypeString);
@@ -343,7 +329,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_nullable_value_type", "int?", TypeString);
@@ -360,7 +346,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
             }
             else
             {
@@ -380,7 +366,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                return i(_x._1.Value);
+                return i(_x._1);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_nullable_value_type", "int?", TypeString);
         }
@@ -395,7 +381,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int?, TResult> i, TResult _)
         {
-            return _n == 1 ? i(_x._1.Value) : _;
+            return _n == 1 ? i(_x._1) : _;
         }
 
         /// <summary>
@@ -407,7 +393,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int?, TResult> i, global::System.Func<TResult> _)
         {
-            return _n == 1 ? i(_x._1.Value) : _();
+            return _n == 1 ? i(_x._1) : _();
         }
 
         /// <summary>
@@ -425,7 +411,7 @@ namespace dotVariant._G.Foo
                     _();
                     break;
                 case 1:
-                    i(_x._1.Value);
+                    i(_x._1);
                     break;
                 default:
                     global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_nullable_value_type");
@@ -448,7 +434,7 @@ namespace dotVariant._G.Foo
                     global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_nullable_value_type");
                     break;
                 case 1:
-                    i(_x._1.Value);
+                    i(_x._1);
                     break;
                 default:
                     global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_nullable_value_type");
@@ -471,7 +457,7 @@ namespace dotVariant._G.Foo
                 case 0:
                     return _();
                 case 1:
-                    return i(_x._1.Value);
+                    return i(_x._1);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_nullable_value_type");
             }
@@ -492,7 +478,7 @@ namespace dotVariant._G.Foo
                 case 0:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_nullable_value_type");
                 case 1:
-                    return i(_x._1.Value);
+                    return i(_x._1);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_nullable_value_type");
             }

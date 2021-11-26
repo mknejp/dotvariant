@@ -227,46 +227,19 @@ namespace dotVariant._G.Foo
     [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
     internal readonly struct Variant_public
     {
-        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
         private readonly struct Union
         {
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_1 _1;
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_2 _2;
-
+            public readonly int _1;
             public Union(int value)
             {
                 _2 = default;
-                _1 = new Value_1(value);
+                _1 = value;
             }
+            public readonly string _2;
             public Union(string value)
             {
                 _1 = default;
-                _2 = new Value_2(value);
-            }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_1
-        {
-            public readonly int Value;
-            public readonly object _dummy1;
-
-            public Value_1(int value)
-            {
-                _dummy1 = null;
-                Value = value;
-            }
-        }
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_2
-        {
-            public readonly string Value;
-
-            public Value_2(string value)
-            {
-                Value = value;
+                _2 = value;
             }
         }
 
@@ -288,9 +261,9 @@ namespace dotVariant._G.Foo
         public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in Variant_public v)
             => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int>(in Variant_public v)
-            => new global::dotVariant.GeneratorSupport.Accessor_1<int>(v._x._1.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_1<int>(v._x._1);
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<string>(in Variant_public v)
-            => new global::dotVariant.GeneratorSupport.Accessor_2<string>(v._x._2.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_2<string>(v._x._2);
 
         /// <summary>
         /// <see langword="true"/> if Variant_public was constructed without a value.
@@ -328,9 +301,9 @@ namespace dotVariant._G.Foo
                 case 0:
                     return "";
                 case 1:
-                    return _x._1.Value.ToString();
+                    return _x._1.ToString();
                 case 2:
-                    return _x._2.Value?.ToString() ?? "null";
+                    return _x._2?.ToString() ?? "null";
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_public");
             }
@@ -348,9 +321,9 @@ namespace dotVariant._G.Foo
                     case 0:
                         return null;
                     case 1:
-                        return _x._1.Value;
+                        return _x._1;
                     case 2:
-                        return _x._2.Value;
+                        return _x._2;
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object>("Foo.Variant_public");
                 }
@@ -368,9 +341,9 @@ namespace dotVariant._G.Foo
                 case 0:
                     return true;
                 case 1:
-                    return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
+                    return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1, other._x._1);
                 case 2:
-                    return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._2.Value, other._x._2.Value);
+                    return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._2, other._x._2);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<bool>("Foo.Variant_public");
             }
@@ -383,9 +356,9 @@ namespace dotVariant._G.Foo
                 case 0:
                     return 0;
                 case 1:
-                    return global::System.HashCode.Combine(_x._1.Value);
+                    return global::System.HashCode.Combine(_x._1);
                 case 2:
-                    return global::System.HashCode.Combine(_x._2.Value);
+                    return global::System.HashCode.Combine(_x._2);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<int>("Foo.Variant_public");
             }
@@ -398,7 +371,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="int"/>.</returns>
         public bool TryMatch(out int i)
         {
-            i = _n == 1 ? _x._1.Value : default;
+            i = _n == 1 ? _x._1 : default;
             return _n == 1;
         }
 
@@ -412,7 +385,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
                 return true;
             }
             return false;
@@ -428,7 +401,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i = _x._1.Value;
+                i = _x._1;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "int", TypeString);
@@ -445,7 +418,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "int", TypeString);
@@ -462,7 +435,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
             }
             else
             {
@@ -482,7 +455,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                return i(_x._1.Value);
+                return i(_x._1);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "int", TypeString);
         }
@@ -497,7 +470,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
         {
-            return _n == 1 ? i(_x._1.Value) : _;
+            return _n == 1 ? i(_x._1) : _;
         }
 
         /// <summary>
@@ -509,7 +482,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
         {
-            return _n == 1 ? i(_x._1.Value) : _();
+            return _n == 1 ? i(_x._1) : _();
         }
         /// <summary>
         /// Retrieve the value stored within Variant_public if it is of type <see cref="string"/>.
@@ -518,7 +491,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_public contained a value of type <see cref="string"/>.</returns>
         public bool TryMatch(out string s)
         {
-            s = _n == 2 ? _x._2.Value : default;
+            s = _n == 2 ? _x._2 : default;
             return _n == 2;
         }
 
@@ -532,7 +505,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                s(_x._2.Value);
+                s(_x._2);
                 return true;
             }
             return false;
@@ -548,7 +521,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                s = _x._2.Value;
+                s = _x._2;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_public", "string", TypeString);
@@ -565,7 +538,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                s(_x._2.Value);
+                s(_x._2);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_public", "string", TypeString);
@@ -582,7 +555,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                s(_x._2.Value);
+                s(_x._2);
             }
             else
             {
@@ -602,7 +575,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                return s(_x._2.Value);
+                return s(_x._2);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_public", "string", TypeString);
         }
@@ -617,7 +590,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
         {
-            return _n == 2 ? s(_x._2.Value) : _;
+            return _n == 2 ? s(_x._2) : _;
         }
 
         /// <summary>
@@ -629,7 +602,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
         {
-            return _n == 2 ? s(_x._2.Value) : _();
+            return _n == 2 ? s(_x._2) : _();
         }
 
         /// <summary>
@@ -648,10 +621,10 @@ namespace dotVariant._G.Foo
                     _();
                     break;
                 case 1:
-                    i(_x._1.Value);
+                    i(_x._1);
                     break;
                 case 2:
-                    s(_x._2.Value);
+                    s(_x._2);
                     break;
                 default:
                     global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_public");
@@ -675,10 +648,10 @@ namespace dotVariant._G.Foo
                     global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_public");
                     break;
                 case 1:
-                    i(_x._1.Value);
+                    i(_x._1);
                     break;
                 case 2:
-                    s(_x._2.Value);
+                    s(_x._2);
                     break;
                 default:
                     global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_public");
@@ -702,9 +675,9 @@ namespace dotVariant._G.Foo
                 case 0:
                     return _();
                 case 1:
-                    return i(_x._1.Value);
+                    return i(_x._1);
                 case 2:
-                    return s(_x._2.Value);
+                    return s(_x._2);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_public");
             }
@@ -726,9 +699,9 @@ namespace dotVariant._G.Foo
                 case 0:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_public");
                 case 1:
-                    return i(_x._1.Value);
+                    return i(_x._1);
                 case 2:
-                    return s(_x._2.Value);
+                    return s(_x._2);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_public");
             }

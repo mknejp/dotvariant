@@ -357,90 +357,39 @@ namespace dotVariant._G.Foo
     [global::System.Diagnostics.DebuggerDisplay("{AsObject}", Type = "{TypeString,nq}")]
     internal readonly struct Variant_class_nullable_enable
     {
-        [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
         private readonly struct Union
         {
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_1 _1;
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_2 _2;
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_3 _3;
-            [global::System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Value_4 _4;
-
+            public readonly int _1;
             public Union(int value)
             {
-                _2 = default;
-                _3 = default;
-                _4 = default;
-                _1 = new Value_1(value);
+                _2 = default!;
+                _3 = default!;
+                _4 = default!;
+                _1 = value;
             }
+            public readonly float _2;
             public Union(float value)
             {
-                _1 = default;
-                _3 = default;
-                _4 = default;
-                _2 = new Value_2(value);
+                _1 = default!;
+                _3 = default!;
+                _4 = default!;
+                _2 = value;
             }
+            public readonly string _3;
             public Union(string value)
             {
-                _1 = default;
-                _2 = default;
-                _4 = default;
-                _3 = new Value_3(value);
+                _1 = default!;
+                _2 = default!;
+                _4 = default!;
+                _3 = value;
             }
+            public readonly global::System.Array? _4;
             public Union(global::System.Array? value)
             {
-                _1 = default;
-                _2 = default;
-                _3 = default;
-                _4 = new Value_4(value);
-            }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_1
-        {
-            public readonly int Value;
-            public readonly object _dummy1;
-
-            public Value_1(int value)
-            {
-                _dummy1 = null!;
-                Value = value;
-            }
-        }
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_2
-        {
-            public readonly float Value;
-            public readonly object _dummy1;
-
-            public Value_2(float value)
-            {
-                _dummy1 = null!;
-                Value = value;
-            }
-        }
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_3
-        {
-            public readonly string Value;
-
-            public Value_3(string value)
-            {
-                Value = value;
-            }
-        }
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        private readonly struct Value_4
-        {
-            public readonly global::System.Array? Value;
-
-            public Value_4(global::System.Array? value)
-            {
-                Value = value;
+                _1 = default!;
+                _2 = default!;
+                _3 = default!;
+                _4 = value;
             }
         }
 
@@ -472,13 +421,13 @@ namespace dotVariant._G.Foo
         public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in Variant_class_nullable_enable v)
             => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<int>(in Variant_class_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_1<int>(v._x._1.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_1<int>(v._x._1);
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<float>(in Variant_class_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_2<float>(v._x._2.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_2<float>(v._x._2);
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_3<string>(in Variant_class_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_3<string>(v._x._3.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_3<string>(v._x._3);
         public static explicit operator global::dotVariant.GeneratorSupport.Accessor_4<global::System.Array?>(in Variant_class_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_4<global::System.Array?>(v._x._4.Value);
+            => new global::dotVariant.GeneratorSupport.Accessor_4<global::System.Array?>(v._x._4);
 
         /// <summary>
         /// <see langword="true"/> if Variant_class_nullable_enable was constructed without a value.
@@ -520,13 +469,13 @@ namespace dotVariant._G.Foo
                 case 0:
                     return "";
                 case 1:
-                    return _x._1.Value.ToString();
+                    return _x._1.ToString();
                 case 2:
-                    return _x._2.Value.ToString();
+                    return _x._2.ToString();
                 case 3:
-                    return _x._3.Value.ToString();
+                    return _x._3.ToString();
                 case 4:
-                    return _x._4.Value?.ToString() ?? "null";
+                    return _x._4?.ToString() ?? "null";
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<string>("Foo.Variant_class_nullable_enable");
             }
@@ -544,13 +493,13 @@ namespace dotVariant._G.Foo
                     case 0:
                         return null;
                     case 1:
-                        return _x._1.Value;
+                        return _x._1;
                     case 2:
-                        return _x._2.Value;
+                        return _x._2;
                     case 3:
-                        return _x._3.Value;
+                        return _x._3;
                     case 4:
-                        return _x._4.Value;
+                        return _x._4;
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<object?>("Foo.Variant_class_nullable_enable");
                 }
@@ -568,13 +517,13 @@ namespace dotVariant._G.Foo
                 case 0:
                     return true;
                 case 1:
-                    return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1.Value, other._x._1.Value);
+                    return global::System.Collections.Generic.EqualityComparer<int>.Default.Equals(_x._1, other._x._1);
                 case 2:
-                    return global::System.Collections.Generic.EqualityComparer<float>.Default.Equals(_x._2.Value, other._x._2.Value);
+                    return global::System.Collections.Generic.EqualityComparer<float>.Default.Equals(_x._2, other._x._2);
                 case 3:
-                    return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._3.Value, other._x._3.Value);
+                    return global::System.Collections.Generic.EqualityComparer<string>.Default.Equals(_x._3, other._x._3);
                 case 4:
-                    return global::System.Collections.Generic.EqualityComparer<global::System.Array?>.Default.Equals(_x._4.Value, other._x._4.Value);
+                    return global::System.Collections.Generic.EqualityComparer<global::System.Array?>.Default.Equals(_x._4, other._x._4);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<bool>("Foo.Variant_class_nullable_enable");
             }
@@ -587,13 +536,13 @@ namespace dotVariant._G.Foo
                 case 0:
                     return 0;
                 case 1:
-                    return global::System.HashCode.Combine(_x._1.Value);
+                    return global::System.HashCode.Combine(_x._1);
                 case 2:
-                    return global::System.HashCode.Combine(_x._2.Value);
+                    return global::System.HashCode.Combine(_x._2);
                 case 3:
-                    return global::System.HashCode.Combine(_x._3.Value);
+                    return global::System.HashCode.Combine(_x._3);
                 case 4:
-                    return global::System.HashCode.Combine(_x._4.Value);
+                    return global::System.HashCode.Combine(_x._4);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<int>("Foo.Variant_class_nullable_enable");
             }
@@ -606,7 +555,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="int"/>.</returns>
         public bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out int i)
         {
-            i = _n == 1 ? _x._1.Value : default;
+            i = _n == 1 ? _x._1 : default;
             return _n == 1;
         }
 
@@ -620,7 +569,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
                 return true;
             }
             return false;
@@ -636,7 +585,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i = _x._1.Value;
+                i = _x._1;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_enable", "int", TypeString);
@@ -653,7 +602,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_enable", "int", TypeString);
@@ -670,7 +619,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                i(_x._1.Value);
+                i(_x._1);
             }
             else
             {
@@ -690,7 +639,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 1)
             {
-                return i(_x._1.Value);
+                return i(_x._1);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_enable", "int", TypeString);
         }
@@ -705,7 +654,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, TResult _)
         {
-            return _n == 1 ? i(_x._1.Value) : _;
+            return _n == 1 ? i(_x._1) : _;
         }
 
         /// <summary>
@@ -717,7 +666,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<int, TResult> i, global::System.Func<TResult> _)
         {
-            return _n == 1 ? i(_x._1.Value) : _();
+            return _n == 1 ? i(_x._1) : _();
         }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="float"/>.
@@ -726,7 +675,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="float"/>.</returns>
         public bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out float f)
         {
-            f = _n == 2 ? _x._2.Value : default;
+            f = _n == 2 ? _x._2 : default;
             return _n == 2;
         }
 
@@ -740,7 +689,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                f(_x._2.Value);
+                f(_x._2);
                 return true;
             }
             return false;
@@ -756,7 +705,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                f = _x._2.Value;
+                f = _x._2;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_enable", "float", TypeString);
@@ -773,7 +722,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                f(_x._2.Value);
+                f(_x._2);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_enable", "float", TypeString);
@@ -790,7 +739,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                f(_x._2.Value);
+                f(_x._2);
             }
             else
             {
@@ -810,7 +759,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 2)
             {
-                return f(_x._2.Value);
+                return f(_x._2);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_enable", "float", TypeString);
         }
@@ -825,7 +774,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<float, TResult> f, TResult _)
         {
-            return _n == 2 ? f(_x._2.Value) : _;
+            return _n == 2 ? f(_x._2) : _;
         }
 
         /// <summary>
@@ -837,7 +786,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<float, TResult> f, global::System.Func<TResult> _)
         {
-            return _n == 2 ? f(_x._2.Value) : _();
+            return _n == 2 ? f(_x._2) : _();
         }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="string"/>.
@@ -846,7 +795,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="string"/>.</returns>
         public bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? s)
         {
-            s = _n == 3 ? _x._3.Value : default;
+            s = _n == 3 ? _x._3 : default;
             return _n == 3;
         }
 
@@ -860,7 +809,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 3)
             {
-                s(_x._3.Value);
+                s(_x._3);
                 return true;
             }
             return false;
@@ -876,7 +825,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 3)
             {
-                s = _x._3.Value;
+                s = _x._3;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_enable", "string", TypeString);
@@ -893,7 +842,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 3)
             {
-                s(_x._3.Value);
+                s(_x._3);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_enable", "string", TypeString);
@@ -910,7 +859,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 3)
             {
-                s(_x._3.Value);
+                s(_x._3);
             }
             else
             {
@@ -930,7 +879,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 3)
             {
-                return s(_x._3.Value);
+                return s(_x._3);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_enable", "string", TypeString);
         }
@@ -945,7 +894,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, TResult _)
         {
-            return _n == 3 ? s(_x._3.Value) : _;
+            return _n == 3 ? s(_x._3) : _;
         }
 
         /// <summary>
@@ -957,7 +906,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="s"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<string, TResult> s, global::System.Func<TResult> _)
         {
-            return _n == 3 ? s(_x._3.Value) : _();
+            return _n == 3 ? s(_x._3) : _();
         }
         /// <summary>
         /// Retrieve the value stored within Variant_class_nullable_enable if it is of type <see cref="global::System.Array?"/>.
@@ -966,7 +915,7 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_class_nullable_enable contained a value of type <see cref="global::System.Array?"/>.</returns>
         public bool TryMatch(out global::System.Array? a)
         {
-            a = _n == 4 ? _x._4.Value : default;
+            a = _n == 4 ? _x._4 : default;
             return _n == 4;
         }
 
@@ -980,7 +929,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 4)
             {
-                a(_x._4.Value);
+                a(_x._4);
                 return true;
             }
             return false;
@@ -996,7 +945,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 4)
             {
-                a = _x._4.Value;
+                a = _x._4;
                 return;
             }
             throw global::dotVariant.GeneratorSupport.Errors.MakeMismatchError("Foo.Variant_class_nullable_enable", "System.Array?", TypeString);
@@ -1013,7 +962,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 4)
             {
-                a(_x._4.Value);
+                a(_x._4);
                 return;
             }
             global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError("Foo.Variant_class_nullable_enable", "System.Array?", TypeString);
@@ -1030,7 +979,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 4)
             {
-                a(_x._4.Value);
+                a(_x._4);
             }
             else
             {
@@ -1050,7 +999,7 @@ namespace dotVariant._G.Foo
         {
             if (_n == 4)
             {
-                return a(_x._4.Value);
+                return a(_x._4);
             }
             return global::dotVariant.GeneratorSupport.Errors.ThrowMismatchError<TResult>("Foo.Variant_class_nullable_enable", "System.Array?", TypeString);
         }
@@ -1065,7 +1014,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<global::System.Array?, TResult> a, TResult _)
         {
-            return _n == 4 ? a(_x._4.Value) : _;
+            return _n == 4 ? a(_x._4) : _;
         }
 
         /// <summary>
@@ -1077,7 +1026,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<global::System.Array?, TResult> a, global::System.Func<TResult> _)
         {
-            return _n == 4 ? a(_x._4.Value) : _();
+            return _n == 4 ? a(_x._4) : _();
         }
 
         /// <summary>
@@ -1098,16 +1047,16 @@ namespace dotVariant._G.Foo
                     _();
                     break;
                 case 1:
-                    i(_x._1.Value);
+                    i(_x._1);
                     break;
                 case 2:
-                    f(_x._2.Value);
+                    f(_x._2);
                     break;
                 case 3:
-                    s(_x._3.Value);
+                    s(_x._3);
                     break;
                 case 4:
-                    a(_x._4.Value);
+                    a(_x._4);
                     break;
                 default:
                     global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_class_nullable_enable");
@@ -1133,16 +1082,16 @@ namespace dotVariant._G.Foo
                     global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_class_nullable_enable");
                     break;
                 case 1:
-                    i(_x._1.Value);
+                    i(_x._1);
                     break;
                 case 2:
-                    f(_x._2.Value);
+                    f(_x._2);
                     break;
                 case 3:
-                    s(_x._3.Value);
+                    s(_x._3);
                     break;
                 case 4:
-                    a(_x._4.Value);
+                    a(_x._4);
                     break;
                 default:
                     global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_class_nullable_enable");
@@ -1168,13 +1117,13 @@ namespace dotVariant._G.Foo
                 case 0:
                     return _();
                 case 1:
-                    return i(_x._1.Value);
+                    return i(_x._1);
                 case 2:
-                    return f(_x._2.Value);
+                    return f(_x._2);
                 case 3:
-                    return s(_x._3.Value);
+                    return s(_x._3);
                 case 4:
-                    return a(_x._4.Value);
+                    return a(_x._4);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_class_nullable_enable");
             }
@@ -1198,13 +1147,13 @@ namespace dotVariant._G.Foo
                 case 0:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_class_nullable_enable");
                 case 1:
-                    return i(_x._1.Value);
+                    return i(_x._1);
                 case 2:
-                    return f(_x._2.Value);
+                    return f(_x._2);
                 case 3:
-                    return s(_x._3.Value);
+                    return s(_x._3);
                 case 4:
-                    return a(_x._4.Value);
+                    return a(_x._4);
                 default:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_class_nullable_enable");
             }

@@ -43,6 +43,33 @@ namespace dotVariant.Test.Variants
         }
     }
 
+    [Variant]
+    public sealed partial class NestedValueTypeReferenceTypeMix
+    {
+        static partial void VariantOf(A a, B b, C c, D d, string s);
+
+        public struct A
+        {
+            public int I;
+            public string S;
+        }
+        public struct B
+        {
+            public string S;
+            public int I;
+        }
+        public struct C
+        {
+            public A A;
+            public B B;
+        }
+        public struct D
+        {
+            public B B;
+            public A A;
+        }
+    }
+
 #if NULLABLE_ENABLED
 
     [Variant]
