@@ -7,7 +7,7 @@
 namespace {{ Options.ExtensionClassNamespace }}
 {
 {{~ end ~}}
-    {{ Variant.ExtensionsAccessibility }} static partial class _{{ Variant.Identifier }}_Ex
+    {{ Variant.ExtensionsAccessibility }} static partial class {{ Variant.Name }}Ex
     {
         {{~ ## Match(IObservable<V>, Func<A, R>) ## ~}}
         {{~ for $p in Params ~}}
@@ -16,7 +16,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// into a new form and drops all other elements.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
-        /// <param name="{{ $p.Identifier }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="{{ $p.Name }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
@@ -40,7 +40,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
-        /// <param name="{{ $p.Identifier }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="{{ $p.Name }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -74,7 +74,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
         /// <param name="source">An observable sequence whose elements to match on.</param>
-        /// <param name="{{ $p.Identifier }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
+        /// <param name="{{ $p.Name }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -108,7 +108,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </summary>
         /// <param name="source">An observable sequence whose elements to visit.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
         /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -143,7 +143,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </summary>
         /// <param name="source">An observable sequence whose elements to visit.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
         /// <param name="_">The delegate to invoke if an element is empty.</param>
         /// <returns>An observable sequence that contains the transformed elements of the input sequence.</returns>
@@ -176,7 +176,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<R>>, Func<IObservable<B>, IObservable<R>>, ...) ## ~}}
         {{~ if Params.size > 1 # Otherwise signature conflicts with the generic version below, and they are identical ~}}
         /// <summary>
-        /// Splits the observable sequence of {{ Variant.Identifier }} elements into one independent sub-sequences per value type,
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
         /// transforming each sub-sequence by the provided selector, and merges the resulting values into one observable sequence,
         /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
         /// </summary>
@@ -191,7 +191,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </remarks>
         /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">Transform an observable sequence of <see cref="{{ cref $p.Type }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="{{ $p.Name }}">Transform an observable sequence of <see cref="{{ cref $p.Type }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         {{~ end ~}}
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
@@ -212,7 +212,7 @@ namespace {{ Options.ExtensionClassNamespace }}
 
         {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<R>>, Func<IObservable<B>, IObservable<R>>, ..., Func<IObservable<Unit>, IObservable<R>> empty) ## ~}}
         /// <summary>
-        /// Splits the observable sequence of {{ Variant.Identifier }} elements into one independent sub-sequences per value type,
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
         /// transforming each sub-sequence by the provided selector, and merges the resulting values into one observable sequence.
         /// </summary>
         /// <remarks>
@@ -226,7 +226,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// </remarks>
         /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">Transform an observable sequence of <see cref="{{ cref $p.Type }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
+        /// <param name="{{ $p.Name }}">Transform an observable sequence of <see cref="{{ cref $p.Type }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         {{~ end ~}}
         /// <param name="_">Transform a sequence of <see cref="global::System.Reactive.Unit"/> values (each representing an empty variant) into a sequence of <typeparamref name="TResult"/> values.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
@@ -248,7 +248,7 @@ namespace {{ Options.ExtensionClassNamespace }}
 
         {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<B>, ..., IObservable<M>>) ## ~}}
         /// <summary>
-        /// Splits the observable sequence of {{ Variant.Identifier }} elements into one independent sub-sequences per value type,
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
         /// and combines the resulting values into one observable sequence according to the combining selector,
         /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
         /// </summary>
@@ -285,7 +285,7 @@ namespace {{ Options.ExtensionClassNamespace }}
 
         {{~ ## VisitMany(IObservable<V>, Func<IObservable<A>, IObservable<B>, ..., IObservable<Unit>, IObservable<M>>) ## ~}}
         /// <summary>
-        /// Splits the observable sequence of {{ Variant.Identifier }} elements into one independent sub-sequences per value type,
+        /// Splits the observable sequence of {{ Variant.Name }} elements into one independent sub-sequences per value type,
         /// and combines the resulting values into one observable sequence according to the combining selector.
         /// </summary>
         /// <remarks>

@@ -975,7 +975,7 @@ namespace dotVariant._G.Foo
 
 namespace Foo
 {
-    public static partial class _Variant_struct_nullable_enable_Ex
+    public static partial class Variant_struct_nullable_enableEx
     {
         /// <summary>
         /// Transform a Variant_struct_nullable_enable-based enumerable sequence by applying a selector function to those elements
@@ -1299,7 +1299,7 @@ namespace Foo
 }
 namespace Foo
 {
-    public static partial class _Variant_struct_nullable_enable_Ex
+    public static partial class Variant_struct_nullable_enableEx
     {
         /// <summary>
         /// Projects each <see cref="long"/> element of an observable sequence

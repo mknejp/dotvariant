@@ -70,18 +70,35 @@ namespace dotVariant.Generator.Test
                     })
                 ),
                 (
-                    "identifier",
+                    "identifier and name",
                     @"
                     [dotVariant.Variant]
                     public partial class Variant
                     {
-                        static partial void VariantOf(int a, double b, string c;
+                        static partial void VariantOf(int a, double b, string c);
                     }",
                     ri => Assert.Multiple(() =>
                     {
                         Assert.That(ri.Params[0].Identifier, Is.EqualTo("a"));
                         Assert.That(ri.Params[1].Identifier, Is.EqualTo("b"));
                         Assert.That(ri.Params[2].Identifier, Is.EqualTo("c"));
+                        Assert.That(ri.Params[0].Name, Is.EqualTo("a"));
+                        Assert.That(ri.Params[1].Name, Is.EqualTo("b"));
+                        Assert.That(ri.Params[2].Name, Is.EqualTo("c"));
+                    })
+                ),
+                (
+                    "escaped identifier and name",
+                    @"
+                    [dotVariant.Variant]
+                    public partial class Variant
+                    {
+                        static partial void VariantOf(int @true);
+                    }",
+                    ri => Assert.Multiple(() =>
+                    {
+                        Assert.That(ri.Params[0].Identifier, Is.EqualTo("@true"));
+                        Assert.That(ri.Params[0].Name, Is.EqualTo("true"));
                     })
                 ),
                 (

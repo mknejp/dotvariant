@@ -739,7 +739,7 @@ namespace dotVariant._G.Foo
 
 namespace Foo
 {
-    public static partial class _Variant_public_Ex
+    public static partial class Variant_publicEx
     {
         /// <summary>
         /// Transform a Variant_public-based enumerable sequence by applying a selector function to those elements
@@ -977,7 +977,7 @@ namespace Foo
 }
 namespace Foo
 {
-    public static partial class _Variant_public_Ex
+    public static partial class Variant_publicEx
     {
         /// <summary>
         /// Projects each <see cref="int"/> element of an observable sequence

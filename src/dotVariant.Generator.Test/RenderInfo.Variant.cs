@@ -25,26 +25,6 @@ namespace dotVariant.Generator.Test
             => new (string Name, string Source, Action<RenderInfo> Check)[]
             {
                 (
-                    "identifier",
-                    @"
-                    [dotVariant.Variant]
-                    public partial class XyzVariant
-                    {
-                        static partial void VariantOf(int a, float b);
-                    }",
-                    ri => Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"))
-                ),
-                (
-                    "identifier with type parameters",
-                    @"
-                    [dotVariant.Variant]
-                    public partial class XyzVariant<A, B>
-                    {
-                        static partial void VariantOf(int a, float b);
-                    }",
-                    ri => Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"))
-                ),
-                (
                     "type",
                     @"
                     [dotVariant.Variant]
@@ -54,8 +34,28 @@ namespace dotVariant.Generator.Test
                     }",
                     ri => Assert.Multiple(() =>
                     {
+                        Assert.That(ri.Variant.DiagType, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Name, Is.EqualTo("XyzVariant"));
                         Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant"));
                         Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::XyzVariant"));
+                    })
+                ),
+                (
+                    "escaped type",
+                    @"
+                    [dotVariant.Variant]
+                    public partial class @class
+                    {
+                        static partial void VariantOf(int a, float b);
+                    }",
+                    ri => Assert.Multiple(() =>
+                    {
+                        Assert.That(ri.Variant.DiagType, Is.EqualTo("class"));
+                        Assert.That(ri.Variant.Identifier, Is.EqualTo("@class"));
+                        Assert.That(ri.Variant.Name, Is.EqualTo("class"));
+                        Assert.That(ri.Variant.Type, Is.EqualTo("@class"));
+                        Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::@class"));
                     })
                 ),
                 (
@@ -68,8 +68,28 @@ namespace dotVariant.Generator.Test
                     }",
                     ri => Assert.Multiple(() =>
                     {
+                        Assert.That(ri.Variant.DiagType, Is.EqualTo("XyzVariant<A, B>"));
+                        Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Name, Is.EqualTo("XyzVariant"));
                         Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant<A, B>"));
                         Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::XyzVariant<A, B>"));
+                    })
+                ),
+                (
+                    "type with escaped type parameters",
+                    @"
+                    [dotVariant.Variant]
+                    public partial class XyzVariant<@class, B>
+                    {
+                        static partial void VariantOf(@class a, float b);
+                    }",
+                    ri => Assert.Multiple(() =>
+                    {
+                        Assert.That(ri.Variant.DiagType, Is.EqualTo("XyzVariant<class, B>"));
+                        Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Name, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant<@class, B>"));
+                        Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::XyzVariant<@class, B>"));
                     })
                 ),
                 (
@@ -85,6 +105,9 @@ namespace dotVariant.Generator.Test
                     }",
                     ri => Assert.Multiple(() =>
                     {
+                        Assert.That(ri.Variant.DiagType, Is.EqualTo("Foo.Bar.XyzVariant"));
+                        Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Name, Is.EqualTo("XyzVariant"));
                         Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant"));
                         Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::Foo.Bar.XyzVariant"));
                     })
@@ -102,6 +125,9 @@ namespace dotVariant.Generator.Test
                     }",
                     ri => Assert.Multiple(() =>
                     {
+                        Assert.That(ri.Variant.DiagType, Is.EqualTo("Foo.Bar.XyzVariant<A, B>"));
+                        Assert.That(ri.Variant.Identifier, Is.EqualTo("XyzVariant"));
+                        Assert.That(ri.Variant.Name, Is.EqualTo("XyzVariant"));
                         Assert.That(ri.Variant.Type, Is.EqualTo("XyzVariant<A, B>"));
                         Assert.That(ri.Variant.QualifiedType, Is.EqualTo("global::Foo.Bar.XyzVariant<A, B>"));
                     })
@@ -132,52 +158,6 @@ namespace dotVariant.Generator.Test
                         static partial void VariantOf(int a, float b);
                     }",
                     ri => Assert.That(ri.Variant.Namespace, Is.Null)
-                ),
-                (
-                    "diagnostic type",
-                    @"
-                    [dotVariant.Variant]
-                    public partial class Variant
-                    {
-                        static partial void VariantOf(int a, float b);
-                    }",
-                    ri => Assert.That(ri.Variant.DiagType, Is.EqualTo("Variant"))
-                ),
-                (
-                    "diagnostic type with type parameters",
-                    @"
-                    [dotVariant.Variant]
-                    public partial class Variant<A, B>
-                    {
-                        static partial void VariantOf(int a, float b);
-                    }",
-                    ri => Assert.That(ri.Variant.DiagType, Is.EqualTo("Variant<A, B>"))
-                ),
-                (
-                    "diagnostic type with namesapce",
-                    @"
-                    namespace Foo.Bar
-                    {
-                        [dotVariant.Variant]
-                        public partial class Variant
-                        {
-                            static partial void VariantOf(int a, float b);
-                        }
-                    }",
-                    ri => Assert.That(ri.Variant.DiagType, Is.EqualTo("Foo.Bar.Variant"))
-                ),
-                (
-                    "diagnostic type with namespace and type parameters",
-                    @"
-                    namespace Foo.Bar
-                    {
-                        [dotVariant.Variant]
-                        public partial class Variant<A, B>
-                        {
-                            static partial void VariantOf(int a, float b);
-                        }
-                    }",
-                    ri => Assert.That(ri.Variant.DiagType, Is.EqualTo("Foo.Bar.Variant<A, B>"))
                 ),
                 (
                     "class type",

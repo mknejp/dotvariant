@@ -236,12 +236,12 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
 
         /// <summary>
-        /// <see langword="true"/> if {{ Variant.Identifier }} was constructed without a value.
+        /// <see langword="true"/> if {{ Variant.Name }} was constructed without a value.
         /// </summary>
         {{~ if !Variant.IsReferenceType ~}}
         /// <remarks>
-        /// Because {{ Variant.Identifier }} is a value type, its default constructor cannot be disabled.
-        /// A default-constructed {{ Variant.Identifier }} will always have a <c>IsEmpty</c> value of <see langword="true"/>
+        /// Because {{ Variant.Name }} is a value type, its default constructor cannot be disabled.
+        /// A default-constructed {{ Variant.Name }} will always have a <c>IsEmpty</c> value of <see langword="true"/>
         /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
         /// </remarks>
         {{~ end ~}}
@@ -350,10 +350,10 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ for $p in Params ~}}
         {{~ ## UNION TryMatch ## ~}}
         /// <summary>
-        /// Retrieve the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>.
+        /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-        /// <returns><see langword="true"/> if {{ Variant.Identifier }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
+        /// <param name="{{ $p.Name }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
         public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ $p.OutType }} {{ $p.Identifier }})
         {
             {{ $p.Identifier }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
@@ -361,11 +361,11 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
 
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>.
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-        /// <returns><see langword="true"/> if {{ Variant.Identifier }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"> is rethrown.</exception>
+        /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"> is rethrown.</exception>
         public bool TryMatch({{ action_type $p }} {{ $p.Identifier }})
         {
             if (_n == {{ $p.Index }})
@@ -378,11 +378,11 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         {{~ ## UNION Match ## ~}}
         /// <summary>
-        /// Retrieve the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
+        /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/>,
         /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
+        /// <param name="{{ $p.Name }}">Receives the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
         public void Match({{ annotate_NotNull $p }}out {{ $p.OutType }} {{ $p.Identifier }})
         {
             if (_n == {{ $p.Index }})
@@ -394,12 +394,12 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
 
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/>,
         /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> is rethrown.</exception>
+        /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> is rethrown.</exception>
         public void Match({{ action_type $p }} {{ $p.Identifier }})
         {
             if (_n == {{ $p.Index }})
@@ -411,12 +411,12 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
 
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/>,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/>,
         /// otherwise invoke an alternative delegate.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match({{ action_type $p }} {{ $p.Identifier }}, global::System.Action _)
         {
             if (_n == {{ $p.Index }})
@@ -430,13 +430,13 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
 
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
         /// otherwise throw <see cref="global::System.InvalidOperationException"/>.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
-        /// <returns>The value returned from invoking <paramref name="{{ $p.Identifier }}"/>.</returns>
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> is rethrown.</exception>
+        /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <returns>The value returned from invoking <paramref name="{{ $p.Name }}"/>.</returns>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }})
         {
             if (_n == {{ $p.Index }})
@@ -447,25 +447,25 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
 
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
         /// otherwise return a provided value.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="{{ $p.Identifier }}"/>, or <paramref name="default"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
+        /// <returns>The value returned from invoking <paramref name="{{ $p.Name }}"/>, or <paramref name="default"/>.</returns>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, TResult _)
         {
             return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _;
         }
 
         /// <summary>
-        /// Invoke a delegate with the value stored within {{ Variant.Identifier }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
+        /// Invoke a delegate with the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/> and return the result,
         /// otherwise invoke an alternative delegate and return its result.
         /// </summary>
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
         /// <param name="_">The delegate to invoke if the stored value is of a different type.</param>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Identifier }}"/> or <paramref name="_"/> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, global::System.Func<TResult> _)
         {
             return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _();
@@ -474,13 +474,13 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         {{~ ## UNION Visit(Action) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Identifier }},
-        /// and invoke a special delegate if {{ Variant.Identifier }} is empty.
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Name }},
+        /// and invoke a special delegate if {{ Variant.Name }} is empty.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
-        /// <param name="_">The delegate to invoke if {{ Variant.Identifier }} is empty.</param>
+        /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit({{ action_params }}, global::System.Action _)
         {
@@ -502,13 +502,13 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         {{~ ## UNION Visit(Action) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Identifier }},
-        /// and throw an exception if {{ Variant.Identifier }} is empty.
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Name }},
+        /// and throw an exception if {{ Variant.Name }} is empty.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} is empty.</exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit({{ action_params }})
         {
@@ -530,13 +530,13 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         {{~ ## UNION Visit(Func) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Identifier }} and return the result,
-        /// and invoke a special delegate if {{ Variant.Identifier }} is empty and return its result.
+        /// Invoke the delegate whose parameter type matches that of type of the value stored within {{ Variant.Name }} and return the result,
+        /// and invoke a special delegate if {{ Variant.Name }} is empty and return its result.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
-        /// <param name="_">The delegate to invoke if {{ Variant.Identifier }} is empty.</param>
+        /// <param name="_">The delegate to invoke if {{ Variant.Name }} is empty.</param>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
@@ -556,13 +556,13 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         {{~ ## UNION Visit(Func) ## ~}}
         /// <summary>
-        /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Identifier }} and return the result,
-        /// and throw an exception if {{ Variant.Identifier }} is empty.
+        /// Invoke the delegate whose parameter type matches that of the value stored within {{ Variant.Name }} and return the result,
+        /// and throw an exception if {{ Variant.Name }} is empty.
         /// </summary>
         {{~ for $p in Params ~}}
-        /// <param name="{{ $p.Identifier }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
+        /// <param name="{{ $p.Name }}">The delegate to invoke if the stored value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
-        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Identifier }} is empty.</exception>
+        /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} is empty.</exception>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>({{ func_params }})
