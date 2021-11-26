@@ -115,7 +115,8 @@ it had to store all values side-by-side.
 ## ~}}
 {{~
 func $storage(param)
-    ret is_generic ? "_x._" + param.Index : "_x._" + param.Index + ".Value";
+    #ret is_generic ? "_x._" + param.Index : "_x._" + param.Index + ".Value";
+    ret "_x._" + param.Index;
 end
 ~}}
 {{~ ## STORAGE WRAPPER ## ~}}
@@ -131,7 +132,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
     {{~ end ~}}
     {
-        {{~ if !is_generic ~}}
+        {{~ if false #!is_generic ~}}
         {{~ ## NON-GENERIC UNION TYPE ## ~}}
         [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit)]
         private readonly struct Union
