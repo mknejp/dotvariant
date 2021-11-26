@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/mknejp/dotvariant</RepositoryUrl>
     <Version Condition="'$(Version)' == ''">999.0.0</Version>
 
-    <EnableNETAnalyzer>true</EnableNETAnalyzer>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <PackageSelfTest Condition="'$(PackageSelfTest)' == ''">false</PackageSelfTest>
     <DefineConstants Condition="'$(CI)' != ''">$(DefineConstants);CI</DefineConstants>
   </PropertyGroup>
