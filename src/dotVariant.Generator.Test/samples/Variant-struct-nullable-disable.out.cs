@@ -971,21 +971,21 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="long"/> and dropping all others.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 1)
+                if (_variant.Index == 1)
                 {
-                    yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
+                    yield return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
             }
         }
@@ -993,21 +993,21 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="double"/> and dropping all others.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<double, TResult> d)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 2)
+                if (_variant.Index == 2)
                 {
-                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
+                    yield return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
             }
         }
@@ -1015,21 +1015,21 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="object"/> and dropping all others.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<object, TResult> o)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 3)
+                if (_variant.Index == 3)
                 {
-                    yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
+                    yield return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
             }
         }
@@ -1038,7 +1038,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="long"/> and replacing all others by a fallback value.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
@@ -1046,15 +1046,15 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l,
                 TResult _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 1)
+                if (_variant.Index == 1)
                 {
-                    yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
+                    yield return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1066,7 +1066,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="double"/> and replacing all others by a fallback value.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
@@ -1074,15 +1074,15 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<double, TResult> d,
                 TResult _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 2)
+                if (_variant.Index == 2)
                 {
-                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
+                    yield return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1094,7 +1094,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="object"/> and replacing all others by a fallback value.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
@@ -1102,15 +1102,15 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<object, TResult> o,
                 TResult _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 3)
+                if (_variant.Index == 3)
                 {
-                    yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
+                    yield return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1123,7 +1123,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="long"/> and replacing all others with the result of a fallback selector.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
@@ -1131,15 +1131,15 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l,
                 global::System.Func<TResult> _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 1)
+                if (_variant.Index == 1)
                 {
-                    yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
+                    yield return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1151,7 +1151,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="double"/> and replacing all others with the result of a fallback selector.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
@@ -1159,15 +1159,15 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<double, TResult> d,
                 global::System.Func<TResult> _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 2)
+                if (_variant.Index == 2)
                 {
-                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
+                    yield return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1179,7 +1179,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to those elements
         /// containing a value of type <see cref="object"/> and replacing all others with the result of a fallback selector.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An enumerable sequence that contains the matched and transformed elements of the input sequence.</returns>
@@ -1187,15 +1187,15 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Match<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<object, TResult> o,
                 global::System.Func<TResult> _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                if (variant.Index == 3)
+                if (_variant.Index == 3)
                 {
-                    yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
+                    yield return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1209,7 +1209,7 @@ namespace Foo
         /// wich matches the type stored within the value, and throwing <see cref="global::System.InvalidOperationException"/>
         /// if an element is empty.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="l">The delegate to invoke if the element's value is of type <see cref="long"/>.</param>
         /// <param name="d">The delegate to invoke if the element's value is of type <see cref="double"/>.</param>
         /// <param name="o">The delegate to invoke if the element's value is of type <see cref="object"/>.</param>
@@ -1219,24 +1219,24 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Visit<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                switch (variant.Index)
+                switch (_variant.Index)
                 {
                     case 0:
                         global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_struct_nullable_disable");
                         yield break;
                     case 1:
-                        yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
+                        yield return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
+                        yield return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
+                        yield return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     default:
                         global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_struct_nullable_disable");
@@ -1249,7 +1249,7 @@ namespace Foo
         /// Transform a Variant_struct_nullable_disable-based enumerable sequence by applying a selector function to each element
         /// wich matches the type stored within the value, and replacing empty elements with the result of a fallback selector.
         /// </summary>
-        /// <param name="source">An enumerable sequence whose elements to match on.</param>
+        /// <param name="_source">An enumerable sequence whose elements to match on.</param>
         /// <param name="l">The delegate to invoke if the element's value is of type <see cref="long"/>.</param>
         /// <param name="d">The delegate to invoke if the element's value is of type <see cref="double"/>.</param>
         /// <param name="o">The delegate to invoke if the element's value is of type <see cref="object"/>.</param>
@@ -1259,25 +1259,25 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.Collections.Generic.IEnumerable<TResult>
             Visit<TResult>(
-                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.Collections.Generic.IEnumerable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o,
                 global::System.Func<TResult> _)
         {
-            foreach (var variant in source)
+            foreach (var _variant in _source)
             {
-                switch (variant.Index)
+                switch (_variant.Index)
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
+                        yield return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
+                        yield return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
+                        yield return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     default:
                         global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_struct_nullable_disable");
@@ -1295,51 +1295,51 @@ namespace Foo
         /// Projects each <see cref="long"/> element of an observable sequence
         /// into a new form and drops all other elements.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 1),
+                global::System.Reactive.Linq.Observable.Where(_source, _variant => _variant.Index == 1),
                 _variant => l(_variant.UnsafeGet(new global::dotVariant.Accessor._1())));
         }
         /// <summary>
         /// Projects each <see cref="double"/> element of an observable sequence
         /// into a new form and drops all other elements.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<double, TResult> d)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 2),
+                global::System.Reactive.Linq.Observable.Where(_source, _variant => _variant.Index == 2),
                 _variant => d(_variant.UnsafeGet(new global::dotVariant.Accessor._2())));
         }
         /// <summary>
         /// Projects each <see cref="object"/> element of an observable sequence
         /// into a new form and drops all other elements.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<object, TResult> o)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 3),
+                global::System.Reactive.Linq.Observable.Where(_source, _variant => _variant.Index == 3),
                 _variant => o(_variant.UnsafeGet(new global::dotVariant.Accessor._3())));
         }
 
@@ -1347,18 +1347,18 @@ namespace Foo
         /// Projects each <see cref="long"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l,
                 TResult _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if (_variant.Index == 1)
                 {
@@ -1374,18 +1374,18 @@ namespace Foo
         /// Projects each <see cref="double"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<double, TResult> d,
                 TResult _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if (_variant.Index == 2)
                 {
@@ -1401,18 +1401,18 @@ namespace Foo
         /// Projects each <see cref="object"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<object, TResult> o,
                 TResult _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if (_variant.Index == 3)
                 {
@@ -1429,18 +1429,18 @@ namespace Foo
         /// Projects each <see cref="long"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="l">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l,
                 global::System.Func<TResult> _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if (_variant.Index == 1)
                 {
@@ -1456,18 +1456,18 @@ namespace Foo
         /// Projects each <see cref="double"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="d">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<double, TResult> d,
                 global::System.Func<TResult> _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if (_variant.Index == 2)
                 {
@@ -1483,18 +1483,18 @@ namespace Foo
         /// Projects each <see cref="object"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="o">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<object, TResult> o,
                 global::System.Func<TResult> _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if (_variant.Index == 3)
                 {
@@ -1511,7 +1511,7 @@ namespace Foo
         /// Projects each element of an observable sequence into a new form depending on its contained value type,
         /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to visit.</param>
+        /// <param name="_source">An observable sequence whose elements to visit.</param>
         /// <param name="l">The delegate to invoke if the element's value is of type <see cref="long"/>.</param>
         /// <param name="d">The delegate to invoke if the element's value is of type <see cref="double"/>.</param>
         /// <param name="o">The delegate to invoke if the element's value is of type <see cref="object"/>.</param>
@@ -1519,10 +1519,10 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Visit<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 switch (_variant.Index)
                 {
@@ -1544,7 +1544,7 @@ namespace Foo
         /// Projects each element of an observable sequence into a new form depending on its contained value type,
         /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to visit.</param>
+        /// <param name="_source">An observable sequence whose elements to visit.</param>
         /// <param name="l">The delegate to invoke if the element's value is of type <see cref="long"/>.</param>
         /// <param name="d">The delegate to invoke if the element's value is of type <see cref="double"/>.</param>
         /// <param name="o">The delegate to invoke if the element's value is of type <see cref="object"/>.</param>
@@ -1553,11 +1553,11 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Visit<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o,
                 global::System.Func<TResult> _)
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 switch (_variant.Index)
                 {
@@ -1589,7 +1589,7 @@ namespace Foo
         ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
         /// <param name="l">Transform an observable sequence of <see cref="long"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="d">Transform an observable sequence of <see cref="double"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="o">Transform an observable sequence of <see cref="object"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
@@ -1597,10 +1597,10 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<global::System.IObservable<long>, global::System.IObservable<TResult>> l, global::System.Func<global::System.IObservable<double>, global::System.IObservable<TResult>> d, global::System.Func<global::System.IObservable<object>, global::System.IObservable<TResult>> o)
         {
-            return VisitMany(source, (_1, _2, _3) =>
+            return VisitMany(_source, (_1, _2, _3) =>
             {
                 return global::System.Reactive.Linq.Observable.Merge(l(_1), d(_2), o(_3));
             });
@@ -1619,7 +1619,7 @@ namespace Foo
         ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
         /// <param name="l">Transform an observable sequence of <see cref="long"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="d">Transform an observable sequence of <see cref="double"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         /// <param name="o">Transform an observable sequence of <see cref="object"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
@@ -1628,11 +1628,11 @@ namespace Foo
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
                 global::System.Func<global::System.IObservable<long>, global::System.IObservable<TResult>> l, global::System.Func<global::System.IObservable<double>, global::System.IObservable<TResult>> d, global::System.Func<global::System.IObservable<object>, global::System.IObservable<TResult>> o,
                 global::System.Func<global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> _)
         {
-            return VisitMany(source, (_1, _2, _3, _0) =>
+            return VisitMany(_source, (_1, _2, _3, _0) =>
             {
                 return global::System.Reactive.Linq.Observable.Merge(l(_1), d(_2), o(_3), _(_0));
             });
@@ -1651,22 +1651,22 @@ namespace Foo
         ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
-        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_selector">Combine the individual sub-sequences into one resulting sequence.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
-                global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<TResult>> selector)
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
+                global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<TResult>> _selector)
         {
             return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(false);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3).Subscribe(_o),
-                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
+                    _selector(_mo.Subject1, _mo.Subject2, _mo.Subject3).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(_source, _mo),
                     _mo);
             });
         }
@@ -1683,21 +1683,21 @@ namespace Foo
         ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
-        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_selector">Combine the individual sub-sequences into one resulting sequence.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult>(
-                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> source,
-                global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
+                this global::System.IObservable<global::Foo.Variant_struct_nullable_disable> _source,
+                global::System.Func<global::System.IObservable<long>, global::System.IObservable<double>, global::System.IObservable<object>, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> _selector)
         {
             return global::System.Reactive.Linq.Observable.Create<TResult>(_o =>
             {
                 var _mo = new VisitManyObserver(true);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector(_mo.Subject1, _mo.Subject2, _mo.Subject3, _mo.Subject0).Subscribe(_o),
-                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
+                    _selector(_mo.Subject1, _mo.Subject2, _mo.Subject3, _mo.Subject0).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(_source, _mo),
                     _mo);
             });
         }

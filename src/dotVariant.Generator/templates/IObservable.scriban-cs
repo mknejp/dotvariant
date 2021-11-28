@@ -23,20 +23,20 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// Projects each <see cref="{{ $p.Type }}"/> element of an observable sequence
         /// into a new form and drops all other elements.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="{{ $p.Name }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ func_type $p }} {{ $p.Identifier }})
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => {{ $get_n }} == {{ $p.Index }}),
+                global::System.Reactive.Linq.Observable.Where(_source, _variant => {{ $get_n }} == {{ $p.Index }}),
                 _variant => {{ $p.Identifier }}({{ $get_value $p }}));
         }
         {{~ end ~}}
@@ -47,21 +47,21 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// Projects each <see cref="{{ cref $p.Type }}"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback value.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="{{ $p.Name }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ func_type $p }} {{ $p.Identifier }},
                 TResult _)
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if ({{ $get_n }} == {{ $p.Index }})
                 {
@@ -81,21 +81,21 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// Projects each <see cref="{{ cref $p.Type }}"/> element of an observable sequence
         /// into a new form and replaces all other elements by a fallback selector result.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to match on.</param>
+        /// <param name="_source">An observable sequence whose elements to match on.</param>
         /// <param name="{{ $p.Name }}">Function applied to matching elements and whose value to surface from the resulting sequence.</param>
         /// <param name="_">Value to produce for elements which do not match the desired type.</param>
         /// <returns>An observable sequence that contains the matched and transformed elements of the input sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Match<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ func_type $p }} {{ $p.Identifier }},
                 global::System.Func<TResult> _)
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 if ({{ $get_n }} == {{ $p.Index }})
                 {
@@ -114,7 +114,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// Projects each element of an observable sequence into a new form depending on its contained value type,
         /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to visit.</param>
+        /// <param name="_source">An observable sequence whose elements to visit.</param>
         {{~ for $p in Params ~}}
         /// <param name="{{ $p.Name }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
@@ -122,13 +122,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Visit<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ func_params }})
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 switch ({{ $get_n }})
                 {
@@ -149,7 +149,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// Projects each element of an observable sequence into a new form depending on its contained value type,
         /// failing with <see cref="global::System.InvalidOperationException"/> if an element is empty.
         /// </summary>
-        /// <param name="source">An observable sequence whose elements to visit.</param>
+        /// <param name="_source">An observable sequence whose elements to visit.</param>
         {{~ for $p in Params ~}}
         /// <param name="{{ $p.Name }}">The delegate to invoke if the element's value is of type <see cref="{{ cref $p.Type }}"/>.</param>
         {{~ end ~}}
@@ -158,14 +158,14 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             Visit<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ func_params }},
                 global::System.Func<TResult> _)
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
-            return global::System.Reactive.Linq.Observable.Select(source, _variant =>
+            return global::System.Reactive.Linq.Observable.Select(_source, _variant =>
             {
                 switch ({{ $get_n }})
                 {
@@ -197,7 +197,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
         {{~ for $p in Params ~}}
         /// <param name="{{ $p.Name }}">Transform an observable sequence of <see cref="{{ cref $p.Type }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         {{~ end ~}}
@@ -205,13 +205,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ Params | array.each @(do; ret "global::System.Func<global::System.IObservable<" + $0.Type + ">, global::System.IObservable<TResult>> " + $0.Identifier; end) | array.join ", " }})
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
-            return VisitMany(source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}) =>
+            return VisitMany(_source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}) =>
             {
                 return global::System.Reactive.Linq.Observable.Merge({{ Params | array.each @(do; ret $0.Identifier + "(_" + $0.Index + ")"; end) | array.join ", " }});
             });
@@ -232,7 +232,7 @@ namespace {{ Options.ExtensionClassNamespace }}
         ///     <item>When all sub-sequences terminate with OnCompleted (even before the source does) the resulting sequence terminates.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
         {{~ for $p in Params ~}}
         /// <param name="{{ $p.Name }}">Transform an observable sequence of <see cref="{{ cref $p.Type }}"/> values into an observable sequence of <typeparamref name="TResult"/> values.</param>
         {{~ end ~}}
@@ -241,14 +241,14 @@ namespace {{ Options.ExtensionClassNamespace }}
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
                 {{ Params | array.each @(do; ret "global::System.Func<global::System.IObservable<" + $0.Type + ">, global::System.IObservable<TResult>> " + $0.Identifier; end) | array.join ", " }},
                 global::System.Func<global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> _)
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
         {
-            return VisitMany(source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}, _0) =>
+            return VisitMany(_source, ({{ Params | array.each @(do; ret "_" + $0.Index; end) | array.join ", "}}, _0) =>
             {
                 return global::System.Reactive.Linq.Observable.Merge({{ Params | array.each @(do; ret $0.Identifier + "(_" + $0.Index + ")"; end) | array.join ", " }}, _(_0));
             });
@@ -268,15 +268,15 @@ namespace {{ Options.ExtensionClassNamespace }}
         ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
-        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_selector">Combine the individual sub-sequences into one resulting sequence.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
-                global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + $0.Type + ">"; end) | array.join ", " }}, global::System.IObservable<TResult>> selector)
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
+                global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + $0.Type + ">"; end) | array.join ", " }}, global::System.IObservable<TResult>> _selector)
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
@@ -285,8 +285,8 @@ namespace {{ Options.ExtensionClassNamespace }}
             {
                 var _mo = new VisitManyObserver{{ type_parameter_list }}(false);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}).Subscribe(_o),
-                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
+                    _selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(_source, _mo),
                     _mo);
             });
         }
@@ -304,14 +304,14 @@ namespace {{ Options.ExtensionClassNamespace }}
         ///     <item>How termination (successful or error) of sub-sequences affects the resulting sequence depends on the combining operation.</item>
         /// </list>
         /// </remarks>
-        /// <param name="source">An observable sequence whose elements to split into sub-sequences.</param>
-        /// <param name="selector">Combine the individual sub-sequences into one resulting sequence.</param>
+        /// <param name="_source">An observable sequence whose elements to split into sub-sequences.</param>
+        /// <param name="_selector">Combine the individual sub-sequences into one resulting sequence.</param>
         /// <returns>An observable sequence that contains the elements of all sub-sequence.</returns>
         /// <typeparam name="TResult">The resulting sequence's element type.</typeparam>
         public static global::System.IObservable<TResult>
             VisitMany<TResult{{ appended_type_parameters }}>(
-                this global::System.IObservable<{{ Variant.QualifiedType }}> source,
-                global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + $0.Type + ">"; end) | array.join ", " }}, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> selector)
+                this global::System.IObservable<{{ Variant.QualifiedType }}> _source,
+                global::System.Func<{{ Params | array.each @(do; ret "global::System.IObservable<" + $0.Type + ">"; end) | array.join ", " }}, global::System.IObservable<global::System.Reactive.Unit>, global::System.IObservable<TResult>> _selector)
         {{~ for $tp in constrained_type_parameters ~}}
             where {{ $tp.Identifier }} : {{ array.join $tp.Constraints ", " }}
         {{~ end ~}}
@@ -320,8 +320,8 @@ namespace {{ Options.ExtensionClassNamespace }}
             {
                 var _mo = new VisitManyObserver{{ type_parameter_list }}(true);
                 return global::System.Reactive.Disposables.StableCompositeDisposable.Create(
-                    selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}, _mo.Subject0).Subscribe(_o),
-                    global::System.ObservableExtensions.SubscribeSafe(source, _mo),
+                    _selector({{ Params | array.each @(do; ret "_mo.Subject" + $0.Index + ""; end) | array.join ", " }}, _mo.Subject0).Subscribe(_o),
+                    global::System.ObservableExtensions.SubscribeSafe(_source, _mo),
                     _mo);
             });
         }
