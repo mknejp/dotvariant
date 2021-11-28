@@ -149,6 +149,11 @@ namespace Foo
         public bool IsEmpty
             => _variant.IsEmpty;
 
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.Index"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public byte Index
+            => _variant.Index;
+
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override bool Equals(object? other)
@@ -175,6 +180,11 @@ namespace Foo
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override string ToString()
             => _variant.ToString();
+
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.UnsafeGet(global::dotVariant.Accessor._1)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public T1? UnsafeGet(global::dotVariant.Accessor._1 accessor)
+            => _variant.UnsafeGet(accessor);
 
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.TryMatch(out T1?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -216,6 +226,11 @@ namespace Foo
         public TResult Match<TResult>(global::System.Func<T1?, TResult> a, global::System.Func<TResult> _)
             => _variant.Match(a, _);
 
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.UnsafeGet(global::dotVariant.Accessor._2)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public T2? UnsafeGet(global::dotVariant.Accessor._2 accessor)
+            => _variant.UnsafeGet(accessor);
+
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.TryMatch(out T2?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(out T2? b)
@@ -255,6 +270,11 @@ namespace Foo
         [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<T2?, TResult> b, global::System.Func<TResult> _)
             => _variant.Match(b, _);
+
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.UnsafeGet(global::dotVariant.Accessor._3)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public T3? UnsafeGet(global::dotVariant.Accessor._3 accessor)
+            => _variant.UnsafeGet(accessor);
 
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.TryMatch(out T3?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -296,6 +316,11 @@ namespace Foo
         public TResult Match<TResult>(global::System.Func<T3?, TResult> c, global::System.Func<TResult> _)
             => _variant.Match(c, _);
 
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.UnsafeGet(global::dotVariant.Accessor._4)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public T4? UnsafeGet(global::dotVariant.Accessor._4 accessor)
+            => _variant.UnsafeGet(accessor);
+
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.TryMatch(out T4?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(out T4? d)
@@ -336,6 +361,11 @@ namespace Foo
         public TResult Match<TResult>(global::System.Func<T4?, TResult> d, global::System.Func<TResult> _)
             => _variant.Match(d, _);
 
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.UnsafeGet(global::dotVariant.Accessor._5)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public T5? UnsafeGet(global::dotVariant.Accessor._5 accessor)
+            => _variant.UnsafeGet(accessor);
+
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.TryMatch(out T5?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public bool TryMatch(out T5? e)
@@ -375,6 +405,11 @@ namespace Foo
         [global::System.Diagnostics.DebuggerNonUserCode]
         public TResult Match<TResult>(global::System.Func<T5?, TResult> e, global::System.Func<TResult> _)
             => _variant.Match(e, _);
+
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.UnsafeGet(global::dotVariant.Accessor._6)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public T6? UnsafeGet(global::dotVariant.Accessor._6 accessor)
+            => _variant.UnsafeGet(accessor);
 
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant{T1, T2, T3, T4, T5, T6}.TryMatch(out T6?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -449,35 +484,6 @@ namespace Foo
                 #pragma warning restore 8604, 8625
             }
         }
-
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Discriminator)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<T1?>(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Accessor_1<T1?>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<T2?>(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Accessor_2<T2?>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_3<T3?>(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Accessor_3<T3?>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_4<T4?>(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Accessor_4<T4?>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_5<T5?>(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Accessor_5<T5?>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_6<T6?>(Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Accessor_6<T6?>)v._variant;
     }
 }
 
@@ -557,59 +563,50 @@ namespace dotVariant._G.Foo
         }
 
         private readonly Union _x;
-        private readonly byte _n;
+
+        /// <summary>
+        /// The 1-based index of the currently stored type,
+        /// counted left-ro-right from the <see cref="global::Foo.Variant{T1, T2, T3, T4, T5, T6}.VariantOf()"/> parameter list.
+        /// <c>0</c> if the variant is empty.
+        /// </summary>
+        public readonly byte Index;
 
         public Variant(T1? a)
         {
-            _n = 1;
+            Index = 1;
             _x = new Union(a);
         }
         public Variant(T2? b)
         {
-            _n = 2;
+            Index = 2;
             _x = new Union(b);
         }
         public Variant(T3? c)
         {
-            _n = 3;
+            Index = 3;
             _x = new Union(c);
         }
         public Variant(T4? d)
         {
-            _n = 4;
+            Index = 4;
             _x = new Union(d);
         }
         public Variant(T5? e)
         {
-            _n = 5;
+            Index = 5;
             _x = new Union(e);
         }
         public Variant(T6? f)
         {
-            _n = 6;
+            Index = 6;
             _x = new Union(f);
         }
 
 
-        public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<T1?>(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => new global::dotVariant.GeneratorSupport.Accessor_1<T1?>(v._x._1);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<T2?>(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => new global::dotVariant.GeneratorSupport.Accessor_2<T2?>(v._x._2);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_3<T3?>(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => new global::dotVariant.GeneratorSupport.Accessor_3<T3?>(v._x._3);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_4<T4?>(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => new global::dotVariant.GeneratorSupport.Accessor_4<T4?>(v._x._4);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_5<T5?>(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => new global::dotVariant.GeneratorSupport.Accessor_5<T5?>(v._x._5);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_6<T6?>(in Variant<T1, T2, T3, T4, T5, T6> v)
-            => new global::dotVariant.GeneratorSupport.Accessor_6<T6?>(v._x._6);
-
         /// <summary>
         /// <see langword="true"/> if Variant was constructed without a value.
         /// </summary>
-        public bool IsEmpty => _n == 0;
+        public bool IsEmpty => this.Index == 0;
 
         /// <summary>
         /// The string representation of the stored value's type.
@@ -618,7 +615,7 @@ namespace dotVariant._G.Foo
         {
             get
             {
-                switch (_n)
+                switch (this.Index)
                 {
                     case 0:
                         return "<empty>";
@@ -645,7 +642,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         public override string ToString()
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return "";
@@ -673,7 +670,7 @@ namespace dotVariant._G.Foo
         {
             get
             {
-                switch (_n)
+                switch (this.Index)
                 {
                     case 0:
                         return null;
@@ -697,11 +694,11 @@ namespace dotVariant._G.Foo
 
         public bool Equals(in Variant<T1, T2, T3, T4, T5, T6> other)
         {
-            if (_n != other._n)
+            if (this.Index != other.Index)
             {
                 return false;
             }
-            switch (_n)
+            switch (Index)
             {
                 case 0:
                     return true;
@@ -724,7 +721,7 @@ namespace dotVariant._G.Foo
 
         public override int GetHashCode()
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return 0;
@@ -746,14 +743,24 @@ namespace dotVariant._G.Foo
         }
 
         /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="T1?"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 1</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public T1? UnsafeGet(global::dotVariant.Accessor._1 _)
+            => _x._1;
+
+        /// <summary>
         /// Retrieve the value stored within Variant if it is of type <see cref="T1?"/>.
         /// </summary>
         /// <param name="a">Receives the stored value if it is of type <see cref="T1?"/>.</param>
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T1?"/>.</returns>
         public bool TryMatch(out T1? a)
         {
-            a = _n == 1 ? _x._1 : default;
-            return _n == 1;
+            a = this.Index == 1 ? _x._1 : default;
+            return this.Index == 1;
         }
 
         /// <summary>
@@ -764,7 +771,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T1?> a)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 a(_x._1);
                 return true;
@@ -780,7 +787,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant does not contain a value of type <see cref="T1?"/>.</exception>
         public void Match(out T1? a)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 a = _x._1;
                 return;
@@ -797,7 +804,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> is rethrown.</exception>
         public void Match(global::System.Action<T1?> a)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 a(_x._1);
                 return;
@@ -814,7 +821,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<T1?> a, global::System.Action _)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 a(_x._1);
             }
@@ -834,7 +841,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T1?, TResult> a)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 return a(_x._1);
             }
@@ -851,7 +858,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T1?, TResult> a, TResult _)
         {
-            return _n == 1 ? a(_x._1) : _;
+            return this.Index == 1 ? a(_x._1) : _;
         }
 
         /// <summary>
@@ -863,8 +870,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T1?, TResult> a, global::System.Func<TResult> _)
         {
-            return _n == 1 ? a(_x._1) : _();
+            return this.Index == 1 ? a(_x._1) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="T2?"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 2</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public T2? UnsafeGet(global::dotVariant.Accessor._2 _)
+            => _x._2;
+
         /// <summary>
         /// Retrieve the value stored within Variant if it is of type <see cref="T2?"/>.
         /// </summary>
@@ -872,8 +889,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T2?"/>.</returns>
         public bool TryMatch(out T2? b)
         {
-            b = _n == 2 ? _x._2 : default;
-            return _n == 2;
+            b = this.Index == 2 ? _x._2 : default;
+            return this.Index == 2;
         }
 
         /// <summary>
@@ -884,7 +901,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T2?> b)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 b(_x._2);
                 return true;
@@ -900,7 +917,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant does not contain a value of type <see cref="T2?"/>.</exception>
         public void Match(out T2? b)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 b = _x._2;
                 return;
@@ -917,7 +934,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> is rethrown.</exception>
         public void Match(global::System.Action<T2?> b)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 b(_x._2);
                 return;
@@ -934,7 +951,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<T2?> b, global::System.Action _)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 b(_x._2);
             }
@@ -954,7 +971,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T2?, TResult> b)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 return b(_x._2);
             }
@@ -971,7 +988,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T2?, TResult> b, TResult _)
         {
-            return _n == 2 ? b(_x._2) : _;
+            return this.Index == 2 ? b(_x._2) : _;
         }
 
         /// <summary>
@@ -983,8 +1000,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T2?, TResult> b, global::System.Func<TResult> _)
         {
-            return _n == 2 ? b(_x._2) : _();
+            return this.Index == 2 ? b(_x._2) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="T3?"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 3</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public T3? UnsafeGet(global::dotVariant.Accessor._3 _)
+            => _x._3;
+
         /// <summary>
         /// Retrieve the value stored within Variant if it is of type <see cref="T3?"/>.
         /// </summary>
@@ -992,8 +1019,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T3?"/>.</returns>
         public bool TryMatch(out T3? c)
         {
-            c = _n == 3 ? _x._3 : default;
-            return _n == 3;
+            c = this.Index == 3 ? _x._3 : default;
+            return this.Index == 3;
         }
 
         /// <summary>
@@ -1004,7 +1031,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T3?> c)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 c(_x._3);
                 return true;
@@ -1020,7 +1047,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant does not contain a value of type <see cref="T3?"/>.</exception>
         public void Match(out T3? c)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 c = _x._3;
                 return;
@@ -1037,7 +1064,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> is rethrown.</exception>
         public void Match(global::System.Action<T3?> c)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 c(_x._3);
                 return;
@@ -1054,7 +1081,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<T3?> c, global::System.Action _)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 c(_x._3);
             }
@@ -1074,7 +1101,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T3?, TResult> c)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 return c(_x._3);
             }
@@ -1091,7 +1118,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T3?, TResult> c, TResult _)
         {
-            return _n == 3 ? c(_x._3) : _;
+            return this.Index == 3 ? c(_x._3) : _;
         }
 
         /// <summary>
@@ -1103,8 +1130,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T3?, TResult> c, global::System.Func<TResult> _)
         {
-            return _n == 3 ? c(_x._3) : _();
+            return this.Index == 3 ? c(_x._3) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="T4?"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 4</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public T4? UnsafeGet(global::dotVariant.Accessor._4 _)
+            => _x._4;
+
         /// <summary>
         /// Retrieve the value stored within Variant if it is of type <see cref="T4?"/>.
         /// </summary>
@@ -1112,8 +1149,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T4?"/>.</returns>
         public bool TryMatch(out T4? d)
         {
-            d = _n == 4 ? _x._4 : default;
-            return _n == 4;
+            d = this.Index == 4 ? _x._4 : default;
+            return this.Index == 4;
         }
 
         /// <summary>
@@ -1124,7 +1161,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T4?> d)
         {
-            if (_n == 4)
+            if (this.Index == 4)
             {
                 d(_x._4);
                 return true;
@@ -1140,7 +1177,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant does not contain a value of type <see cref="T4?"/>.</exception>
         public void Match(out T4? d)
         {
-            if (_n == 4)
+            if (this.Index == 4)
             {
                 d = _x._4;
                 return;
@@ -1157,7 +1194,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
         public void Match(global::System.Action<T4?> d)
         {
-            if (_n == 4)
+            if (this.Index == 4)
             {
                 d(_x._4);
                 return;
@@ -1174,7 +1211,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<T4?> d, global::System.Action _)
         {
-            if (_n == 4)
+            if (this.Index == 4)
             {
                 d(_x._4);
             }
@@ -1194,7 +1231,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T4?, TResult> d)
         {
-            if (_n == 4)
+            if (this.Index == 4)
             {
                 return d(_x._4);
             }
@@ -1211,7 +1248,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T4?, TResult> d, TResult _)
         {
-            return _n == 4 ? d(_x._4) : _;
+            return this.Index == 4 ? d(_x._4) : _;
         }
 
         /// <summary>
@@ -1223,8 +1260,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T4?, TResult> d, global::System.Func<TResult> _)
         {
-            return _n == 4 ? d(_x._4) : _();
+            return this.Index == 4 ? d(_x._4) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="T5?"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 5</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public T5? UnsafeGet(global::dotVariant.Accessor._5 _)
+            => _x._5;
+
         /// <summary>
         /// Retrieve the value stored within Variant if it is of type <see cref="T5?"/>.
         /// </summary>
@@ -1232,8 +1279,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T5?"/>.</returns>
         public bool TryMatch(out T5? e)
         {
-            e = _n == 5 ? _x._5 : default;
-            return _n == 5;
+            e = this.Index == 5 ? _x._5 : default;
+            return this.Index == 5;
         }
 
         /// <summary>
@@ -1244,7 +1291,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T5?> e)
         {
-            if (_n == 5)
+            if (this.Index == 5)
             {
                 e(_x._5);
                 return true;
@@ -1260,7 +1307,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant does not contain a value of type <see cref="T5?"/>.</exception>
         public void Match(out T5? e)
         {
-            if (_n == 5)
+            if (this.Index == 5)
             {
                 e = _x._5;
                 return;
@@ -1277,7 +1324,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"/> is rethrown.</exception>
         public void Match(global::System.Action<T5?> e)
         {
-            if (_n == 5)
+            if (this.Index == 5)
             {
                 e(_x._5);
                 return;
@@ -1294,7 +1341,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<T5?> e, global::System.Action _)
         {
-            if (_n == 5)
+            if (this.Index == 5)
             {
                 e(_x._5);
             }
@@ -1314,7 +1361,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T5?, TResult> e)
         {
-            if (_n == 5)
+            if (this.Index == 5)
             {
                 return e(_x._5);
             }
@@ -1331,7 +1378,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T5?, TResult> e, TResult _)
         {
-            return _n == 5 ? e(_x._5) : _;
+            return this.Index == 5 ? e(_x._5) : _;
         }
 
         /// <summary>
@@ -1343,8 +1390,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T5?, TResult> e, global::System.Func<TResult> _)
         {
-            return _n == 5 ? e(_x._5) : _();
+            return this.Index == 5 ? e(_x._5) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="T6?"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 6</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public T6? UnsafeGet(global::dotVariant.Accessor._6 _)
+            => _x._6;
+
         /// <summary>
         /// Retrieve the value stored within Variant if it is of type <see cref="T6?"/>.
         /// </summary>
@@ -1352,8 +1409,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T6?"/>.</returns>
         public bool TryMatch(out T6? f)
         {
-            f = _n == 6 ? _x._6 : default;
-            return _n == 6;
+            f = this.Index == 6 ? _x._6 : default;
+            return this.Index == 6;
         }
 
         /// <summary>
@@ -1364,7 +1421,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T6?> f)
         {
-            if (_n == 6)
+            if (this.Index == 6)
             {
                 f(_x._6);
                 return true;
@@ -1380,7 +1437,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant does not contain a value of type <see cref="T6?"/>.</exception>
         public void Match(out T6? f)
         {
-            if (_n == 6)
+            if (this.Index == 6)
             {
                 f = _x._6;
                 return;
@@ -1397,7 +1454,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> is rethrown.</exception>
         public void Match(global::System.Action<T6?> f)
         {
-            if (_n == 6)
+            if (this.Index == 6)
             {
                 f(_x._6);
                 return;
@@ -1414,7 +1471,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<T6?> f, global::System.Action _)
         {
-            if (_n == 6)
+            if (this.Index == 6)
             {
                 f(_x._6);
             }
@@ -1434,7 +1491,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T6?, TResult> f)
         {
-            if (_n == 6)
+            if (this.Index == 6)
             {
                 return f(_x._6);
             }
@@ -1451,7 +1508,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T6?, TResult> f, TResult _)
         {
-            return _n == 6 ? f(_x._6) : _;
+            return this.Index == 6 ? f(_x._6) : _;
         }
 
         /// <summary>
@@ -1463,7 +1520,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T6?, TResult> f, global::System.Func<TResult> _)
         {
-            return _n == 6 ? f(_x._6) : _();
+            return this.Index == 6 ? f(_x._6) : _();
         }
 
         /// <summary>
@@ -1480,7 +1537,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<T1?> a, global::System.Action<T2?> b, global::System.Action<T3?> c, global::System.Action<T4?> d, global::System.Action<T5?> e, global::System.Action<T6?> f, global::System.Action _)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     _();
@@ -1523,7 +1580,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<T1?> a, global::System.Action<T2?> b, global::System.Action<T3?> c, global::System.Action<T4?> d, global::System.Action<T5?> e, global::System.Action<T6?> f)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant<T1, T2, T3, T4, T5, T6>");
@@ -1567,7 +1624,7 @@ namespace dotVariant._G.Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<T1?, TResult> a, global::System.Func<T2?, TResult> b, global::System.Func<T3?, TResult> c, global::System.Func<T4?, TResult> d, global::System.Func<T5?, TResult> e, global::System.Func<T6?, TResult> f, global::System.Func<TResult> _)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return _();
@@ -1603,7 +1660,7 @@ namespace dotVariant._G.Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<T1?, TResult> a, global::System.Func<T2?, TResult> b, global::System.Func<T3?, TResult> c, global::System.Func<T4?, TResult> d, global::System.Func<T5?, TResult> e, global::System.Func<T6?, TResult> f)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant<T1, T2, T3, T4, T5, T6>");
@@ -1652,9 +1709,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
+                if (variant.Index == 1)
                 {
-                    yield return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)variant).Value);
+                    yield return a(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
             }
         }
@@ -1679,9 +1736,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
+                if (variant.Index == 2)
                 {
-                    yield return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)variant).Value);
+                    yield return b(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
             }
         }
@@ -1706,9 +1763,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 3)
+                if (variant.Index == 3)
                 {
-                    yield return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)variant).Value);
+                    yield return c(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
             }
         }
@@ -1733,9 +1790,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 4)
+                if (variant.Index == 4)
                 {
-                    yield return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)variant).Value);
+                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                 }
             }
         }
@@ -1760,9 +1817,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 5)
+                if (variant.Index == 5)
                 {
-                    yield return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)variant).Value);
+                    yield return e(variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                 }
             }
         }
@@ -1787,9 +1844,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 6)
+                if (variant.Index == 6)
                 {
-                    yield return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)variant).Value);
+                    yield return f(variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                 }
             }
         }
@@ -1817,9 +1874,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
+                if (variant.Index == 1)
                 {
-                    yield return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)variant).Value);
+                    yield return a(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1850,9 +1907,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
+                if (variant.Index == 2)
                 {
-                    yield return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)variant).Value);
+                    yield return b(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1883,9 +1940,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 3)
+                if (variant.Index == 3)
                 {
-                    yield return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)variant).Value);
+                    yield return c(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1916,9 +1973,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 4)
+                if (variant.Index == 4)
                 {
-                    yield return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)variant).Value);
+                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                 }
                 else
                 {
@@ -1949,9 +2006,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 5)
+                if (variant.Index == 5)
                 {
-                    yield return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)variant).Value);
+                    yield return e(variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                 }
                 else
                 {
@@ -1982,9 +2039,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 6)
+                if (variant.Index == 6)
                 {
-                    yield return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)variant).Value);
+                    yield return f(variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                 }
                 else
                 {
@@ -2016,9 +2073,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
+                if (variant.Index == 1)
                 {
-                    yield return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)variant).Value);
+                    yield return a(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -2049,9 +2106,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
+                if (variant.Index == 2)
                 {
-                    yield return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)variant).Value);
+                    yield return b(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -2082,9 +2139,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 3)
+                if (variant.Index == 3)
                 {
-                    yield return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)variant).Value);
+                    yield return c(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -2115,9 +2172,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 4)
+                if (variant.Index == 4)
                 {
-                    yield return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)variant).Value);
+                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                 }
                 else
                 {
@@ -2148,9 +2205,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 5)
+                if (variant.Index == 5)
                 {
-                    yield return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)variant).Value);
+                    yield return e(variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                 }
                 else
                 {
@@ -2181,9 +2238,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 6)
+                if (variant.Index == 6)
                 {
-                    yield return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)variant).Value);
+                    yield return f(variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                 }
                 else
                 {
@@ -2220,28 +2277,28 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
+                switch (variant.Index)
                 {
                     case 0:
                         global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant<T1, T2, T3, T4, T5, T6>");
                         yield break;
                     case 1:
-                        yield return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)variant).Value);
+                        yield return a(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        yield return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)variant).Value);
+                        yield return b(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        yield return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)variant).Value);
+                        yield return c(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     case 4:
-                        yield return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)variant).Value);
+                        yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                         break;
                     case 5:
-                        yield return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)variant).Value);
+                        yield return e(variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                         break;
                     case 6:
-                        yield return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)variant).Value);
+                        yield return f(variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                         break;
                     default:
                         global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant<T1, T2, T3, T4, T5, T6>");
@@ -2278,28 +2335,28 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
+                switch (variant.Index)
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)variant).Value);
+                        yield return a(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        yield return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)variant).Value);
+                        yield return b(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        yield return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)variant).Value);
+                        yield return c(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     case 4:
-                        yield return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)variant).Value);
+                        yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                         break;
                     case 5:
-                        yield return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)variant).Value);
+                        yield return e(variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                         break;
                     case 6:
-                        yield return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)variant).Value);
+                        yield return f(variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                         break;
                     default:
                         global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant<T1, T2, T3, T4, T5, T6>");
@@ -2332,8 +2389,8 @@ namespace Foo
             where T5 : notnull
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1),
-                _variant => a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 1),
+                _variant => a(_variant.UnsafeGet(new global::dotVariant.Accessor._1())));
         }
         /// <summary>
         /// Projects each <see cref="T2?"/> element of an observable sequence
@@ -2354,8 +2411,8 @@ namespace Foo
             where T5 : notnull
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2),
-                _variant => b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 2),
+                _variant => b(_variant.UnsafeGet(new global::dotVariant.Accessor._2())));
         }
         /// <summary>
         /// Projects each <see cref="T3?"/> element of an observable sequence
@@ -2376,8 +2433,8 @@ namespace Foo
             where T5 : notnull
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 3),
-                _variant => c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 3),
+                _variant => c(_variant.UnsafeGet(new global::dotVariant.Accessor._3())));
         }
         /// <summary>
         /// Projects each <see cref="T4?"/> element of an observable sequence
@@ -2398,8 +2455,8 @@ namespace Foo
             where T5 : notnull
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 4),
-                _variant => d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 4),
+                _variant => d(_variant.UnsafeGet(new global::dotVariant.Accessor._4())));
         }
         /// <summary>
         /// Projects each <see cref="T5?"/> element of an observable sequence
@@ -2420,8 +2477,8 @@ namespace Foo
             where T5 : notnull
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 5),
-                _variant => e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 5),
+                _variant => e(_variant.UnsafeGet(new global::dotVariant.Accessor._5())));
         }
         /// <summary>
         /// Projects each <see cref="T6?"/> element of an observable sequence
@@ -2442,8 +2499,8 @@ namespace Foo
             where T5 : notnull
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 6),
-                _variant => f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 6),
+                _variant => f(_variant.UnsafeGet(new global::dotVariant.Accessor._6())));
         }
 
         /// <summary>
@@ -2468,9 +2525,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
+                if (_variant.Index == 1)
                 {
-                    return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)_variant).Value);
+                    return a(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -2500,9 +2557,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2)
+                if (_variant.Index == 2)
                 {
-                    return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)_variant).Value);
+                    return b(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -2532,9 +2589,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 3)
+                if (_variant.Index == 3)
                 {
-                    return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)_variant).Value);
+                    return c(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -2564,9 +2621,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 4)
+                if (_variant.Index == 4)
                 {
-                    return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)_variant).Value);
+                    return d(_variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                 }
                 else
                 {
@@ -2596,9 +2653,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 5)
+                if (_variant.Index == 5)
                 {
-                    return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)_variant).Value);
+                    return e(_variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                 }
                 else
                 {
@@ -2628,9 +2685,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 6)
+                if (_variant.Index == 6)
                 {
-                    return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)_variant).Value);
+                    return f(_variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                 }
                 else
                 {
@@ -2661,9 +2718,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
+                if (_variant.Index == 1)
                 {
-                    return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)_variant).Value);
+                    return a(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -2693,9 +2750,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2)
+                if (_variant.Index == 2)
                 {
-                    return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)_variant).Value);
+                    return b(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -2725,9 +2782,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 3)
+                if (_variant.Index == 3)
                 {
-                    return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)_variant).Value);
+                    return c(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -2757,9 +2814,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 4)
+                if (_variant.Index == 4)
                 {
-                    return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)_variant).Value);
+                    return d(_variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                 }
                 else
                 {
@@ -2789,9 +2846,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 5)
+                if (_variant.Index == 5)
                 {
-                    return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)_variant).Value);
+                    return e(_variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                 }
                 else
                 {
@@ -2821,9 +2878,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 6)
+                if (_variant.Index == 6)
                 {
-                    return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)_variant).Value);
+                    return f(_variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                 }
                 else
                 {
@@ -2857,22 +2914,22 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
+                switch (_variant.Index)
                 {
                     case 0:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant<T1, T2, T3, T4, T5, T6>");
                     case 1:
-                        return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)_variant).Value);
+                        return a(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                     case 2:
-                        return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)_variant).Value);
+                        return b(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                     case 3:
-                        return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)_variant).Value);
+                        return c(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                     case 4:
-                        return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)_variant).Value);
+                        return d(_variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                     case 5:
-                        return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)_variant).Value);
+                        return e(_variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                     case 6:
-                        return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)_variant).Value);
+                        return f(_variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant<T1, T2, T3, T4, T5, T6>");
                 }
@@ -2906,22 +2963,22 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
+                switch (_variant.Index)
                 {
                     case 0:
                         return _();
                     case 1:
-                        return a(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)_variant).Value);
+                        return a(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                     case 2:
-                        return b(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)_variant).Value);
+                        return b(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                     case 3:
-                        return c(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)_variant).Value);
+                        return c(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                     case 4:
-                        return d(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)_variant).Value);
+                        return d(_variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                     case 5:
-                        return e(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)_variant).Value);
+                        return e(_variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                     case 6:
-                        return f(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)_variant).Value);
+                        return f(_variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant<T1, T2, T3, T4, T5, T6>");
                 }
@@ -3116,7 +3173,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant<T1, T2, T3, T4, T5, T6> _variant)
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
+                switch (_variant.Index)
                 {
                     case 0:
                         if (_accept0)
@@ -3129,22 +3186,22 @@ namespace Foo
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant.GeneratorSupport.Accessor_1<T1?>)_variant).Value);
+                        Subject1.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        Subject2.OnNext(((global::dotVariant.GeneratorSupport.Accessor_2<T2?>)_variant).Value);
+                        Subject2.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        Subject3.OnNext(((global::dotVariant.GeneratorSupport.Accessor_3<T3?>)_variant).Value);
+                        Subject3.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     case 4:
-                        Subject4.OnNext(((global::dotVariant.GeneratorSupport.Accessor_4<T4?>)_variant).Value);
+                        Subject4.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._4()));
                         break;
                     case 5:
-                        Subject5.OnNext(((global::dotVariant.GeneratorSupport.Accessor_5<T5?>)_variant).Value);
+                        Subject5.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._5()));
                         break;
                     case 6:
-                        Subject6.OnNext(((global::dotVariant.GeneratorSupport.Accessor_6<T6?>)_variant).Value);
+                        Subject6.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._6()));
                         break;
                     default:
                         OnError(global::dotVariant.GeneratorSupport.Errors.MakeInternalError("Foo.Variant<T1, T2, T3, T4, T5, T6>"));

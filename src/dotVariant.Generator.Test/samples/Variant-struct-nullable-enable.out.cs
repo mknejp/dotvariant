@@ -79,6 +79,11 @@ namespace Foo
         public readonly bool IsEmpty
             => _variant.IsEmpty;
 
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.Index"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public readonly byte Index
+            => _variant.Index;
+
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly override bool Equals(object? other)
@@ -105,6 +110,11 @@ namespace Foo
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly override string ToString()
             => _variant.ToString();
+
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.UnsafeGet(global::dotVariant.Accessor._1)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public readonly long UnsafeGet(global::dotVariant.Accessor._1 accessor)
+            => _variant.UnsafeGet(accessor);
 
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.TryMatch(out long)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -146,6 +156,11 @@ namespace Foo
         public readonly TResult Match<TResult>(global::System.Func<long, TResult> l, global::System.Func<TResult> _)
             => _variant.Match(l, _);
 
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.UnsafeGet(global::dotVariant.Accessor._2)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public readonly double UnsafeGet(global::dotVariant.Accessor._2 accessor)
+            => _variant.UnsafeGet(accessor);
+
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.TryMatch(out double)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out double d)
@@ -185,6 +200,11 @@ namespace Foo
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly TResult Match<TResult>(global::System.Func<double, TResult> d, global::System.Func<TResult> _)
             => _variant.Match(d, _);
+
+        /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.UnsafeGet(global::dotVariant.Accessor._3)"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public readonly object UnsafeGet(global::dotVariant.Accessor._3 accessor)
+            => _variant.UnsafeGet(accessor);
 
         /// <inheritdoc cref="global::dotVariant._G.Foo.Variant_struct_nullable_enable.TryMatch(out object?)"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -259,23 +279,6 @@ namespace Foo
                 #pragma warning restore 8604, 8625
             }
         }
-
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(Variant_struct_nullable_enable v)
-            => (global::dotVariant.GeneratorSupport.Discriminator)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<long>(Variant_struct_nullable_enable v)
-            => (global::dotVariant.GeneratorSupport.Accessor_1<long>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<double>(Variant_struct_nullable_enable v)
-            => (global::dotVariant.GeneratorSupport.Accessor_2<double>)v._variant;
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_3<object>(Variant_struct_nullable_enable v)
-            => (global::dotVariant.GeneratorSupport.Accessor_3<object>)v._variant;
     }
 }
 
@@ -311,33 +314,30 @@ namespace dotVariant._G.Foo
         }
 
         private readonly Union _x;
-        private readonly byte _n;
+
+        /// <summary>
+        /// The 1-based index of the currently stored type,
+        /// counted left-ro-right from the <see cref="global::Foo.Variant_struct_nullable_enable.VariantOf()"/> parameter list.
+        /// <c>0</c> if the variant is empty.
+        /// </summary>
+        public readonly byte Index;
 
         public Variant_struct_nullable_enable(long l)
         {
-            _n = 1;
+            Index = 1;
             _x = new Union(l);
         }
         public Variant_struct_nullable_enable(double d)
         {
-            _n = 2;
+            Index = 2;
             _x = new Union(d);
         }
         public Variant_struct_nullable_enable(object o)
         {
-            _n = 3;
+            Index = 3;
             _x = new Union(o);
         }
 
-
-        public static explicit operator global::dotVariant.GeneratorSupport.Discriminator(in Variant_struct_nullable_enable v)
-            => (global::dotVariant.GeneratorSupport.Discriminator)v._n;
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_1<long>(in Variant_struct_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_1<long>(v._x._1);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_2<double>(in Variant_struct_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_2<double>(v._x._2);
-        public static explicit operator global::dotVariant.GeneratorSupport.Accessor_3<object>(in Variant_struct_nullable_enable v)
-            => new global::dotVariant.GeneratorSupport.Accessor_3<object>(v._x._3);
 
         /// <summary>
         /// <see langword="true"/> if Variant_struct_nullable_enable was constructed without a value.
@@ -347,7 +347,7 @@ namespace dotVariant._G.Foo
         /// A default-constructed Variant_struct_nullable_enable will always have a <c>IsEmpty</c> value of <see langword="true"/>
         /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
         /// </remarks>
-        public bool IsEmpty => _n == 0;
+        public bool IsEmpty => this.Index == 0;
 
         /// <summary>
         /// The string representation of the stored value's type.
@@ -356,7 +356,7 @@ namespace dotVariant._G.Foo
         {
             get
             {
-                switch (_n)
+                switch (this.Index)
                 {
                     case 0:
                         return "<empty>";
@@ -377,7 +377,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         public override string ToString()
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return "";
@@ -399,7 +399,7 @@ namespace dotVariant._G.Foo
         {
             get
             {
-                switch (_n)
+                switch (this.Index)
                 {
                     case 0:
                         return null;
@@ -417,11 +417,11 @@ namespace dotVariant._G.Foo
 
         public bool Equals(in Variant_struct_nullable_enable other)
         {
-            if (_n != other._n)
+            if (this.Index != other.Index)
             {
                 return false;
             }
-            switch (_n)
+            switch (Index)
             {
                 case 0:
                     return true;
@@ -438,7 +438,7 @@ namespace dotVariant._G.Foo
 
         public override int GetHashCode()
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return 0;
@@ -454,14 +454,24 @@ namespace dotVariant._G.Foo
         }
 
         /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="long"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 1</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public long UnsafeGet(global::dotVariant.Accessor._1 _)
+            => _x._1;
+
+        /// <summary>
         /// Retrieve the value stored within Variant_struct_nullable_enable if it is of type <see cref="long"/>.
         /// </summary>
         /// <param name="l">Receives the stored value if it is of type <see cref="long"/>.</param>
         /// <returns><see langword="true"/> if Variant_struct_nullable_enable contained a value of type <see cref="long"/>.</returns>
         public bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out long l)
         {
-            l = _n == 1 ? _x._1 : default;
-            return _n == 1;
+            l = this.Index == 1 ? _x._1 : default;
+            return this.Index == 1;
         }
 
         /// <summary>
@@ -472,7 +482,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<long> l)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 l(_x._1);
                 return true;
@@ -488,7 +498,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="long"/>.</exception>
         public void Match([global::System.Diagnostics.CodeAnalysis.NotNull] out long l)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 l = _x._1;
                 return;
@@ -505,7 +515,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> is rethrown.</exception>
         public void Match(global::System.Action<long> l)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 l(_x._1);
                 return;
@@ -522,7 +532,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<long> l, global::System.Action _)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 l(_x._1);
             }
@@ -542,7 +552,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<long, TResult> l)
         {
-            if (_n == 1)
+            if (this.Index == 1)
             {
                 return l(_x._1);
             }
@@ -559,7 +569,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<long, TResult> l, TResult _)
         {
-            return _n == 1 ? l(_x._1) : _;
+            return this.Index == 1 ? l(_x._1) : _;
         }
 
         /// <summary>
@@ -571,8 +581,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<long, TResult> l, global::System.Func<TResult> _)
         {
-            return _n == 1 ? l(_x._1) : _();
+            return this.Index == 1 ? l(_x._1) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="double"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 2</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public double UnsafeGet(global::dotVariant.Accessor._2 _)
+            => _x._2;
+
         /// <summary>
         /// Retrieve the value stored within Variant_struct_nullable_enable if it is of type <see cref="double"/>.
         /// </summary>
@@ -580,8 +600,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_struct_nullable_enable contained a value of type <see cref="double"/>.</returns>
         public bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out double d)
         {
-            d = _n == 2 ? _x._2 : default;
-            return _n == 2;
+            d = this.Index == 2 ? _x._2 : default;
+            return this.Index == 2;
         }
 
         /// <summary>
@@ -592,7 +612,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<double> d)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 d(_x._2);
                 return true;
@@ -608,7 +628,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="double"/>.</exception>
         public void Match([global::System.Diagnostics.CodeAnalysis.NotNull] out double d)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 d = _x._2;
                 return;
@@ -625,7 +645,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
         public void Match(global::System.Action<double> d)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 d(_x._2);
                 return;
@@ -642,7 +662,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<double> d, global::System.Action _)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 d(_x._2);
             }
@@ -662,7 +682,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<double, TResult> d)
         {
-            if (_n == 2)
+            if (this.Index == 2)
             {
                 return d(_x._2);
             }
@@ -679,7 +699,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<double, TResult> d, TResult _)
         {
-            return _n == 2 ? d(_x._2) : _;
+            return this.Index == 2 ? d(_x._2) : _;
         }
 
         /// <summary>
@@ -691,8 +711,18 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<double, TResult> d, global::System.Func<TResult> _)
         {
-            return _n == 2 ? d(_x._2) : _();
+            return this.Index == 2 ? d(_x._2) : _();
         }
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="object"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == 3</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public object UnsafeGet(global::dotVariant.Accessor._3 _)
+            => _x._3;
+
         /// <summary>
         /// Retrieve the value stored within Variant_struct_nullable_enable if it is of type <see cref="object"/>.
         /// </summary>
@@ -700,8 +730,8 @@ namespace dotVariant._G.Foo
         /// <returns><see langword="true"/> if Variant_struct_nullable_enable contained a value of type <see cref="object"/>.</returns>
         public bool TryMatch([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out object? o)
         {
-            o = _n == 3 ? _x._3 : default;
-            return _n == 3;
+            o = this.Index == 3 ? _x._3 : default;
+            return this.Index == 3;
         }
 
         /// <summary>
@@ -712,7 +742,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
         public bool TryMatch(global::System.Action<object> o)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 o(_x._3);
                 return true;
@@ -728,7 +758,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.InvalidOperationException">Variant_struct_nullable_enable does not contain a value of type <see cref="object"/>.</exception>
         public void Match([global::System.Diagnostics.CodeAnalysis.NotNull] out object? o)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 o = _x._3;
                 return;
@@ -745,7 +775,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> is rethrown.</exception>
         public void Match(global::System.Action<object> o)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 o(_x._3);
                 return;
@@ -762,7 +792,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match(global::System.Action<object> o, global::System.Action _)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 o(_x._3);
             }
@@ -782,7 +812,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<object, TResult> o)
         {
-            if (_n == 3)
+            if (this.Index == 3)
             {
                 return o(_x._3);
             }
@@ -799,7 +829,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<object, TResult> o, TResult _)
         {
-            return _n == 3 ? o(_x._3) : _;
+            return this.Index == 3 ? o(_x._3) : _;
         }
 
         /// <summary>
@@ -811,7 +841,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<object, TResult> o, global::System.Func<TResult> _)
         {
-            return _n == 3 ? o(_x._3) : _();
+            return this.Index == 3 ? o(_x._3) : _();
         }
 
         /// <summary>
@@ -825,7 +855,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<long> l, global::System.Action<double> d, global::System.Action<object> o, global::System.Action _)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     _();
@@ -856,7 +886,7 @@ namespace dotVariant._G.Foo
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit(global::System.Action<long> l, global::System.Action<double> d, global::System.Action<object> o)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_struct_nullable_enable");
@@ -888,7 +918,7 @@ namespace dotVariant._G.Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o, global::System.Func<TResult> _)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return _();
@@ -915,7 +945,7 @@ namespace dotVariant._G.Foo
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>(global::System.Func<long, TResult> l, global::System.Func<double, TResult> d, global::System.Func<object, TResult> o)
         {
-            switch (_n)
+            switch (this.Index)
             {
                 case 0:
                     return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_struct_nullable_enable");
@@ -953,9 +983,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
+                if (variant.Index == 1)
                 {
-                    yield return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)variant).Value);
+                    yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
             }
         }
@@ -975,9 +1005,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
+                if (variant.Index == 2)
                 {
-                    yield return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)variant).Value);
+                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
             }
         }
@@ -997,9 +1027,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 3)
+                if (variant.Index == 3)
                 {
-                    yield return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)variant).Value);
+                    yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
             }
         }
@@ -1022,9 +1052,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
+                if (variant.Index == 1)
                 {
-                    yield return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)variant).Value);
+                    yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1050,9 +1080,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
+                if (variant.Index == 2)
                 {
-                    yield return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)variant).Value);
+                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1078,9 +1108,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 3)
+                if (variant.Index == 3)
                 {
-                    yield return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)variant).Value);
+                    yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1107,9 +1137,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 1)
+                if (variant.Index == 1)
                 {
-                    yield return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)variant).Value);
+                    yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1135,9 +1165,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 2)
+                if (variant.Index == 2)
                 {
-                    yield return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)variant).Value);
+                    yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1163,9 +1193,9 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant) == 3)
+                if (variant.Index == 3)
                 {
-                    yield return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)variant).Value);
+                    yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1194,19 +1224,19 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
+                switch (variant.Index)
                 {
                     case 0:
                         global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError("Foo.Variant_struct_nullable_enable");
                         yield break;
                     case 1:
-                        yield return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)variant).Value);
+                        yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        yield return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)variant).Value);
+                        yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        yield return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)variant).Value);
+                        yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     default:
                         global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_struct_nullable_enable");
@@ -1235,19 +1265,19 @@ namespace Foo
         {
             foreach (var variant in source)
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)variant))
+                switch (variant.Index)
                 {
                     case 0:
                         yield return _();
                         break;
                     case 1:
-                        yield return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)variant).Value);
+                        yield return l(variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        yield return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)variant).Value);
+                        yield return d(variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        yield return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)variant).Value);
+                        yield return o(variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     default:
                         global::dotVariant.GeneratorSupport.Errors.ThrowInternalError("Foo.Variant_struct_nullable_enable");
@@ -1275,8 +1305,8 @@ namespace Foo
                 global::System.Func<long, TResult> l)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1),
-                _variant => l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 1),
+                _variant => l(_variant.UnsafeGet(new global::dotVariant.Accessor._1())));
         }
         /// <summary>
         /// Projects each <see cref="double"/> element of an observable sequence
@@ -1292,8 +1322,8 @@ namespace Foo
                 global::System.Func<double, TResult> d)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2),
-                _variant => d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 2),
+                _variant => d(_variant.UnsafeGet(new global::dotVariant.Accessor._2())));
         }
         /// <summary>
         /// Projects each <see cref="object"/> element of an observable sequence
@@ -1309,8 +1339,8 @@ namespace Foo
                 global::System.Func<object, TResult> o)
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => ((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 3),
-                _variant => o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)_variant).Value));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => _variant.Index == 3),
+                _variant => o(_variant.UnsafeGet(new global::dotVariant.Accessor._3())));
         }
 
         /// <summary>
@@ -1330,9 +1360,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
+                if (_variant.Index == 1)
                 {
-                    return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)_variant).Value);
+                    return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1357,9 +1387,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2)
+                if (_variant.Index == 2)
                 {
-                    return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)_variant).Value);
+                    return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1384,9 +1414,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 3)
+                if (_variant.Index == 3)
                 {
-                    return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)_variant).Value);
+                    return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1412,9 +1442,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 1)
+                if (_variant.Index == 1)
                 {
-                    return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)_variant).Value);
+                    return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                 }
                 else
                 {
@@ -1439,9 +1469,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 2)
+                if (_variant.Index == 2)
                 {
-                    return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)_variant).Value);
+                    return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                 }
                 else
                 {
@@ -1466,9 +1496,9 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant) == 3)
+                if (_variant.Index == 3)
                 {
-                    return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)_variant).Value);
+                    return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                 }
                 else
                 {
@@ -1494,16 +1524,16 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
+                switch (_variant.Index)
                 {
                     case 0:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowEmptyError<TResult>("Foo.Variant_struct_nullable_enable");
                     case 1:
-                        return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)_variant).Value);
+                        return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                     case 2:
-                        return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)_variant).Value);
+                        return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                     case 3:
-                        return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)_variant).Value);
+                        return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_struct_nullable_enable");
                 }
@@ -1529,16 +1559,16 @@ namespace Foo
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
+                switch (_variant.Index)
                 {
                     case 0:
                         return _();
                     case 1:
-                        return l(((global::dotVariant.GeneratorSupport.Accessor_1<long>)_variant).Value);
+                        return l(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                     case 2:
-                        return d(((global::dotVariant.GeneratorSupport.Accessor_2<double>)_variant).Value);
+                        return d(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                     case 3:
-                        return o(((global::dotVariant.GeneratorSupport.Accessor_3<object>)_variant).Value);
+                        return o(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                     default:
                         return global::dotVariant.GeneratorSupport.Errors.ThrowInternalError<TResult>("Foo.Variant_struct_nullable_enable");
                 }
@@ -1696,7 +1726,7 @@ namespace Foo
 
             public void OnNext(global::Foo.Variant_struct_nullable_enable _variant)
             {
-                switch (((int)(global::dotVariant.GeneratorSupport.Discriminator)_variant))
+                switch (_variant.Index)
                 {
                     case 0:
                         if (_accept0)
@@ -1709,13 +1739,13 @@ namespace Foo
                         }
                         break;
                     case 1:
-                        Subject1.OnNext(((global::dotVariant.GeneratorSupport.Accessor_1<long>)_variant).Value);
+                        Subject1.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._1()));
                         break;
                     case 2:
-                        Subject2.OnNext(((global::dotVariant.GeneratorSupport.Accessor_2<double>)_variant).Value);
+                        Subject2.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._2()));
                         break;
                     case 3:
-                        Subject3.OnNext(((global::dotVariant.GeneratorSupport.Accessor_3<object>)_variant).Value);
+                        Subject3.OnNext(_variant.UnsafeGet(new global::dotVariant.Accessor._3()));
                         break;
                     default:
                         OnError(global::dotVariant.GeneratorSupport.Errors.MakeInternalError("Foo.Variant_struct_nullable_enable"));

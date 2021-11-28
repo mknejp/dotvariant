@@ -102,13 +102,18 @@ readonly make_empty_error_error
 storage_type = "global::dotVariant._G." + (Variant.Namespace ? Variant.Namespace + "." : "") + Variant.Type
 readonly storage_type
 
-func get_value(param, expression = "_variant")
-    ret "((global::dotVariant.GeneratorSupport.Accessor_" + param.Index + "<" + param.Type + ">)" + expression + ").Value"
+func accessor(param)
+    ret "global::dotVariant.Accessor._" + param.Index
+end
+readonly accessor
+
+func get_value(param, expression)
+    ret expression + ".UnsafeGet(new global::dotVariant.Accessor._" + param.Index + "())"
 end
 readonly get_value
 
-func get_n(expression = "_variant")
-    ret "((int)(global::dotVariant.GeneratorSupport.Discriminator)" + expression + ")"
+func get_n(expression)
+    ret expression + ".Index"
 end
 readonly get_n
 
@@ -116,11 +121,6 @@ func cref(name)
     ret name | string.replace "<" "{" | string.replace ">" "}"
 end
 readonly cref
-
-func accessor(index, type)
-    ret "global::dotVariant.GeneratorSupport.Accessor_" + index + "<" + type + ">"
-end
-readonly accessor
 
 func_types = Params | array.each @(do; ret func_type $0; end) | array.join ", "
 func_params = Params | array.each @(do; ret (func_type $0) + " " + $0.Identifier; end) | array.join ", "
@@ -132,8 +132,6 @@ global_nullable = emit_nullability ? "?" : ""
 global_forgive = emit_nullability ? "!" : ""
 needs_dispose = (Params | array.filter @(do; ret $0.IsDisposable; end) | array.size) > 0
 forward_params = Params | array.each @(do; ret $0.Identifier; end) | array.join ", "
-discriminator = "global::dotVariant.GeneratorSupport.Discriminator"
-object_accessor = "global::dotVariant.GeneratorSupport.ObjectAccessor"
 is_generic = Variant.Generics != empty
 
 readonly func_types

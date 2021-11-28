@@ -3,6 +3,14 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 ~}}
+{{~
+func $get_n()
+    ret get_n "_variant"
+end
+func $get_value(param)
+    ret get_value param "_variant"
+end
+~}}
 {{~ if Options.ExtensionClassNamespace ~}}
 namespace {{ Options.ExtensionClassNamespace }}
 {
@@ -28,8 +36,8 @@ namespace {{ Options.ExtensionClassNamespace }}
         {{~ end ~}}
         {
             return global::System.Reactive.Linq.Observable.Select(
-                global::System.Reactive.Linq.Observable.Where(source, _variant => {{ get_n }} == {{ $p.Index }}),
-                _variant => {{ $p.Identifier }}({{ get_value $p }}));
+                global::System.Reactive.Linq.Observable.Where(source, _variant => {{ $get_n }} == {{ $p.Index }}),
+                _variant => {{ $p.Identifier }}({{ $get_value $p }}));
         }
         {{~ end ~}}
 
@@ -55,9 +63,9 @@ namespace {{ Options.ExtensionClassNamespace }}
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if ({{ get_n }} == {{ $p.Index }})
+                if ({{ $get_n }} == {{ $p.Index }})
                 {
-                    return {{ $p.Identifier }}({{ get_value $p }});
+                    return {{ $p.Identifier }}({{ $get_value $p }});
                 }
                 else
                 {
@@ -89,9 +97,9 @@ namespace {{ Options.ExtensionClassNamespace }}
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                if ({{ get_n }} == {{ $p.Index }})
+                if ({{ $get_n }} == {{ $p.Index }})
                 {
-                    return {{ $p.Identifier }}({{ get_value $p }});
+                    return {{ $p.Identifier }}({{ $get_value $p }});
                 }
                 else
                 {
@@ -122,13 +130,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch ({{ get_n }})
+                switch ({{ $get_n }})
                 {
                     case 0:
                         return {{ throw_empty_error "TResult" }};
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
-                        return {{ $p.Identifier }}({{ get_value $p }});
+                        return {{ $p.Identifier }}({{ $get_value $p }});
                     {{~ end ~}}
                     default:
                         return {{ throw_internal_error "TResult" }};
@@ -159,13 +167,13 @@ namespace {{ Options.ExtensionClassNamespace }}
         {
             return global::System.Reactive.Linq.Observable.Select(source, _variant =>
             {
-                switch ({{ get_n }})
+                switch ({{ $get_n }})
                 {
                     case 0:
                         return _();
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
-                        return {{ $p.Identifier }}({{ get_value $p }});
+                        return {{ $p.Identifier }}({{ $get_value $p }});
                     {{~ end ~}}
                     default:
                         return {{ throw_internal_error "TResult" }};
@@ -345,7 +353,7 @@ namespace {{ Options.ExtensionClassNamespace }}
 
             public void OnNext({{ Variant.QualifiedType }} _variant)
             {
-                switch ({{ get_n }})
+                switch ({{ $get_n }})
                 {
                     case 0:
                         if (_accept0)
@@ -359,7 +367,7 @@ namespace {{ Options.ExtensionClassNamespace }}
                         break;
                     {{~ for $p in Params ~}}
                     case {{ $p.Index }}:
-                        Subject{{ $p.Index }}.OnNext({{ get_value $p }});
+                        Subject{{ $p.Index }}.OnNext({{ $get_value $p }});
                         break;
                     {{~ end ~}}
                     default:
