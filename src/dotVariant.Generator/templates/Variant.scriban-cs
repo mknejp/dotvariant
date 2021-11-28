@@ -80,6 +80,11 @@ namespace {{ Variant.Namespace }}
         public {{ method_modifiers }}bool IsEmpty
             => _variant.IsEmpty;
 
+        /// <inheritdoc cref="{{ cref storage_type }}.Index"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public {{ method_modifiers }}byte Index
+            => _variant.Index;
+
         {{~ ## VARIANT Equals ## ~}}
         /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -111,6 +116,12 @@ namespace {{ Variant.Namespace }}
             => _variant.ToString();
 
         {{~ for $p in Params ~}}
+        {{~ ## VARIANT UnsafeGet ## ~}}
+        /// <inheritdoc cref="{{ cref storage_type }}.UnsafeGet({{ cref (accessor $p) }})"/>
+        [global::System.Diagnostics.DebuggerNonUserCode]
+        public {{ method_modifiers }}{{ $p.Type }} UnsafeGet({{ accessor $p }} accessor)
+            => _variant.UnsafeGet(accessor);
+
         {{~ ## VARIANT TryMatch ## ~}}
         /// <inheritdoc cref="{{ cref storage_type }}.TryMatch(out {{ cref $p.OutType }})"/>
         [global::System.Diagnostics.DebuggerNonUserCode]
@@ -189,18 +200,6 @@ namespace {{ Variant.Namespace }}
                 #pragma warning restore 8604, 8625
             }
         }
-
-        {{~ ## INTERNAL ACCESS ## ~}}
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator {{ discriminator }}({{ Variant.Type }} v)
-            => ({{ discriminator }})v._variant;
-        {{~ for $p in Params ~}}
-        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        [global::System.Diagnostics.DebuggerNonUserCode]
-        public static explicit operator {{ accessor $p.Index $p.Type }}({{ Variant.Type }} v)
-            => ({{ accessor $p.Index $p.Type }})v._variant;
-        {{~ end ~}}
     }
 {{~ if Variant.Namespace ~}}
 }

@@ -114,6 +114,9 @@ for value types and still consumes *much* less memory than if
 it had to store all values side-by-side.
 ## ~}}
 {{~
+func $get_n()
+    ret get_n "this"
+end
 func $storage(param)
     #ret is_generic ? "_x._" + param.Index : "_x._" + param.Index + ".Value";
     ret "_x._" + param.Index;
@@ -192,13 +195,19 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {{~ end ~}}
 
         private readonly Union _x;
-        private readonly byte _n;
+
+        /// <summary>
+        /// The 1-based index of the currently stored type,
+        /// counted left-ro-right from the <see cref="{{ cref Variant.QualifiedType }}.VariantOf()"/> parameter list.
+        /// <c>0</c> if the variant is empty.
+        /// </summary>
+        public readonly byte Index;
 
         {{~ ## STORAGE CONSTRUCTORS ## ~}}
         {{~ for $p in Params ~}}
         public {{ Variant.Identifier }}({{ $p.Type }} {{ $p.Identifier }})
         {
-            _n = {{ $p.Index }};
+            Index = {{ $p.Index }};
             _x = new Union({{ $p.Identifier }});
         }
         {{~ end ~}}
@@ -210,7 +219,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// </summary>
         public void Dispose()
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     break;
@@ -228,14 +237,6 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
         {{~ end ~}}
 
-        {{~ ## INTERNAL ACCESS ## ~}}
-        public static explicit operator {{ discriminator }}(in {{ Variant.Type }} v)
-            => ({{ discriminator }})v._n;
-        {{~ for $p in Params ~}}
-        public static explicit operator {{ accessor $p.Index $p.Type }}(in {{ Variant.Type }} v)
-            => new {{ accessor $p.Index $p.Type }}(v.{{ $storage $p }});
-        {{~ end ~}}
-
         /// <summary>
         /// <see langword="true"/> if {{ Variant.Name }} was constructed without a value.
         /// </summary>
@@ -246,7 +247,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// and never satisfy any matching attempts except for the wildcard <c>_</c> parameter.
         /// </remarks>
         {{~ end ~}}
-        public bool IsEmpty => _n == 0;
+        public bool IsEmpty => {{ $get_n }} == 0;
 
         /// <summary>
         /// The string representation of the stored value's type.
@@ -255,7 +256,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {
             get
             {
-                switch (_n)
+                switch ({{ $get_n }})
                 {
                     case 0:
                         return "<empty>";
@@ -274,7 +275,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// </summary>
         public override string ToString()
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     return "";
@@ -294,7 +295,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         {
             get
             {
-                switch (_n)
+                switch ({{ $get_n }})
                 {
                     case 0:
                         return null;
@@ -310,11 +311,11 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         public bool Equals(in {{ Variant.Type }} other)
         {
-            if (_n != other._n)
+            if ({{ $get_n }} != {{ get_n "other" }})
             {
                 return false;
             }
-            switch (_n)
+            switch (Index)
             {
                 case 0:
                     return true;
@@ -330,7 +331,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         public override int GetHashCode()
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     return 0;
@@ -349,6 +350,16 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         }
 
         {{~ for $p in Params ~}}
+        /// <summary>
+        /// Retrieve the stored value assuming it is of type <see cref="{{ cref $p.Type }}"/>.
+        ///
+        /// <b>Only call this if you have ensured that <c>Index == {{ $p.Index }}</c>,
+        /// otherwise the correctness of the returned value is not guaranteed,
+        /// nor that any value is returned at all.</b>
+        /// </summary>
+        public {{ $p.Type }} UnsafeGet({{ accessor $p }} _)
+            => {{ $storage $p }};
+
         {{~ ## UNION TryMatch ## ~}}
         /// <summary>
         /// Retrieve the value stored within {{ Variant.Name }} if it is of type <see cref="{{ cref $p.Type }}"/>.
@@ -357,8 +368,8 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
         public bool TryMatch({{ annotate_NotNullWhen $p }}out {{ $p.OutType }} {{ $p.Identifier }})
         {
-            {{ $p.Identifier }} = _n == {{ $p.Index }} ? {{ $storage $p }} : default;
-            return _n == {{ $p.Index }};
+            {{ $p.Identifier }} = {{ $get_n }} == {{ $p.Index }} ? {{ $storage $p }} : default;
+            return {{ $get_n }} == {{ $p.Index }};
         }
 
         /// <summary>
@@ -369,7 +380,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"> is rethrown.</exception>
         public bool TryMatch({{ action_type $p }} {{ $p.Identifier }})
         {
-            if (_n == {{ $p.Index }})
+            if ({{ $get_n }} == {{ $p.Index }})
             {
                 {{ $p.Identifier }}({{ $storage $p }});
                 return true;
@@ -386,7 +397,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.InvalidOperationException">{{ Variant.Name }} does not contain a value of type <see cref="{{ cref $p.Type }}"/>.</exception>
         public void Match({{ annotate_NotNull $p }}out {{ $p.OutType }} {{ $p.Identifier }})
         {
-            if (_n == {{ $p.Index }})
+            if ({{ $get_n }} == {{ $p.Index }})
             {
                 {{ $p.Identifier }} = {{ $storage $p }};
                 return;
@@ -403,7 +414,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> is rethrown.</exception>
         public void Match({{ action_type $p }} {{ $p.Identifier }})
         {
-            if (_n == {{ $p.Index }})
+            if ({{ $get_n }} == {{ $p.Index }})
             {
                 {{ $p.Identifier }}({{ $storage $p }});
                 return;
@@ -420,7 +431,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public void Match({{ action_type $p }} {{ $p.Identifier }}, global::System.Action _)
         {
-            if (_n == {{ $p.Index }})
+            if ({{ $get_n }} == {{ $p.Index }})
             {
                 {{ $p.Identifier }}({{ $storage $p }});
             }
@@ -440,7 +451,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }})
         {
-            if (_n == {{ $p.Index }})
+            if ({{ $get_n }} == {{ $p.Index }})
             {
                 return {{ $p.Identifier }}({{ $storage $p }});
             }
@@ -457,7 +468,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, TResult _)
         {
-            return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _;
+            return {{ $get_n }} == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _;
         }
 
         /// <summary>
@@ -469,7 +480,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, global::System.Func<TResult> _)
         {
-            return _n == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _();
+            return {{ $get_n }} == {{ $p.Index }} ? {{ $p.Identifier }}({{ $storage $p }}) : _();
         }
         {{~ end ~}}
 
@@ -485,7 +496,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit({{ action_params }}, global::System.Action _)
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     _();
@@ -513,7 +524,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <exception cref="global::System.Exception">Any exception thrown from a delegate is rethrown.</exception>
         public void Visit({{ action_params }})
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     {{ throw_empty_error }};
@@ -542,7 +553,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>({{ func_params }}, global::System.Func<TResult> _)
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     return _();
@@ -568,7 +579,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// <typeparam name="TResult">The return type of all delegates, and by extension the return type of this function.</typeparam>
         public TResult Visit<TResult>({{ func_params }})
         {
-            switch (_n)
+            switch ({{ $get_n }})
             {
                 case 0:
                     return {{ throw_empty_error "TResult" }};
