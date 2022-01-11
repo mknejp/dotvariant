@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31025.218
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotVariant", "dotVariant\dotVariant.csproj", "{B14D1B4F-EA99-4937-90C6-235AD8FB7251}"
 EndProject
@@ -21,6 +20,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotVariant.Test-net45", "dotVariant.Test-net45\dotVariant.Test-net45.csproj", "{1305501C-65AB-4338-848F-3D2B919B7255}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "dotVariant.Test", "dotVariant.Test\dotVariant.Test.shproj", "{193D7A79-92BF-46BE-BB02-60360DA0883D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A5DAA24D-3270-4696-9620-104C5987E146}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\publish.yaml = ..\.github\workflows\publish.yaml
+		..\.github\workflows\test-package.yaml = ..\.github\workflows\test-package.yaml
+		..\.github\workflows\test.yaml = ..\.github\workflows\test.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
