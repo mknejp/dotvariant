@@ -41,8 +41,4 @@
     <AssemblyMetadata Include="SamplesDir" Value="$(MSBuildThisFileDirectory)samples" />
   </ItemGroup>
 
-  <Target Name="PrintCosntants" BeforeTargets="BeforeBuild">
-    <Message Importance="high" Text="DefineConstants = $(DefineConstants)" />
-  </Target>
-
 </Project>

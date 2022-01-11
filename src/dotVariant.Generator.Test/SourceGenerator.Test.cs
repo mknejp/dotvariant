@@ -4,6 +4,7 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -33,19 +34,25 @@ namespace dotVariant.Generator.Test
                     $"{typeName}.cs");
             var output = outputs[file];
             output = _copyrightHeader + output;
+
             if (output != expected)
             {
-                var commit = true;
-                //var commit = false;
-#if CI
-                Assert.That(commit, Is.False);
-#endif
-                if (commit)
+                if (_commitTranslations)
                 {
                     WriteSample(fileName, output);
                 }
                 Assert.That(output, Is.EqualTo(expected));
             }
+        }
+
+        private static readonly bool _commitTranslations = true;
+
+        [Test]
+        public static void PreventCommitInMain()
+        {
+#if CI
+            Assert.That(_commitTranslations, Is.False);
+#endif
         }
 
         private static readonly string _samplesDir

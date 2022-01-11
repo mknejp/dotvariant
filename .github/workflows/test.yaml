@@ -16,6 +16,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: |
-          Get-Item Env:
-          dotnet test dotVariant.sln -p:Configuration=${{ matrix.config }}
+      - run: dotnet test dotVariant.sln -p:Configuration=${{ matrix.config }}

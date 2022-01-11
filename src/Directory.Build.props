@@ -13,7 +13,8 @@
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <PackageSelfTest Condition="'$(PackageSelfTest)' == ''">false</PackageSelfTest>
-    <DefineConstants Condition="'$(CI)' != ''">$(DefineConstants);CI</DefineConstants>
+    <!--<DefineConstants Condition="'$(CI)' != ''">$(DefineConstants);CI</DefineConstants>-->
+    <DefineConstants>$(DefineConstants);CI</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
