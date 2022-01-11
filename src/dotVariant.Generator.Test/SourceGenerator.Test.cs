@@ -4,7 +4,6 @@
 // (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 //
 
-using Microsoft.CodeAnalysis.FlowAnalysis;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -45,7 +44,7 @@ namespace dotVariant.Generator.Test
             }
         }
 
-        private static readonly bool _commitTranslations = true;
+        private static readonly bool _commitTranslations = false;
 
         [Test]
         public static void PreventCommitInMain()
