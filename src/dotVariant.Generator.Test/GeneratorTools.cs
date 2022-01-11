@@ -92,8 +92,9 @@ namespace dotVariant.Generator.Test
         {
             var assembly = Assembly.GetExecutingAssembly();
             using var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.samples.{name}");
+            using var reader = new StreamReader(stream!);
 
-            return new StreamReader(stream!).ReadToEnd();
+            return reader.ReadToEnd();
         }
 
         public static IEnumerable<DiagnosticExpectation> ExtractExpectations(string input)
