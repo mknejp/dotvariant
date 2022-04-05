@@ -479,7 +479,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
         /// <returns><see langword="true"/> if Variant_struct_nullable_enable contained a value of type <see cref="long"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<long> l)
         {
             if (this.Index == 1)
@@ -609,7 +609,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
         /// <returns><see langword="true"/> if Variant_struct_nullable_enable contained a value of type <see cref="double"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<double> d)
         {
             if (this.Index == 2)
@@ -739,7 +739,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
         /// <returns><see langword="true"/> if Variant_struct_nullable_enable contained a value of type <see cref="object"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<object> o)
         {
             if (this.Index == 3)

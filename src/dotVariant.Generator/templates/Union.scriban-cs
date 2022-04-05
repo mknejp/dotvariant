@@ -377,7 +377,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// </summary>
         /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
         /// <returns><see langword="true"/> if {{ Variant.Name }} contained a value of type <see cref="{{ cref $p.Type }}"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> is rethrown.</exception>
         public bool TryMatch({{ action_type $p }} {{ $p.Identifier }})
         {
             if ({{ $get_n }} == {{ $p.Index }})

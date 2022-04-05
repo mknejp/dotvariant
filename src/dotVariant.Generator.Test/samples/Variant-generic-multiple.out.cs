@@ -515,7 +515,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="T1"/>.</param>
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T1"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T1> a)
         {
             if (this.Index == 1)
@@ -645,7 +645,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="b">The delegate to invoke with the stored value if it is of type <see cref="T2"/>.</param>
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T2"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T2> b)
         {
             if (this.Index == 2)
@@ -775,7 +775,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="c">The delegate to invoke with the stored value if it is of type <see cref="T3"/>.</param>
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T3"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T3> c)
         {
             if (this.Index == 3)

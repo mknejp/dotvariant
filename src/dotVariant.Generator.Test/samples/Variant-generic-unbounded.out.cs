@@ -303,7 +303,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="value">The delegate to invoke with the stored value if it is of type <see cref="T"/>.</param>
         /// <returns><see langword="true"/> if Variant contained a value of type <see cref="T"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="value"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="value"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<T> value)
         {
             if (this.Index == 1)
