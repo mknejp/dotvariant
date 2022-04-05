@@ -420,7 +420,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="i">The delegate to invoke with the stored value if it is of type <see cref="int"/>.</param>
         /// <returns><see langword="true"/> if Variant_disposable contained a value of type <see cref="int"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="i"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<int> i)
         {
             if (this.Index == 1)
@@ -550,7 +550,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="stream">The delegate to invoke with the stored value if it is of type <see cref="global::System.IO.Stream"/>.</param>
         /// <returns><see langword="true"/> if Variant_disposable contained a value of type <see cref="global::System.IO.Stream"/>.</returns>
-        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"> is rethrown.</exception>
+        /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="stream"/> is rethrown.</exception>
         public bool TryMatch(global::System.Action<global::System.IO.Stream> stream)
         {
             if (this.Index == 2)
