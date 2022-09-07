@@ -95,19 +95,19 @@ namespace Foo
         public readonly bool Equals(Variant_struct_nullable_enable other)
             => _variant.Equals(other._variant);
 
-        /// <summary>Returns a value that indicates whether two variants are equal.</summary>
+        /// <summary>Compare two Variant_struct_nullable_enable objects for equality.</summary>
         /// <param name="lhs">The first <see cref="Variant_struct_nullable_enable" /> to compare.</param>
         /// <param name="rhs">The second <see cref="Variant_struct_nullable_enable" /> to compare.</param>
-        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are equal; otherwise, false.</returns>
+        /// <returns><see langword="true" /> if <paramref name="lhs"/> and <paramref name="rhs"/> are considered equal; otherwise, <see langword="false" />.</returns>
         /// <seealso cref="Equals(Variant_struct_nullable_enable)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant_struct_nullable_enable lhs, Variant_struct_nullable_enable rhs)
             => lhs.Equals(rhs);
 
-        /// <summary>Returns a value that indicates whether two variants are unequal.</summary>
+        /// <summary>Compare two Variant_struct_nullable_enable objects for inequality.</summary>
         /// <param name="lhs">The first <see cref="Variant_struct_nullable_enable" /> to compare.</param>
         /// <param name="rhs">The second <see cref="Variant_struct_nullable_enable" /> to compare.</param>
-        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are unequal; otherwise, false.</returns>
+        /// <returns><see langword="true" /> if <paramref name="lhs"/> and <paramref name="rhs"/> are not considered equal; otherwise, <see langword="false" />.</returns>
         /// <seealso cref="Equals(Variant_struct_nullable_enable)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant_struct_nullable_enable lhs, Variant_struct_nullable_enable rhs)
@@ -979,7 +979,7 @@ namespace Foo
 {
     /// <summary>
     /// Extensions which allow for easy and powerful integration into `System.Linq`-like queries
-    /// on `IEnumerable&lt;T&gt;` sequences, that let you manipulate a stream of variants based on the contained type.
+    /// on <see cref="global::System.Collections.Generic.IEnumerable{T}" /> sequences, that let you manipulate a stream of variants based on the contained type.
     /// </summary>
     public static partial class Variant_struct_nullable_enableEx
     {
@@ -1307,7 +1307,7 @@ namespace Foo
 {
     /// <summary>
     /// Extensions which allow for easy and powerful integration into `System.Reactive.Linq`-like queries
-    /// on `IObservable&lt;T&gt;` sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
+    /// on <see cref="global::System.IObservable{T}" /> sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
     /// </summary>
     public static partial class Variant_struct_nullable_enableEx
     {
