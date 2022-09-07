@@ -165,18 +165,30 @@ namespace Foo
         public bool Equals(Variant<T1, T2, T3, T4, T5, T6>? other)
             => !(other is null) && _variant.Equals(other._variant);
 
+        /// <summary>Returns a value that indicates whether two variants are equal.</summary>
+        /// <param name="lhs">The first <see cref="Variant<T1, T2, T3, T4, T5, T6>" /> to compare.</param>
+        /// <param name="rhs">The second <see cref="Variant<T1, T2, T3, T4, T5, T6>" /> to compare.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are equal; otherwise, false.</returns>
+        /// <seealso cref="Equals(Variant<T1, T2, T3, T4, T5, T6>?)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant<T1, T2, T3, T4, T5, T6>? lhs, Variant<T1, T2, T3, T4, T5, T6>? rhs)
             => lhs?.Equals(rhs) ?? (rhs is null);
 
+        /// <summary>Returns a value that indicates whether two variants are unequal.</summary>
+        /// <param name="lhs">The first <see cref="Variant<T1, T2, T3, T4, T5, T6>" /> to compare.</param>
+        /// <param name="rhs">The second <see cref="Variant<T1, T2, T3, T4, T5, T6>" /> to compare.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are unequal; otherwise, false.</returns>
+        /// <seealso cref="Equals(Variant<T1, T2, T3, T4, T5, T6>?)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant<T1, T2, T3, T4, T5, T6>? lhs, Variant<T1, T2, T3, T4, T5, T6>? rhs)
             => !(lhs == rhs);
 
+        /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override int GetHashCode()
             => _variant.GetHashCode();
 
+        /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override string ToString()
             => _variant.ToString();
@@ -566,7 +578,7 @@ namespace dotVariant._G.Foo
 
         /// <summary>
         /// The 1-based index of the currently stored type,
-        /// counted left-ro-right from the <see cref="global::Foo.Variant{T1, T2, T3, T4, T5, T6}.VariantOf()"/> parameter list.
+        /// counted left-ro-right from the <see cref="global::Foo.Variant{T1, T2, T3, T4, T5, T6}.VariantOf"/> parameter list.
         /// <c>0</c> if the variant is empty.
         /// </summary>
         public readonly byte Index;
@@ -854,7 +866,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="a">The delegate to invoke with the stored value if it is of type <see cref="T1?"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="a"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="a"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="a"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T1?, TResult> a, TResult _)
         {
@@ -984,7 +996,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="b">The delegate to invoke with the stored value if it is of type <see cref="T2?"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="b"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="b"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="b"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T2?, TResult> b, TResult _)
         {
@@ -1114,7 +1126,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="c">The delegate to invoke with the stored value if it is of type <see cref="T3?"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="c"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="c"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="c"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T3?, TResult> c, TResult _)
         {
@@ -1244,7 +1256,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="T4?"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="d"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="d"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T4?, TResult> d, TResult _)
         {
@@ -1374,7 +1386,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="e">The delegate to invoke with the stored value if it is of type <see cref="T5?"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="e"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="e"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="e"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T5?, TResult> e, TResult _)
         {
@@ -1504,7 +1516,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="f">The delegate to invoke with the stored value if it is of type <see cref="T6?"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="f"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="f"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="f"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T6?, TResult> f, TResult _)
         {
@@ -1686,6 +1698,10 @@ namespace dotVariant._G.Foo
 
 namespace Foo
 {
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Linq`-like queries
+    /// on `IEnumerable&lt;T&gt;` sequences, that let you manipulate a stream of variants based on the contained type.
+    /// </summary>
     public static partial class VariantEx
     {
         /// <summary>
@@ -2368,6 +2384,10 @@ namespace Foo
 }
 namespace Foo
 {
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Reactive.Linq`-like queries
+    /// on `IObservable&lt;T&gt;` sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
+    /// </summary>
     public static partial class VariantEx
     {
         /// <summary>

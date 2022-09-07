@@ -95,18 +95,30 @@ namespace Foo
         public readonly bool Equals(Variant_struct_nullable_disable other)
             => _variant.Equals(other._variant);
 
+        /// <summary>Returns a value that indicates whether two variants are equal.</summary>
+        /// <param name="lhs">The first <see cref="Variant_struct_nullable_disable" /> to compare.</param>
+        /// <param name="rhs">The second <see cref="Variant_struct_nullable_disable" /> to compare.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are equal; otherwise, false.</returns>
+        /// <seealso cref="Equals(Variant_struct_nullable_disable)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant_struct_nullable_disable lhs, Variant_struct_nullable_disable rhs)
             => lhs.Equals(rhs);
 
+        /// <summary>Returns a value that indicates whether two variants are unequal.</summary>
+        /// <param name="lhs">The first <see cref="Variant_struct_nullable_disable" /> to compare.</param>
+        /// <param name="rhs">The second <see cref="Variant_struct_nullable_disable" /> to compare.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are unequal; otherwise, false.</returns>
+        /// <seealso cref="Equals(Variant_struct_nullable_disable)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant_struct_nullable_disable lhs, Variant_struct_nullable_disable rhs)
             => !(lhs == rhs);
 
+        /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly override int GetHashCode()
             => _variant.GetHashCode();
 
+        /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public readonly override string ToString()
             => _variant.ToString();
@@ -317,7 +329,7 @@ namespace dotVariant._G.Foo
 
         /// <summary>
         /// The 1-based index of the currently stored type,
-        /// counted left-ro-right from the <see cref="global::Foo.Variant_struct_nullable_disable.VariantOf()"/> parameter list.
+        /// counted left-ro-right from the <see cref="global::Foo.Variant_struct_nullable_disable.VariantOf"/> parameter list.
         /// <c>0</c> if the variant is empty.
         /// </summary>
         public readonly byte Index;
@@ -565,7 +577,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="l">The delegate to invoke with the stored value if it is of type <see cref="long"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="l"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="l"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="l"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<long, TResult> l, TResult _)
         {
@@ -695,7 +707,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="d">The delegate to invoke with the stored value if it is of type <see cref="double"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="d"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="d"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="d"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<double, TResult> d, TResult _)
         {
@@ -825,7 +837,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="o">The delegate to invoke with the stored value if it is of type <see cref="object"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="o"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="o"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="o"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<object, TResult> o, TResult _)
         {
@@ -965,6 +977,10 @@ namespace dotVariant._G.Foo
 
 namespace Foo
 {
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Linq`-like queries
+    /// on `IEnumerable&lt;T&gt;` sequences, that let you manipulate a stream of variants based on the contained type.
+    /// </summary>
     public static partial class Variant_struct_nullable_disableEx
     {
         /// <summary>
@@ -1289,6 +1305,10 @@ namespace Foo
 }
 namespace Foo
 {
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Reactive.Linq`-like queries
+    /// on `IObservable&lt;T&gt;` sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
+    /// </summary>
     public static partial class Variant_struct_nullable_disableEx
     {
         /// <summary>

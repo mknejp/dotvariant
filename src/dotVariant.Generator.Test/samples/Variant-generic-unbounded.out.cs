@@ -60,18 +60,30 @@ namespace Foo
         public bool Equals(Variant<T>? other)
             => !(other is null) && _variant.Equals(other._variant);
 
+        /// <summary>Returns a value that indicates whether two variants are equal.</summary>
+        /// <param name="lhs">The first <see cref="Variant<T>" /> to compare.</param>
+        /// <param name="rhs">The second <see cref="Variant<T>" /> to compare.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are equal; otherwise, false.</returns>
+        /// <seealso cref="Equals(Variant<T>?)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==(Variant<T>? lhs, Variant<T>? rhs)
             => lhs?.Equals(rhs) ?? (rhs is null);
 
+        /// <summary>Returns a value that indicates whether two variants are unequal.</summary>
+        /// <param name="lhs">The first <see cref="Variant<T>" /> to compare.</param>
+        /// <param name="rhs">The second <see cref="Variant<T>" /> to compare.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are unequal; otherwise, false.</returns>
+        /// <seealso cref="Equals(Variant<T>?)" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=(Variant<T>? lhs, Variant<T>? rhs)
             => !(lhs == rhs);
 
+        /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override int GetHashCode()
             => _variant.GetHashCode();
 
+        /// <inheritdoc/>
         [global::System.Diagnostics.DebuggerNonUserCode]
         public override string ToString()
             => _variant.ToString();
@@ -176,7 +188,7 @@ namespace dotVariant._G.Foo
 
         /// <summary>
         /// The 1-based index of the currently stored type,
-        /// counted left-ro-right from the <see cref="global::Foo.Variant{T}.VariantOf()"/> parameter list.
+        /// counted left-ro-right from the <see cref="global::Foo.Variant{T}.VariantOf"/> parameter list.
         /// <c>0</c> if the variant is empty.
         /// </summary>
         public readonly byte Index;
@@ -389,7 +401,7 @@ namespace dotVariant._G.Foo
         /// </summary>
         /// <param name="value">The delegate to invoke with the stored value if it is of type <see cref="T"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="value"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="value"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="value"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>(global::System.Func<T, TResult> value, TResult _)
         {
@@ -501,6 +513,10 @@ namespace dotVariant._G.Foo
 
 namespace Foo
 {
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Linq`-like queries
+    /// on `IEnumerable&lt;T&gt;` sequences, that let you manipulate a stream of variants based on the contained type.
+    /// </summary>
     public static partial class VariantEx
     {
         /// <summary>
@@ -653,6 +669,10 @@ namespace Foo
 }
 namespace Foo
 {
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Reactive.Linq`-like queries
+    /// on `IObservable&lt;T&gt;` sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
+    /// </summary>
     public static partial class VariantEx
     {
         /// <summary>

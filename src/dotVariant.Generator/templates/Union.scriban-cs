@@ -198,7 +198,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
 
         /// <summary>
         /// The 1-based index of the currently stored type,
-        /// counted left-ro-right from the <see cref="{{ cref Variant.QualifiedType }}.VariantOf()"/> parameter list.
+        /// counted left-ro-right from the <see cref="{{ cref Variant.QualifiedType }}.VariantOf"/> parameter list.
         /// <c>0</c> if the variant is empty.
         /// </summary>
         public readonly byte Index;
@@ -464,7 +464,7 @@ namespace dotVariant._G{{ if Variant.Namespace; "." + Variant.Namespace; end }}
         /// </summary>
         /// <param name="{{ $p.Name }}">The delegate to invoke with the stored value if it is of type <see cref="{{ cref $p.Type }}"/>.</param>
         /// <param name="_">The value to return if the stored value is of a different type.</param>
-        /// <returns>The value returned from invoking <paramref name="{{ $p.Name }}"/>, or <paramref name="default"/>.</returns>
+        /// <returns>The value returned from invoking <paramref name="{{ $p.Name }}"/>, or <paramref name="_"/>.</returns>
         /// <exception cref="global::System.Exception">Any exception thrown from <paramref name="{{ $p.Name }}"/> or <paramref name="_"/> is rethrown.</exception>
         public TResult Match<TResult>({{ func_type $p }} {{ $p.Identifier }}, TResult _)
         {
