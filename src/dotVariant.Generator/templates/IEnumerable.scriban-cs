@@ -17,7 +17,7 @@ namespace {{ Options.ExtensionClassNamespace }}
 {{~ end ~}}
     /// <summary>
     /// Extensions which allow for easy and powerful integration into `System.Linq`-like queries
-    /// on `IEnumerable&lt;T&gt;` sequences, that let you manipulate a stream of variants based on the contained type.
+    /// on <see cref="global::System.Collections.Generic.IEnumerable{T}" /> sequences, that let you manipulate a stream of variants based on the contained type.
     /// </summary>
     {{ Variant.ExtensionsAccessibility }} static partial class {{ Variant.Name }}Ex
     {

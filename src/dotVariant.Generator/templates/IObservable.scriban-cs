@@ -17,7 +17,7 @@ namespace {{ Options.ExtensionClassNamespace }}
 {{~ end ~}}
     /// <summary>
     /// Extensions which allow for easy and powerful integration into `System.Reactive.Linq`-like queries
-    /// on `IObservable&lt;T&gt;` sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
+    /// on <see cref="global::System.IObservable{T}" /> sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
     /// </summary>
     {{ Variant.ExtensionsAccessibility }} static partial class {{ Variant.Name }}Ex
     {

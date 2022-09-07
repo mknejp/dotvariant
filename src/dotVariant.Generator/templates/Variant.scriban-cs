@@ -97,19 +97,19 @@ namespace {{ Variant.Namespace }}
         public {{ method_modifiers }}bool Equals({{ variant_nullable_param }} other)
             => {{ if Variant.IsReferenceType; "!(other is null) && "; end }}_variant.Equals(other._variant);
 
-        /// <summary>Returns a value that indicates whether two variants are equal.</summary>
+        /// <summary>Compare two {{ Variant.Type }} objects for equality.</summary>
         /// <param name="lhs">The first <see cref="{{ Variant.Type }}" /> to compare.</param>
         /// <param name="rhs">The second <see cref="{{ Variant.Type }}" /> to compare.</param>
-        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are equal; otherwise, false.</returns>
+        /// <returns><see langword="true" /> if <paramref name="lhs"/> and <paramref name="rhs"/> are considered equal; otherwise, <see langword="false" />.</returns>
         /// <seealso cref="Equals({{variant_nullable_param }})" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator ==({{ param_modifiers; variant_nullable_param }} lhs, {{ param_modifiers; variant_nullable_param }} rhs)
             => {{ coalesce Variant "lhs" ".Equals(rhs)" "(rhs is null)" }};
 
-        /// <summary>Returns a value that indicates whether two variants are unequal.</summary>
+        /// <summary>Compare two {{ Variant.Type }} objects for inequality.</summary>
         /// <param name="lhs">The first <see cref="{{ Variant.Type }}" /> to compare.</param>
         /// <param name="rhs">The second <see cref="{{ Variant.Type }}" /> to compare.</param>
-        /// <returns><c>true</c> if <paramref name="lhs"/> and <paramref name="rhs"/> are unequal; otherwise, false.</returns>
+        /// <returns><see langword="true" /> if <paramref name="lhs"/> and <paramref name="rhs"/> are not considered equal; otherwise, <see langword="false" />.</returns>
         /// <seealso cref="Equals({{variant_nullable_param }})" />
         [global::System.Diagnostics.DebuggerNonUserCode]
         public static bool operator !=({{ param_modifiers; variant_nullable_param }} lhs, {{ param_modifiers; variant_nullable_param }} rhs)
