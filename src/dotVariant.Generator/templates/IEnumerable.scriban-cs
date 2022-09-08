@@ -15,6 +15,10 @@ end
 namespace {{ Options.ExtensionClassNamespace }}
 {
 {{~ end ~}}
+    /// <summary>
+    /// Extensions which allow for easy and powerful integration into `System.Linq`-like queries
+    /// on <see cref="global::System.Collections.Generic.IEnumerable{T}" /> sequences, that let you manipulate a stream of variants based on the contained type.
+    /// </summary>
     {{ Variant.ExtensionsAccessibility }} static partial class {{ Variant.Name }}Ex
     {
         {{~ ## Match(IEnumerable<V>, Func<A, R>) ## ~}}
