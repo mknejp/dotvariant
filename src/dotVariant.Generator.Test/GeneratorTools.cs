@@ -116,6 +116,7 @@ namespace dotVariant.Generator.Test
             new Dictionary<string, string>()
                 {
                     { "VariantAttribute.cs", LoadSample("VariantAttribute.cs") },
+                    { "NoImplicitConversionAttribute.cs", LoadSample("NoImplicitConversionAttribute.cs") },
                 }
                 .ToImmutableDictionary();
     }

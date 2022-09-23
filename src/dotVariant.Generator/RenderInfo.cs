@@ -201,13 +201,15 @@ namespace dotVariant.Generator
             var emitNullable = desc.NullableContext.HasFlag(NullableContext.AnnotationsEnabled);
             var disposable = compilation.GetTypeByMetadataName(typeof(IDisposable).FullName)!;
 
+            const string attributeName = nameof(dotVariant) + "." + nameof(NoImplicitConversionAttribute);
+
             var paramDescriptors =
                 desc
                 .Options
                 .Select((p, i) => new ParamInfo(
                     CanBeNull: CanBeNull(p, desc.NullableContext),
                     DiagType: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(DiagFormat),
-                    EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type)),
+                    EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type) || p.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName)),
                     Identifier: p.ToDisplayString(IdentifierFormat),
                     Index: i + 1,
                     IsDisposable: Implements(p, disposable),

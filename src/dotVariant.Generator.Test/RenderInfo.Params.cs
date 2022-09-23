@@ -156,6 +156,16 @@ namespace dotVariant.Generator.Test
                     ri => Assert.That(ri.Params[0].EmitImplicitCast, Is.True)
                 ),
                 (
+                    "emit no implicit cast for explicitly attributed parameters",
+                    @"
+                    [dotVariant.Variant]
+                    public partial class Variant
+                    {
+                        static partial void VariantOf([dotVariant.NoImplicitConversion] int a);
+                    }",
+                    ri => Assert.That(ri.Params[0].EmitImplicitCast, Is.False)
+                ),
+                (
                     "emit no implicit cast for base types",
                     @"
                     [dotVariant.Variant]

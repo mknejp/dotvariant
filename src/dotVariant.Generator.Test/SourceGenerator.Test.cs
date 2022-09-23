@@ -83,6 +83,7 @@ namespace dotVariant.Generator.Test
                     ("Variant-generic-unbounded", "Foo.Variant{T}"),
                     ("Variant-nullable-value-type", "Foo.Variant_nullable_value_type"),
                     ("Variant-public", "Foo.Variant_public"),
+                    ("Variant-no-implicit-conversion", "Foo.Variant_no_implicit_conversion"),
                     ("Variant-struct-nullable-disable", "Foo.Variant_struct_nullable_disable"),
                     ("Variant-struct-nullable-enable", "Foo.Variant_struct_nullable_enable"),
                 }
