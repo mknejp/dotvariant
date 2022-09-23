@@ -207,7 +207,7 @@ namespace dotVariant.Generator
                 .Select((p, i) => new ParamInfo(
                     CanBeNull: CanBeNull(p, desc.NullableContext),
                     DiagType: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(DiagFormat),
-                    EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type)),
+                    EmitImplicitCast: !(p.Type.TypeKind == TypeKind.Interface || IsAncestorOf(p.Type, desc.Type) || HasImplicitConversionDisabled(p)),
                     Identifier: p.ToDisplayString(IdentifierFormat),
                     Index: i + 1,
                     IsDisposable: Implements(p, disposable),

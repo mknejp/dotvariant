@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="diagnostics/**/*" />
-    <EmbeddedResource Include="samples/**/*" />
+    <EmbeddedResource Include="samples/**/*" WithCulture="false" />
     <!--
       Embed the support sources so we don't have a dependency on the runtime library
       (which might contain generated code and fail to build while generator tests are failing)

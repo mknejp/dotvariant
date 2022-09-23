@@ -97,6 +97,12 @@ namespace dotVariant.Generator
         public static int NumReferenceFields(IParameterSymbol param)
             => NumReferenceFields(param.Type);
 
+        public static bool HasImplicitConversionDisabled(IParameterSymbol param)
+        {
+            const string attributeName = nameof(dotVariant) + "." + nameof(NoImplicitConversionAttribute);
+            return param.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName);
+        }
+
         public static int NumReferenceFields(ITypeSymbol type)
             => type.IsReferenceType
                 ? 1

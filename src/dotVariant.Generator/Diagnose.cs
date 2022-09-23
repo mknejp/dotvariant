@@ -220,7 +220,7 @@ namespace dotVariant.Generator
             {
                 foreach (var p in options)
                 {
-                    if (Inspect.IsAncestorOf(p.Type, type))
+                    if (Inspect.IsAncestorOf(p.Type, type) && !Inspect.HasImplicitConversionDisabled(p))
                     {
                         yield return MakeWarning(
                             nameof(NoImplicitConversionForBaseClasses),
@@ -240,7 +240,7 @@ namespace dotVariant.Generator
             {
                 foreach (var p in options)
                 {
-                    if (p.Type.TypeKind == TypeKind.Interface)
+                    if (p.Type.TypeKind == TypeKind.Interface && !Inspect.HasImplicitConversionDisabled(p))
                     {
                         yield return MakeWarning(
                             nameof(NoImplicitConversionForInterfaces),
