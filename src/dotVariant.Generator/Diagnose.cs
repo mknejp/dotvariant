@@ -211,12 +211,6 @@ namespace dotVariant.Generator
                 }
             }
 
-            private static bool CheckNoImplicitConversionAttribute(ISymbol p)
-            {
-                const string attributeName = nameof(dotVariant) + "." + nameof(NoImplicitConversionAttribute);
-                return !p.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName);
-            }
-
             public static IEnumerable<Diagnostic> NoImplicitConversionForBaseClasses(
                 ITypeSymbol type,
                 MethodDeclarationSyntax syntax,
@@ -226,7 +220,7 @@ namespace dotVariant.Generator
             {
                 foreach (var p in options)
                 {
-                    if (Inspect.IsAncestorOf(p.Type, type) && CheckNoImplicitConversionAttribute(p))
+                    if (Inspect.IsAncestorOf(p.Type, type) && !Inspect.HasImplicitConversionDisabled(p))
                     {
                         yield return MakeWarning(
                             nameof(NoImplicitConversionForBaseClasses),
@@ -246,7 +240,7 @@ namespace dotVariant.Generator
             {
                 foreach (var p in options)
                 {
-                    if (p.Type.TypeKind == TypeKind.Interface && CheckNoImplicitConversionAttribute(p))
+                    if (p.Type.TypeKind == TypeKind.Interface && !Inspect.HasImplicitConversionDisabled(p))
                     {
                         yield return MakeWarning(
                             nameof(NoImplicitConversionForInterfaces),
