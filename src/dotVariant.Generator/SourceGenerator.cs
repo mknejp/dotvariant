@@ -7,85 +7,69 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace dotVariant.Generator
 {
     [Generator]
-    public sealed class SourceGenerator : ISourceGenerator
+    public sealed class SourceGenerator : IIncrementalGenerator
     {
-        public void Execute(GeneratorExecutionContext context)
+        public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
         {
-            var receiver = (SyntaxReceiver)context.SyntaxContextReceiver!;
-
-            var decls =
-                receiver
-                .VariantDecls
-                .Select(decl => (decl.Symbol, decl.Syntax, decl.Nullable, Diags: Diagnose.Variant(decl.Symbol, decl.Syntax, context.CancellationToken)))
-                .Memoize();
-
-            decls
-                .SelectMany(desc => desc.Diags)
-                .ForEach(context.ReportDiagnostic);
-
-            Descriptors =
-                decls
-                .Where(decl => !decl.Diags.Any(d => d.Severity == DiagnosticSeverity.Error))
-                .Select(decl => Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable))
-                .ToImmutableArray();
-
-            RenderInfos =
-                Descriptors
-                .Select(desc => RenderInfo.FromDescriptor(desc, (CSharpCompilation)context.Compilation, context.AnalyzerConfigOptions, context.CancellationToken))
-                .ToImmutableArray();
-
-            Enumerable
-                .Zip(Descriptors, RenderInfos, (desc, ri) => (desc, ri))
-                .ForEach(v => context.AddSource(SanitizeName(v.desc.Type.ToDisplayString()), Renderer.Render(v.ri)));
-
-            static string SanitizeName(string name)
-                => name
-                // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
-                .Replace('<', '{')
-                .Replace('>', '}')
-                // Escaped names like @class or @event aren't supported either
-                .Replace('@', '.');
-        }
-
-        public ImmutableArray<Descriptor> Descriptors { get; private set; }
-        public ImmutableArray<RenderInfo> RenderInfos { get; private set; }
-
-        public void Initialize(GeneratorInitializationContext context)
-        {
-            context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
-        }
-
-        private sealed class SyntaxReceiver : ISyntaxContextReceiver
-        {
-            public List<(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax, NullableContext Nullable)> VariantDecls { get; } = new();
-
-            public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
+            var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) =>
             {
-                if (context.Node is not TypeDeclarationSyntax tds || tds.AttributeLists.IsEmpty())
-                {
-                    return;
-                }
-
+                const nuint declarationBloom = (nuint)SyntaxKind.ClassDeclaration | (nuint)SyntaxKind.StructDeclaration |
+                                             (nuint)SyntaxKind.RecordDeclaration | (nuint)SyntaxKind.RecordStructDeclaration;
+                var nodeKind = node.Kind();
+                return ((nuint)nodeKind & declarationBloom) != default && nodeKind is SyntaxKind.ClassDeclaration
+                    or SyntaxKind.StructDeclaration
+                    or SyntaxKind.RecordDeclaration or SyntaxKind.RecordStructDeclaration;
+            }, (context, ct) =>
+            {
                 var sema = context.SemanticModel;
-
-                if (sema.GetDeclaredSymbol(tds) is not INamedTypeSymbol symbol)
+                if (context.Node is not TypeDeclarationSyntax syntax)
                 {
-                    return;
+                    return default;
+                }
+                if (sema.GetDeclaredSymbol(syntax, ct) is not { } symbol)
+                {
+                    return default;
+                }
+                if (sema.Compilation is not CSharpCompilation comp)
+                {
+                    return default;
+                }
+                if (!symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == VariantDecl.AttributeName))
+                {
+                    return default;
                 }
 
-                const string attributeName = nameof(dotVariant) + "." + nameof(VariantAttribute);
-                if (symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName))
+                var diagnostics = Diagnose.Variant(symbol, syntax, ct);
+
+                var decl = new VariantDecl(symbol, syntax, sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start), diagnostics);
+                var compInfo = CompilationInfo.FromCompilation(comp);
+                (VariantDecl decl, CompilationInfo compInfo)? nullable = (decl, compInfo);
+                return nullable;
+            }).Where(t => t.HasValue).Select((t, ct) => t!.Value);
+
+            var descriptorsAndrenderInfos = variantDecls.Combine(generatorContext.AnalyzerConfigOptionsProvider).Select(
+                (tuple, ct) =>
                 {
-                    VariantDecls.Add((symbol, tds, sema.GetNullableContext(context.Node.GetLocation().SourceSpan.Start)));
-                }
-            }
+                    var ((decl, compInfo), analyzerOptionProvider) = tuple;
+                    if (decl.Diags.Any(static diag => diag.Severity >= DiagnosticSeverity.Error))
+                    {
+                        return default;
+                    }
+                    var desc = Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable);
+                    var renderInfo = RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct);
+                    return (desc, renderInfo);
+                });
+
+            generatorContext.RegisterImplementationSourceOutput(descriptorsAndrenderInfos, (context, tuple) =>
+            {
+                var (desc, renderInfo) = tuple;
+                context.AddSource(desc.SanitizedTypeName, Renderer.Render(renderInfo));
+            });
         }
     }
 }

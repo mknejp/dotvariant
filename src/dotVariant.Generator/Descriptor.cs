@@ -24,5 +24,12 @@ namespace dotVariant.Generator
             var options = Inspect.GetOptions(type);
             return new(type, syntax, options, nullability);
         }
+
+        public string SanitizedTypeName => Type.Name
+                // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
+                .Replace('<', '{')
+                .Replace('>', '}')
+                // Escaped names like @class or @event aren't supported either
+                .Replace('@', '.');
     }
 }

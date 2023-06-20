@@ -192,14 +192,14 @@ namespace dotVariant.Generator
 
         public static RenderInfo FromDescriptor(
             Descriptor desc,
-            CSharpCompilation compilation,
+            CompilationInfo compilation,
             AnalyzerConfigOptionsProvider options,
             CancellationToken token)
         {
             var maxObjects = desc.Options.Max(NumReferenceFields);
             var type = desc.Type;
             var emitNullable = desc.NullableContext.HasFlag(NullableContext.AnnotationsEnabled);
-            var disposable = compilation.GetTypeByMetadataName(typeof(IDisposable).FullName)!;
+            var disposable = compilation.DisposableInterface;
 
             var paramDescriptors =
                 desc
@@ -229,8 +229,8 @@ namespace dotVariant.Generator
                     ExtensionClassNamespace: ExtensionsNamespace(options, typeNamespace)),
                 Params: paramDescriptors.ToImmutableArray(),
                 Runtime: new(
-                    HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null,
-                    HasSystemReactiveLinq: HasReactive(compilation)),
+                    HasHashCode: compilation.HasHashCode,
+                    HasSystemReactiveLinq: compilation.HasReactive),
                 Variant: new(
                     Accessibility: VariantAccessibility(type),
                     CanBeNull: type.IsReferenceType,
@@ -247,7 +247,7 @@ namespace dotVariant.Generator
                     Type: type.ToDisplayString(TopLevelTypeFormat),
                     UserDefined: new(
                         // If the user defined any method named Dispose() bail out. Too risky!
-                        Dispose: ImplementsDispose(type, compilation) || HasAnyDisposeMethod(type))));
+                        Dispose: ImplementsDispose(type, compilation.DisposableInterface) || HasAnyDisposeMethod(type))));
         }
 
         private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version)
@@ -350,9 +350,6 @@ namespace dotVariant.Generator
             value = value?.Trim('.');
             return string.IsNullOrWhiteSpace(value) ? typeNamespace : value;
         }
-
-        private static bool HasReactive(CSharpCompilation compilation)
-            => compilation.GetTypeByMetadataName("System.Reactive.Linq.Observable") is not null;
 
         public static readonly SymbolDisplayFormat TopLevelTypeFormat = new(
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
