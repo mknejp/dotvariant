@@ -19,13 +19,13 @@
 
   <ItemGroup>
     <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Link="lib/$(TargetFramework)/%(Filename)%(Extension)" />
-    <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Link="licenses/%(RecursiveDir)%(Filename)%(Extension)"/>
+    <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Link="licenses/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="build/*" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <Target Name="dotVariant-GatherGeneratorDependencies" AfterTargets="Build">
     <MSBuild Projects="../dotVariant.Generator/dotVariant.Generator.csproj" Targets="GetTargetPath">
-      <Output TaskParameter="TargetOutputs" ItemName="GeneratorOutputs"/>
+      <Output TaskParameter="TargetOutputs" ItemName="GeneratorOutputs" />
     </MSBuild>
     <!--<Message Importance="high" Text="%(GeneratorOutputs.Identity)" />-->
     <ItemGroup>
