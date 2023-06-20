@@ -8,13 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsExternalInit" Version="1.0.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.0.0" PrivateAssets="all" />
+    <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
     <!-- Transitive closure of generator runtime dependencies -->
-    <PackageReference Include="Scriban" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="System.Interactive" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="Scriban" Version="5.7.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="System.Interactive" Version="6.0.1" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
