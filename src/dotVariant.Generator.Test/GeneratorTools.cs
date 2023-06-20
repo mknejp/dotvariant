@@ -21,7 +21,7 @@ namespace dotVariant.Generator.Test
 {
     internal static class GeneratorTools
     {
-        public static Dictionary<string, string> GetGeneratedOutput(IDictionary<string, string> sources, Func<ISourceGenerator> makeGenerator, bool failOnInvalidSource = false)
+        public static Dictionary<string, string> GetGeneratedOutput(IDictionary<string, string> sources, Func<IIncrementalGenerator> makeGenerator, bool failOnInvalidSource = false)
         {
             var compilation = Compile(sources);
 
@@ -41,10 +41,10 @@ namespace dotVariant.Generator.Test
         }
 
         public static Dictionary<string, string> GetGeneratedOutput<TGenerator>(IDictionary<string, string> sources, bool failOnInvalidSource = false)
-            where TGenerator : ISourceGenerator, new()
+            where TGenerator : IIncrementalGenerator, new()
             => GetGeneratedOutput(sources, () => new TGenerator(), failOnInvalidSource);
 
-        public static ImmutableArray<Diagnostic> GetGeneratorDiagnostics(IDictionary<string, string> sources, Func<ISourceGenerator> makeGenerator)
+        public static ImmutableArray<Diagnostic> GetGeneratorDiagnostics(IDictionary<string, string> sources, Func<IIncrementalGenerator> makeGenerator)
         {
             var compilation = Compile(sources);
 
@@ -57,7 +57,7 @@ namespace dotVariant.Generator.Test
         }
 
         public static ImmutableArray<Diagnostic> GetGeneratorDiagnostics<TGenerator>(IDictionary<string, string> sources)
-            where TGenerator : ISourceGenerator, new()
+            where TGenerator : IIncrementalGenerator, new()
             => GetGeneratorDiagnostics(sources, () => new TGenerator());
 
         public static CSharpCompilation Compile(
