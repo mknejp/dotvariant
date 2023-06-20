@@ -25,7 +25,7 @@ namespace dotVariant.Generator
             return new(type, syntax, options, nullability);
         }
 
-        public string SanitizedTypeName => Type.Name
+        public string SanitizedTypeName => (Type.ContainingNamespace.MetadataName + Type.MetadataName)
                 // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
                 .Replace('<', '{')
                 .Replace('>', '}')
