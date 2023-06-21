@@ -71,7 +71,7 @@ namespace dotVariant.Generator
                     return source.Select(tuple =>
                     {
                         var (desc, compInfo) = tuple;
-                        return (desc.SanitizedTypeName, RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct));
+                        return (desc.HintName, RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct));
                     });
                 });
 
