@@ -116,7 +116,8 @@ namespace dotVariant.Generator
             string? Namespace,
             string QualifiedType,
             string Type,
-            VariantInfo.UserDefinitions UserDefined)
+            VariantInfo.UserDefinitions UserDefined,
+            string TypeParameterQualifiedName)
         {
             /// <param name="Dispose">
             /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
@@ -219,7 +220,7 @@ namespace dotVariant.Generator
                     OutType: DetermineOutType(p, emitNullable, compilation.LanguageVersion),
                     Type: p.Type.WithNullableAnnotation(p.NullableAnnotation).ToDisplayString(QualifiedTypeFormat)));
 
-            var typeNamespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
+            var typeNamespace = TypeNamespace(type);
 
             return new(
                 Language: new(
@@ -247,7 +248,20 @@ namespace dotVariant.Generator
                     Type: type.ToDisplayString(TopLevelTypeFormat),
                     UserDefined: new(
                         // If the user defined any method named Dispose() bail out. Too risky!
-                        Dispose: ImplementsDispose(type, compilation.DisposableInterface) || HasAnyDisposeMethod(type))));
+                        Dispose: ImplementsDispose(type, compilation.DisposableInterface) || HasAnyDisposeMethod(type)),
+                    TypeParameterQualifiedName: TypeParameterQualifiedName(type)
+                )
+            );
+        }
+
+        private static string? TypeNamespace(INamedTypeSymbol type)
+        {
+            return type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString();
+        }
+
+        private static string TypeParameterQualifiedName(INamedTypeSymbol type)
+        {
+            return type.TypeParameters.IsDefaultOrEmpty ? type.Name : $"{type.Name}_{string.Join("_", type.TypeParameters.Select(p => p.Name))}";
         }
 
         private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version)
