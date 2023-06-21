@@ -14,78 +14,80 @@ using System.Linq;
 namespace dotVariant.Generator
 {
     [Generator]
-    public sealed class SourceGenerator : ISourceGenerator
+    public sealed class SourceGenerator : IIncrementalGenerator
     {
-        public void Execute(GeneratorExecutionContext context)
+#if DEBUG
+        public List<RenderInfo> RenderInfos { get; } = new();
+#endif
+
+        public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
         {
-            var receiver = (SyntaxReceiver)context.SyntaxContextReceiver!;
-
-            var decls =
-                receiver
-                .VariantDecls
-                .Select(decl => (decl.Symbol, decl.Syntax, decl.Nullable, Diags: Diagnose.Variant(decl.Symbol, decl.Syntax, context.CancellationToken)))
-                .Memoize();
-
-            decls
-                .SelectMany(desc => desc.Diags)
-                .ForEach(context.ReportDiagnostic);
-
-            Descriptors =
-                decls
-                .Where(decl => !decl.Diags.Any(d => d.Severity == DiagnosticSeverity.Error))
-                .Select(decl => Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable))
-                .ToImmutableArray();
-
-            RenderInfos =
-                Descriptors
-                .Select(desc => RenderInfo.FromDescriptor(desc, (CSharpCompilation)context.Compilation, context.AnalyzerConfigOptions, context.CancellationToken))
-                .ToImmutableArray();
-
-            Enumerable
-                .Zip(Descriptors, RenderInfos, (desc, ri) => (desc, ri))
-                .ForEach(v => context.AddSource(SanitizeName(v.desc.Type.ToDisplayString()), Renderer.Render(v.ri)));
-
-            static string SanitizeName(string name)
-                => name
-                // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
-                .Replace('<', '{')
-                .Replace('>', '}')
-                // Escaped names like @class or @event aren't supported either
-                .Replace('@', '.');
-        }
-
-        public ImmutableArray<Descriptor> Descriptors { get; private set; }
-        public ImmutableArray<RenderInfo> RenderInfos { get; private set; }
-
-        public void Initialize(GeneratorInitializationContext context)
-        {
-            context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
-        }
-
-        private sealed class SyntaxReceiver : ISyntaxContextReceiver
-        {
-            public List<(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax, NullableContext Nullable)> VariantDecls { get; } = new();
-
-            public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
+            var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) =>
             {
-                if (context.Node is not TypeDeclarationSyntax tds || tds.AttributeLists.IsEmpty())
-                {
-                    return;
-                }
-
+                const nuint declarationBloom = (nuint)SyntaxKind.ClassDeclaration | (nuint)SyntaxKind.StructDeclaration |
+                                             (nuint)SyntaxKind.RecordDeclaration | (nuint)SyntaxKind.RecordStructDeclaration;
+                var nodeKind = node.Kind();
+                return ((nuint)nodeKind & declarationBloom) != default && nodeKind is SyntaxKind.ClassDeclaration
+                    or SyntaxKind.StructDeclaration
+                    or SyntaxKind.RecordDeclaration or SyntaxKind.RecordStructDeclaration;
+            }, (context, ct) =>
+            {
                 var sema = context.SemanticModel;
+                if (context.Node is not TypeDeclarationSyntax syntax)
+                {
+                    return default;
+                }
+                if (sema.GetDeclaredSymbol(syntax, ct) is not { } symbol)
+                {
+                    return default;
+                }
+                if (sema.Compilation is not CSharpCompilation comp)
+                {
+                    return default;
+                }
+                if (!symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == VariantDecl.AttributeName))
+                {
+                    return default;
+                }
 
-                if (sema.GetDeclaredSymbol(tds) is not INamedTypeSymbol symbol)
+                var diagnostics = Diagnose.Variant(symbol, syntax, ct).ToImmutableArray();
+
+                var decl = new VariantDecl(symbol, syntax, sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start), diagnostics);
+                var compInfo = CompilationInfo.FromCompilation(comp);
+                return (decl, compInfo).AsNullable();
+            }).SelectNotNull();
+
+            var descriptors = variantDecls.Select((tuple, _) =>
+            {
+                var (decl, compInfo) = tuple;
+                return new DiagnosedResult<(Descriptor, CompilationInfo)>(decl.Diags,
+                    () => (Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable), compInfo));
+            });
+
+            var renderInfos = descriptors.Combine(generatorContext.AnalyzerConfigOptionsProvider).Select(
+                (tuple, ct) =>
+                {
+                    var (source, analyzerOptionProvider) = tuple;
+                    return source.Select(tuple =>
+                    {
+                        var (desc, compInfo) = tuple;
+                        return (desc.HintName, RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct));
+                    });
+                });
+
+            generatorContext.RegisterImplementationSourceOutput(renderInfos, (context, source) =>
+            {
+                source.Diagnostics.ForEach(context.ReportDiagnostic);
+                if (!source.TryGetValue(out var tuple))
                 {
                     return;
                 }
-
-                const string attributeName = nameof(dotVariant) + "." + nameof(VariantAttribute);
-                if (symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName))
-                {
-                    VariantDecls.Add((symbol, tds, sema.GetNullableContext(context.Node.GetLocation().SourceSpan.Start)));
-                }
-            }
+                var (name, info) = tuple;
+#if DEBUG
+                RenderInfos.Add(info);
+#endif
+                context.AddSource(name, Renderer.Render(info));
+            });
         }
     }
 }

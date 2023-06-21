@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotVariant.Runtime", "dotVa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotVariant.Test-net5.0", "dotVariant.Test-net5.0\dotVariant.Test-net5.0.csproj", "{5FA8381B-0576-498A-9968-006A38839D3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotVariant.Test-net45", "dotVariant.Test-net45\dotVariant.Test-net45.csproj", "{1305501C-65AB-4338-848F-3D2B919B7255}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotVariant.Test-net452", "dotVariant.Test-net452\dotVariant.Test-net452.csproj", "{1305501C-65AB-4338-848F-3D2B919B7255}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "dotVariant.Test", "dotVariant.Test\dotVariant.Test.shproj", "{193D7A79-92BF-46BE-BB02-60360DA0883D}"
 EndProject
@@ -29,11 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		dotVariant.Test\dotVariant.Test.projitems*{1305501c-65ab-4338-848f-3d2b919b7255}*SharedItemsImports = 5
-		dotVariant.Test\dotVariant.Test.projitems*{193d7a79-92bf-46be-bb02-60360da0883d}*SharedItemsImports = 13
-		dotVariant.Test\dotVariant.Test.projitems*{5fa8381b-0576-498a-9968-006a38839d3c}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -69,5 +64,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5601C60A-02E6-42A8-B802-79FCCC6CD6C3}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		dotVariant.Test\dotVariant.Test.projitems*{1305501c-65ab-4338-848f-3d2b919b7255}*SharedItemsImports = 5
+		dotVariant.Test\dotVariant.Test.projitems*{193d7a79-92bf-46be-bb02-60360da0883d}*SharedItemsImports = 13
+		dotVariant.Test\dotVariant.Test.projitems*{5fa8381b-0576-498a-9968-006a38839d3c}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

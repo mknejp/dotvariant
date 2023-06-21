@@ -10,7 +10,7 @@ using System.Collections.Immutable;
 
 namespace dotVariant.Generator
 {
-    public sealed record Descriptor(
+    public readonly record struct Descriptor(
         INamedTypeSymbol Type,
         TypeDeclarationSyntax Syntax,
         ImmutableArray<IParameterSymbol> Options,
@@ -24,5 +24,12 @@ namespace dotVariant.Generator
             var options = Inspect.GetOptions(type);
             return new(type, syntax, options, nullability);
         }
+
+        public string HintName => $"{Type.ToString()
+            // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
+            .Replace('<', '{')
+            .Replace('>', '}')
+            // Escaped names like @class or @event aren't supported either
+            .Replace('@', '.')}.cs";
     }
 }

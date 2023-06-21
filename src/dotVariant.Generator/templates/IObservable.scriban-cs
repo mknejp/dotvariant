@@ -19,7 +19,7 @@ namespace {{ Options.ExtensionClassNamespace }}
     /// Extensions which allow for easy and powerful integration into `System.Reactive.Linq`-like queries
     /// on <see cref="global::System.IObservable{T}" /> sequences, that let you manipulate an asynchronous stream of variants based on the contained type.
     /// </summary>
-    {{ Variant.ExtensionsAccessibility }} static partial class {{ Variant.Name }}Ex
+    {{ Variant.ExtensionsAccessibility }} static partial class {{ Variant.TypeParameterQualifiedName }}Ex
     {
         {{~ ## Match(IObservable<V>, Func<A, R>) ## ~}}
         {{~ for $p in Params ~}}
