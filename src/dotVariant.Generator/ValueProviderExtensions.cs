@@ -63,5 +63,46 @@ namespace dotVariant.Generator
                 return lhs.Select(v => (v, rhs));
             });
         }
+
+        public static IncrementalValuesProvider<DiagnosedResult<TValue>> Diagnose<TValue>(
+            this IncrementalValuesProvider<DiagnosedResult<TValue>> source,
+            Func<TValue, CancellationToken, ImmutableArray<Diagnostic>> diagnose)
+        {
+            return IncrementalValueProviderExtensions.Select(source, (result, ct) =>
+            {
+                if (result.TryGetValue(out var value))
+                {
+                    var diagnostics = diagnose(value, ct);
+                    return result.WithDiagnostics(diagnostics);
+                }
+
+                return result;
+            });
+        }
+
+        public static IncrementalValuesProvider<DiagnosedResult<TValue>> Diagnose<TValue>(
+            this IncrementalValuesProvider<TValue> source,
+            Func<TValue, CancellationToken, ImmutableArray<Diagnostic>> diagnose)
+        {
+            return IncrementalValueProviderExtensions.Select(source, (value, ct) =>
+            {
+                var diagnostics = diagnose(value, ct);
+                return new DiagnosedResult<TValue>(diagnostics, value);
+            });
+        }
+
+        public static void RegisterSourceOutput<TSource>(this IncrementalGeneratorInitializationContext context,
+            IncrementalValuesProvider<DiagnosedResult<TSource>> source,
+            Action<SourceProductionContext, TSource> action)
+        {
+            context.RegisterSourceOutput(source, (context, value) =>
+            {
+                value.Diagnostics.ForEach(context.ReportDiagnostic);
+                if (value.TryGetValue(out var v))
+                {
+                    action(context, v);
+                }
+            });
+        }
     }
 }

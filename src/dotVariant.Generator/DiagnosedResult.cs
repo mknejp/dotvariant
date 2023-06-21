@@ -57,17 +57,6 @@ public readonly struct DiagnosedResult<TValue>
         return new(Diagnostics, HasErrors, result);
     }
 
-    public DiagnosedResult<TValue> WithDiagnostics(ImmutableArray<Diagnostic> diagnostics)
-    {
-        if (Diagnostics.IsDefaultOrEmpty && diagnostics.IsDefaultOrEmpty)
-        {
-            return new(ImmutableArray<Diagnostic>.Empty, HasErrors, ValueOrDefault);
-        }
-
-        diagnostics = Diagnostics.IsDefaultOrEmpty ? diagnostics : Diagnostics.AddRange(diagnostics);
-        return new(diagnostics, ValueOrDefault!);
-    }
-
     public ImmutableArray<DiagnosedResult<TResult>> SelectMany<TResult>(Func<TValue, ImmutableArray<TResult>> selector)
     {
         var diagnostics = Diagnostics;
@@ -79,6 +68,17 @@ public readonly struct DiagnosedResult<TValue>
 
         var results = selector(ValueOrDefault!);
         return results.Select(r => new DiagnosedResult<TResult>(diagnostics, false, r)).ToImmutableArray();
+    }
+
+    public DiagnosedResult<TValue> WithDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+    {
+        if (Diagnostics.IsDefaultOrEmpty && diagnostics.IsDefaultOrEmpty)
+        {
+            return new(ImmutableArray<Diagnostic>.Empty, HasErrors, ValueOrDefault);
+        }
+
+        diagnostics = Diagnostics.IsDefaultOrEmpty ? diagnostics : Diagnostics.AddRange(diagnostics);
+        return new(diagnostics, ValueOrDefault!);
     }
 
     public bool Equals(DiagnosedResult<TValue> other)
