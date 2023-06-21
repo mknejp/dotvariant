@@ -24,7 +24,7 @@ namespace dotVariant.Generator
     /// <param name="Params">Properties of the parameters provided to <c>VariantOf</c>.</param>
     /// <param name="Runtime">Information about the .NET runtime we are generating code for.</param>
     /// <param name="Variant">Properties of the variant class.</param>
-    public sealed record RenderInfo(
+    public readonly record struct RenderInfo(
         RenderInfo.LanguageInfo Language,
         RenderInfo.OptionsInfo Options,
         ImmutableArray<RenderInfo.ParamInfo> Params,

@@ -10,7 +10,7 @@ using System.Collections.Immutable;
 
 namespace dotVariant.Generator
 {
-    public sealed record Descriptor(
+    public readonly record struct Descriptor(
         INamedTypeSymbol Type,
         TypeDeclarationSyntax Syntax,
         ImmutableArray<IParameterSymbol> Options,
