@@ -22,17 +22,21 @@ namespace dotVariant.Generator.Test
     internal static class SourceGenerator_Test
     {
         [TestCaseSource(nameof(TranslationCases))]
-        public static void Translation(string typeName, string fileName, string input, string expected)
+        public static void Translation(string[] typeNames, string fileName, string input, string expected)
         {
             var sources = SupportSources.Add("input", input);
             var outputs = GetGeneratedOutput<SourceGenerator>(sources, true);
-            var file =
-                Path.Combine(
-                    $"{typeof(SourceGenerator).Assembly.GetName().Name}",
-                    $"{typeof(SourceGenerator).FullName}",
-                    $"{typeName}.cs");
-            var output = outputs[file];
-            output = _copyrightHeader + output;
+
+            var output = _copyrightHeader;
+            foreach (var typeName in typeNames)
+            {
+                var file =
+                    Path.Combine(
+                        $"{typeof(SourceGenerator).Assembly.GetName().Name}",
+                        $"{typeof(SourceGenerator).FullName}",
+                        $"{typeName}.cs");
+                output += outputs[file];
+            }
 
             if (output != expected)
             {
@@ -69,23 +73,24 @@ namespace dotVariant.Generator.Test
         }
 
         public static IEnumerable<TestCaseData> TranslationCases()
-            => new (string FileName, string TypeName)[]
+            => new (string FileName, string[] TypeName)[]
                 {
-                    ("Variant-class-nullable-disable", "Foo.Variant_class_nullable_disable"),
-                    ("Variant-class-nullable-enable", "Foo.Variant_class_nullable_enable"),
-                    ("Variant-disposable", "Foo.Variant_disposable"),
-                    ("Variant-generic-class", "Foo.Variant{T}"),
-                    ("Variant-generic-class-nullable", "Foo.Variant{T}"),
-                    ("Variant-generic-multiple", "Foo.Variant{T1, T2, T3}"),
-                    ("Variant-generic-notnull", "Foo.Variant{T}"),
-                    ("Variant-generic-struct", "Foo.Variant{T}"),
-                    ("Variant-generic-T-as-nullable", "Foo.Variant{T1, T2, T3, T4, T5, T6}"),
-                    ("Variant-generic-unbounded", "Foo.Variant{T}"),
-                    ("Variant-nullable-value-type", "Foo.Variant_nullable_value_type"),
-                    ("Variant-public", "Foo.Variant_public"),
-                    ("Variant-no-implicit-conversion", "Foo.Variant_no_implicit_conversion"),
-                    ("Variant-struct-nullable-disable", "Foo.Variant_struct_nullable_disable"),
-                    ("Variant-struct-nullable-enable", "Foo.Variant_struct_nullable_enable"),
+                    ("Variant-class-nullable-disable",new[] {  "Foo.Variant_class_nullable_disable" }),
+                    ("Variant-class-nullable-enable", new[] { "Foo.Variant_class_nullable_enable" }),
+                    ("Variant-disposable", new[] { "Foo.Variant_disposable" }),
+                    ("Variant-generic-class", new[] { "Foo.Variant{T}" }),
+                    ("Variant-generic-class-nullable", new[] { "Foo.Variant{T}" }),
+                    ("Variant-generic-multiple", new[] { "Foo.Variant{T1, T2, T3}" }),
+                    ("Variant-generic-notnull", new[] { "Foo.Variant{T}" }),
+                    ("Variant-generic-struct", new[] { "Foo.Variant{T}" }),
+                    ("Variant-generic-T-as-nullable", new[] { "Foo.Variant{T1, T2, T3, T4, T5, T6}" }),
+                    ("Variant-generic-unbounded", new[] { "Foo.Variant{T}" }),
+                    ("Variant-nullable-value-type", new[] { "Foo.Variant_nullable_value_type" }),
+                    ("Variant-public", new[] { "Foo.Variant_public" }),
+                    ("Variant-no-implicit-conversion", new[] { "Foo.Variant_no_implicit_conversion" }),
+                    ("Variant-struct-nullable-disable", new[] { "Foo.Variant_struct_nullable_disable" }),
+                    ("Variant-struct-nullable-enable", new[] { "Foo.Variant_struct_nullable_enable" }),
+                    ("Variant-generic-same-name", new[] { "Foo.Variant{T}", "Foo.Variant{T1, T2}" })
                 }
                 .Select(
                     test => new TestCaseData(
