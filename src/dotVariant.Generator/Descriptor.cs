@@ -17,12 +17,11 @@ namespace dotVariant.Generator
         NullableContext NullableContext)
     {
         public static Descriptor FromDeclaration(
-            INamedTypeSymbol type,
-            TypeDeclarationSyntax syntax,
+            SemanticType type,
             NullableContext nullability)
         {
-            var options = Inspect.GetOptions(type);
-            return new(type, syntax, options, nullability);
+            var options = Inspect.GetOptions(type.Symbol);
+            return new(type.Symbol, type.Syntax, options, nullability);
         }
 
         public string HintName => $"{Type.ToString()

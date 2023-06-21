@@ -17,11 +17,11 @@ namespace dotVariant.Generator
 {
     internal static class Diagnose
     {
-        public static IEnumerable<Diagnostic> Variant(ITypeSymbol type, TypeDeclarationSyntax syntax, CancellationToken token)
+        public static IEnumerable<Diagnostic> Variant(SemanticType type, CancellationToken token)
             => new[]
                 {
-                    CheckType(type, syntax, token),
-                    CheckOptions(type, token),
+                    CheckType(type.Symbol, type.Syntax, token),
+                    CheckOptions(type.Symbol, token),
                 }
                 .Concat();
 

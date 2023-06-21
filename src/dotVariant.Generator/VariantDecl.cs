@@ -10,8 +10,10 @@ using System.Collections.Immutable;
 
 namespace dotVariant.Generator;
 
-public readonly record struct VariantDecl(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax,
-    NullableContext Nullable, ImmutableArray<Diagnostic> Diags)
+public readonly record struct SemanticType(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax);
+
+public readonly record struct VariantDecl(SemanticType Type, ImmutableArray<SemanticType> NestingTrace,
+    NullableContext Nullable)
 {
     public const string AttributeName = nameof(dotVariant) + "." + nameof(VariantAttribute);
 }
