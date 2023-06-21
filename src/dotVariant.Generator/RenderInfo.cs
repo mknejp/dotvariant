@@ -37,7 +37,7 @@ namespace dotVariant.Generator
         /// <param name="Version">
         /// Integer of the form ABB where A=major and BB=minor version of the language (i.e. 703 -> 7.3)
         /// </param>
-        public sealed record LanguageInfo(
+        public readonly record struct LanguageInfo(
             string Nullable,
             int Version);
 
@@ -45,7 +45,7 @@ namespace dotVariant.Generator
         /// The namespace in which to generate extension method implementations.
         /// If <see langword="null"/> use the global namespace.
         /// </param>
-        public sealed record OptionsInfo(
+        public readonly record struct OptionsInfo(
             string? ExtensionClassNamespace);
 
         /// <param name="HasHashCode">
@@ -54,7 +54,7 @@ namespace dotVariant.Generator
         /// <param name="HasSystemReactiveLinq">
         /// <see langword="true"/> if <see cref="System.Reactive.Linq"/> namespace is found.
         /// </param>
-        public sealed record RuntimeInfo(
+        public readonly record struct RuntimeInfo(
             bool HasHashCode,
             bool HasSystemReactiveLinq);
 
@@ -102,7 +102,7 @@ namespace dotVariant.Generator
         /// <param name="UserDefined">
         /// Contains info about relevant members the user has defined.
         /// </param>
-        public sealed record VariantInfo(
+        public readonly record struct VariantInfo(
             string? Accessibility,
             bool CanBeNull,
             string DiagType,
@@ -121,7 +121,7 @@ namespace dotVariant.Generator
             /// <param name="Dispose">
             /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
             /// </param>
-            public sealed record UserDefinitions(
+            public readonly record struct UserDefinitions(
                 bool Dispose);
 
             /// <param name="Constraints">
@@ -130,7 +130,7 @@ namespace dotVariant.Generator
             /// <param name="Identifier">
             /// Identifier of the generic parameter.
             /// </param>
-            public sealed record GenericInfo(
+            public readonly record struct GenericInfo(
                 ImmutableArray<string> Constraints,
                 string Identifier);
         }
@@ -175,7 +175,7 @@ namespace dotVariant.Generator
         /// <param name="Type">
         /// The fully qualified name of the type including type parameter list, without nullability annotation.
         /// </param>
-        public sealed record ParamInfo(
+        public readonly record struct ParamInfo(
             bool CanBeNull,
             string DiagType,
             bool EmitImplicitCast,
