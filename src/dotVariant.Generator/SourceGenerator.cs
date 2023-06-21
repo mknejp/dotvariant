@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace dotVariant.Generator
@@ -49,34 +50,43 @@ namespace dotVariant.Generator
                     return default;
                 }
 
-                var diagnostics = Diagnose.Variant(symbol, syntax, ct);
+                var diagnostics = Diagnose.Variant(symbol, syntax, ct).ToImmutableArray();
 
                 var decl = new VariantDecl(symbol, syntax, sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start), diagnostics);
                 var compInfo = CompilationInfo.FromCompilation(comp);
-                (VariantDecl decl, CompilationInfo compInfo)? nullable = (decl, compInfo);
-                return nullable;
-            }).Where(t => t.HasValue).Select((t, ct) => t!.Value);
+                return (decl, compInfo).AsNullable();
+            }).SelectNotNull();
 
-            var descriptorsAndrenderInfos = variantDecls.Combine(generatorContext.AnalyzerConfigOptionsProvider).Select(
+            var descriptors = variantDecls.Select((tuple, _) =>
+            {
+                var (decl, compInfo) = tuple;
+                return new DiagnosedResult<(Descriptor, CompilationInfo)>(decl.Diags,
+                    () => (Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable), compInfo));
+            });
+
+            var renderInfos = descriptors.Combine(generatorContext.AnalyzerConfigOptionsProvider).Select(
                 (tuple, ct) =>
                 {
-                    var ((decl, compInfo), analyzerOptionProvider) = tuple;
-                    if (decl.Diags.Any(static diag => diag.Severity >= DiagnosticSeverity.Error))
+                    var (source, analyzerOptionProvider) = tuple;
+                    return source.Select(tuple =>
                     {
-                        return default;
-                    }
-                    var desc = Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable);
-                    var renderInfo = RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct);
-#if DEBUG
-                    RenderInfos.Add(renderInfo);
-#endif
-                    return (desc, renderInfo);
+                        var (desc, compInfo) = tuple;
+                        return (desc.SanitizedTypeName, RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct));
+                    });
                 });
 
-            generatorContext.RegisterImplementationSourceOutput(descriptorsAndrenderInfos, (context, tuple) =>
+            generatorContext.RegisterImplementationSourceOutput(renderInfos, (context, source) =>
             {
-                var (desc, renderInfo) = tuple;
-                context.AddSource(desc.SanitizedTypeName, Renderer.Render(renderInfo));
+                source.Diagnostics.ForEach(context.ReportDiagnostic);
+                if (!source.TryGetValue(out var tuple))
+                {
+                    return;
+                }
+                var (name, info) = tuple;
+#if DEBUG
+                RenderInfos.Add(info);
+#endif
+                context.AddSource(name, Renderer.Render(info));
             });
         }
     }
