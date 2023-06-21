@@ -261,7 +261,7 @@ namespace dotVariant.Generator
 
         private static string TypeParameterQualifiedName(INamedTypeSymbol type)
         {
-            return type.TypeParameters.IsDefaultOrEmpty ? type.Name : $"{type.Name}_{string.Join("_", type.TypeParameters.Select(p => p.Name))}";
+            return type.TypeParameters.IsDefaultOrEmpty ? type.Name : $"{type.Name}_{string.Join("_", type.TypeParameters.Select(p => p.Name))}_";
         }
 
         private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version)
