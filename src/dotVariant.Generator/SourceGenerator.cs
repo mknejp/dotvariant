@@ -47,38 +47,30 @@ namespace dotVariant.Generator
                     return default;
                 }
 
-                var diagnostics = Diagnose.Variant(symbol, syntax, ct).ToImmutableArray();
-
-                var decl = new VariantDecl(symbol, syntax, sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start), diagnostics);
+                var type = new SemanticType();
+                var decl = new VariantDecl(type, sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start));
                 var compInfo = CompilationInfo.FromCompilation(comp);
                 return (decl, compInfo).AsNullable();
-            }).SelectNotNull();
+            })
+                .SelectNotNull()
+                .Diagnose((tuple, ct) => Diagnose.Variant(tuple.decl.Type, ct).ToImmutableArray());
 
             var descriptors = variantDecls.Select((tuple, _) =>
             {
                 var (decl, compInfo) = tuple;
-                return new DiagnosedResult<(Descriptor, CompilationInfo)>(decl.Diags,
-                    () => (Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable), compInfo));
+                return (desc: Descriptor.FromDeclaration(decl.Type, decl.Nullable), nested: decl.NestingTrace.Select((type, _) => Descriptor.FromDeclaration(type, decl.Nullable)).ToImmutableArray(), compInfo);
             });
 
             var renderInfos = descriptors.Combine(generatorContext.AnalyzerConfigOptionsProvider).Select(
                 (tuple, ct) =>
                 {
                     var (source, analyzerOptionProvider) = tuple;
-                    return source.Select(tuple =>
-                    {
-                        var (desc, compInfo) = tuple;
-                        return (desc.HintName, RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct));
-                    });
+                    var (desc, nested, compInfo) = source;
+                    return (desc.HintName, RenderInfo.FromDescriptor(desc, nested, compInfo, analyzerOptionProvider, ct));
                 });
 
-            generatorContext.RegisterImplementationSourceOutput(renderInfos, (context, source) =>
+            generatorContext.RegisterSourceOutput(renderInfos, (context, tuple) =>
             {
-                source.Diagnostics.ForEach(context.ReportDiagnostic);
-                if (!source.TryGetValue(out var tuple))
-                {
-                    return;
-                }
                 var (name, info) = tuple;
 #if DEBUG
                 RenderInfos.Add(info);
