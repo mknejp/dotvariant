@@ -38,10 +38,10 @@ jobs:
         runs-on: [ubuntu-latest, macos-latest, windows-latest]
         config: [Debug, Release]
         include:
-          - tfm: net45
+          - tfm: net452
             runs-on: windows-latest
             config: Debug
-          - tfm: net45
+          - tfm: net452
             runs-on: windows-latest
             config: Release
 
