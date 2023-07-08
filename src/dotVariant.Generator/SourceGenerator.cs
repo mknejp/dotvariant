@@ -47,7 +47,7 @@ namespace dotVariant.Generator
                     return default;
                 }
 
-                var type = new SemanticType();
+                var type = new SemanticType(symbol, syntax);
                 var decl = new VariantDecl(type, sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start));
                 var compInfo = CompilationInfo.FromCompilation(comp);
                 return (decl, compInfo).AsNullable();
