@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace dotVariant.Generator;
 
-/// <summary>A result type carrying <see cref="Diagnostic"/> values and a <typeparamref name="TValue"/> if any only if no errors are diagnosed.</summary>
+/// <summary>A result type carrying <see cref="Diagnostic"/> values and a <typeparamref name="TValue"/> if and only if no errors are diagnosed.</summary>
 /// <typeparam name="TValue">The type of the value</typeparam>
 /// <remarks>Diagnosed result ignores diagnostics during equality comparison to improve caching consistency.</remarks>
 public readonly struct DiagnosedResult<TValue> : IEquatable<DiagnosedResult<TValue>>
