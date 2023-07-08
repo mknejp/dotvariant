@@ -7,23 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-    <PackageReference Include="NUnit" Version="3.13.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-    <PackageReference Include="System.Interactive" Version="5.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <Choose>
-    <When Condition="'$(TargetFramework)' == 'net5.0'">
+    <When Condition="'$(TargetFramework)' == 'net6.0'">
       <ItemGroup>
-        <PackageReference Include="System.Reactive" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-      </ItemGroup>      
+        <PackageReference Include="System.Reactive" Version="6.0.0" />
+        <PackageReference Include="System.Interactive" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="6.0.0" />
+      </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
         <PackageReference Include="System.Reactive" Version="3.0.0" />
+        <PackageReference Include="System.Interactive" Version="3.0.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="3.0.0" />
       </ItemGroup>
     </Otherwise>
