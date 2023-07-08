@@ -26,7 +26,7 @@ namespace dotVariant.Generator
         }
 
         public string HintName => $"{Type.ToString()
-            // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
+            // If the type contains type parameters replace angle brackets as those are not allowed in AddSource()
             .Replace('<', '{')
             .Replace('>', '}')
             // Escaped names like @class or @event aren't supported either
