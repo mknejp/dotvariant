@@ -18,10 +18,7 @@ namespace dotVariant.Generator
     {
         public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
         {
-            var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) => NodeIsTypeDeclaration(node), (context, ct) =>
-                {
-                    return TryCreateCompilationInfo(context, ct);
-                })
+            var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) => NodeIsTypeDeclaration(node), TryCreateCompilationInfo)
                 .SelectNotNull()
                 .Diagnose((tuple, ct) => Diagnose.Variant(tuple.decl.Type, ct).ToImmutableArray());
 
