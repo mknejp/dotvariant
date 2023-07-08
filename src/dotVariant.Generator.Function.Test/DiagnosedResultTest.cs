@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace dotVariant.Generator.Function.Te;
+namespace dotVariant.Generator.Function.Test;
 
 public sealed class DiagnosedResultTest
 {
