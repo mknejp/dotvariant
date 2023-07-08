@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\.github\workflows\test.yaml = ..\.github\workflows\test.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotVariant.Generator.Function.Test", "dotVariant.Generator.Function.Test\dotVariant.Generator.Function.Test.csproj", "{42329E06-F134-4254-8089-FC4F121BEF82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{1305501C-65AB-4338-848F-3D2B919B7255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1305501C-65AB-4338-848F-3D2B919B7255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1305501C-65AB-4338-848F-3D2B919B7255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

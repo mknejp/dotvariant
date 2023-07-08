@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>11</LangVersion>
+    <RootNamespace>dotVariant.Generator.Function.Te</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="System.Interactive" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="Verify.NUnit" Version="20.4.0" />
+    <PackageReference Include="Verify.SourceGenerators" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dotVariant.Generator\dotVariant.Generator.csproj" />
+  </ItemGroup>
+
+</Project>
