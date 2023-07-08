@@ -157,14 +157,14 @@ namespace dotVariant.Generator
                 ImmutableArray<IParameterSymbol> options,
                 CancellationToken token)
             {
-                const int max = byte.MaxValue;
+                const int Max = byte.MaxValue;
 
-                if (options.Count() > max)
+                if (options.Count() > Max)
                 {
                     yield return MakeError(
                         nameof(NotTooManyOptions),
-                        $"'VariantOf()' must not have more than {max} parameters.",
-                        $"Variant types must not have more than {max} parameters in their 'VariantOf()' method.",
+                        $"'VariantOf()' must not have more than {Max} parameters.",
+                        $"Variant types must not have more than {Max} parameters in their 'VariantOf()' method.",
                         LocationOfFirstToken(syntax, SyntaxKind.IdentifierToken));
                 }
             }
