@@ -26,7 +26,7 @@ namespace dotVariant.Generator.Test
                 .WithUpdatedAnalyzerConfigOptions(new AnalyzerConfigOptionsProvider(msBuildProperties))
                 .WithUpdatedParseOptions(new CSharpParseOptions(version));
             _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var _, out var _);
-            return generator.RenderInfos.ToImmutableArray();
+            return DebugInfoCollector.TakeRenderInfoList().ToImmutableArray();
         }
     }
 }

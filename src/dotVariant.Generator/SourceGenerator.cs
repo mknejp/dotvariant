@@ -7,7 +7,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -17,10 +16,6 @@ namespace dotVariant.Generator
     [Generator]
     public sealed class SourceGenerator : IIncrementalGenerator
     {
-#if DEBUG
-        public List<RenderInfo> RenderInfos { get; } = new();
-#endif
-
         public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
         {
             var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) => NodeIsTypeDeclaration(node), (context, ct) =>
@@ -52,9 +47,7 @@ namespace dotVariant.Generator
                     return;
                 }
                 var (name, info) = tuple;
-#if DEBUG
-                RenderInfos.Add(info);
-#endif
+                DebugInfoCollector.AddRenderInfo(info);
                 context.AddSource(name, Renderer.Render(info));
             });
         }
