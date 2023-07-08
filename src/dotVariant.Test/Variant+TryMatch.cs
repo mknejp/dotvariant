@@ -46,7 +46,9 @@ namespace dotVariant.Test
             {
                 var v = new Class_int_float_string(1);
                 Assert.That(v.TryMatch(out float _), Is.False);
+#pragma warning disable CS8601
                 Assert.That(v.TryMatch(out string _), Is.False);
+#pragma warning restore CS8601
             }
 
             [Test]
@@ -54,7 +56,9 @@ namespace dotVariant.Test
             {
                 var v = new Class_int_float_string(1f);
                 Assert.That(v.TryMatch(out int _), Is.False);
+#pragma warning disable CS8601
                 Assert.That(v.TryMatch(out string _), Is.False);
+#pragma warning restore CS8601
             }
 
             [Test]
