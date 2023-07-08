@@ -34,7 +34,7 @@ jobs:
     name: test (${{ matrix.tfm }}, ${{ matrix.runs-on }}, ${{ matrix.config }})
     strategy:
       matrix:
-        tfm: [net5.0]
+        tfm: [net6.0]
         runs-on: [ubuntu-latest, macos-latest, windows-latest]
         config: [Debug, Release]
         include:
