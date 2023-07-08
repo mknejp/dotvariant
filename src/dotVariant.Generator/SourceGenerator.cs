@@ -24,10 +24,7 @@ namespace dotVariant.Generator
         {
             var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) =>
             {
-                const nuint declarationBloom = (nuint)SyntaxKind.ClassDeclaration | (nuint)SyntaxKind.StructDeclaration |
-                                             (nuint)SyntaxKind.RecordDeclaration | (nuint)SyntaxKind.RecordStructDeclaration;
-                var nodeKind = node.Kind();
-                return ((nuint)nodeKind & declarationBloom) != default && nodeKind is SyntaxKind.ClassDeclaration
+                return node.Kind() is SyntaxKind.ClassDeclaration
                     or SyntaxKind.StructDeclaration
                     or SyntaxKind.RecordDeclaration or SyntaxKind.RecordStructDeclaration;
             }, (context, ct) =>
