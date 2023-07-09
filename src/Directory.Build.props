@@ -6,6 +6,7 @@
     <Copyright>Copyright © Miro Knejp $([System.DateTime]::Now.Year)</Copyright>
     <PackageDescription>A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)</PackageDescription>
     <PackageLicenseExpression>BSL-1.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>variant;sum-types;functional;union;algebraic-data-types;discriminated-unions</PackageTags>
     <RepositoryUrl>https://github.com/mknejp/dotvariant</RepositoryUrl>
