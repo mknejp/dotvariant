@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021 The dotVariant Authors
+# SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
 #
 # SPDX-License-Identifier: CC0-1.0
 
@@ -36,7 +36,7 @@ indent_size = 2
 # Copyright headers (https://reuse.software/faq/)
 
 [*.cs]
-file_header_template = SPDX-FileCopyrightText: 2021 The dotVariant Authors.\n\nSPDX-License-Identifier: BSL-1.0
+file_header_template = SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)\n\nSPDX-License-Identifier: BSL-1.0
 dotnet_diagnostic.IDE0073.severity = error
 
 [*.cs]

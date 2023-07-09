@@ -5,15 +5,15 @@ Upstream-Contact: Miro Knejp <github.com/mknejp>
 
 # Tool-generated files (project files, etc)
 Files: *.sln *.csproj *.shproj *.props *.projitems
-Copyright: 2021 The dotVariant Authors
+Copyright: 2021 The dotVariant Authors (see AUTHORS.txt)
 License: CC0-1.0
 
 # Configuration files
 Files: */launchSettings.json */nuget.config
-Copyright: 2021 The dotVariant Authors
+Copyright: 2021 The dotVariant Authors (see AUTHORS.txt)
 License: CC0-1.0
 
 # Tool-generated test sample output
 Files: src/dotVariant.Generator.Test/samples/*.out.cs
-Copyright: 2021 The dotVariant Authors
+Copyright: 2021 The dotVariant Authors (see AUTHORS.txt)
 License: CC0-1.0

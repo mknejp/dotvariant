@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021 The dotVariant Authors.
+// SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
 //
 // SPDX-License-Identifier: BSL-1.0
 
