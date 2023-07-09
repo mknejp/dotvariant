@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Author>Miro Knejp</Author>
     <Authors>$(Author)</Authors>
-    <Copyright>Copyright © Miro Knejp $([System.DateTime]::Now.Year)</Copyright>
+    <Copyright>2021 dotVariant Authors</Copyright>
     <PackageDescription>A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)</PackageDescription>
     <PackageLicenseExpression>BSL-1.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
