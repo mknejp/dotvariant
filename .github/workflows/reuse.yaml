@@ -13,6 +13,7 @@ defaults:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    name: reuse lint
     steps:
       - uses: actions/checkout@v2
 
