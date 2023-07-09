@@ -2,9 +2,8 @@
 #
 # SPDX-License-Identifier: BSL-1.0
 
-# Run dotVariant.Test against the pre-built package instead of
-# ProjectReference. This ensures that both the generator
-# and the runtime library are packaged correctly.
+# Read the version number from the tag, build the package in release
+# configuration and embed third party licenses.
 name: publish
 on:
   push:
@@ -22,11 +21,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install dotnet-project-licenses
+        run: |
+          dotnet tool install --global dotnet-project-licenses
+
       - name: Build package
         run: |
           if ("${{ github.ref }}" -match "^refs/tags/v(.+)") {
             $version = $Matches[1]
-            dotnet build dotVariant/dotVariant.csproj -p:Configuration=Release -p:Version=$version
+            dotnet build dotVariant/dotVariant.csproj -p:Configuration=Release -p:Version=$version -p:PackageThirdPartyLicenses=true
           } else {
             echo "::error::Unexpected tag format '${ github.refs }}'"
             exit 1
