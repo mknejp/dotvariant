@@ -30,7 +30,6 @@ namespace dotVariant.Generator.Test
                     $"{typeof(SourceGenerator).FullName}",
                     $"{typeName}.cs");
             var output = outputs[file];
-            output = _copyrightHeader + output;
 
             if (output != expected)
             {
@@ -92,8 +91,6 @@ namespace dotVariant.Generator.Test
                         LoadSample($"{test.FileName}.in.cs"),
                         LoadSample($"{test.FileName}.out.cs"))
                     .SetName($"{nameof(Translation)}({test.FileName})"));
-
-        private static readonly string _copyrightHeader = LoadSample("copyright.cs");
 
         [TestCaseSource(nameof(DiagnosticsCases))]
         public static void Diagnostics(string input)

@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: https://github.com/mknejp/dotVariant
+Upstream-Name: dotVariant
+Upstream-Contact: Miro Knejp <github.com/mknejp>
+
+# Tool-generated test sample output
+Files: src/dotVariant.Generator.Test/samples/*.out.cs
+Copyright: 2021 The dotVariant Authors
+License: CC0-1.0
