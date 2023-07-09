@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 The dotVariant Authors
+#
+# SPDX-License-Identifier: CC0-1.0
+
 # http://EditorConfig.org
 
 root = true
@@ -29,9 +33,10 @@ indent_size = 2
 [*.{ps1,cmd,bat}]
 indent_size = 2
 
-# Copyright headers (https://www.boost.org/users/license.html#FAQ)
+# Copyright headers (https://reuse.software/faq/)
+
 [*.cs]
-file_header_template = \nCopyright Miro Knejp 2021.\nDistributed under the Boost Software License, Version 1.0.\n(See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)\n
+file_header_template = SPDX-FileCopyrightText: 2021 The dotVariant Authors.\n\nSPDX-License-Identifier: BSL-1.0
 dotnet_diagnostic.IDE0073.severity = error
 
 [*.cs]
