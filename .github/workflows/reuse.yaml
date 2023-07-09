@@ -1,4 +1,6 @@
-# intentionally broken license header
+# SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
+#
+# SPDX-License-Identifier: BSL-1.0
 
 # Make sure all files are properly attributed with copyright and license
 name: reuse
