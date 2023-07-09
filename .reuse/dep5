@@ -4,7 +4,7 @@ Upstream-Name: dotVariant
 Upstream-Contact: Miro Knejp <github.com/mknejp>
 
 # Tool-generated files (project files, etc)
-Files: nuget.config *.sln *.csproj *.shproj *.props *.projitems
+Files: *.sln *.csproj *.shproj *.props *.projitems
 Copyright: 2021 The dotVariant Authors
 License: CC0-1.0
 
