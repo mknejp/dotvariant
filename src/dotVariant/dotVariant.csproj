@@ -24,6 +24,7 @@
     <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Link="lib/$(TargetFramework)/%(Filename)%(Extension)" />
     <None Include="build/*" Pack="true" PackagePath="build" />
     <None Include="$(RepositoryRootPath)/LICENSES/**" Pack="true" PackagePath="LICENSES" Link="LICENSES/%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="$(RepositoryRootPath)/AUTHORS.txt" Pack="true" PackagePath="" Link="AUTHORS.txt" />
     <None Include="$(RepositoryRootPath)/README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
 
