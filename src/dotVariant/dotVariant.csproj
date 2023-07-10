@@ -6,8 +6,11 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratorOutputPath>../dotVariant.Generator/bin/$(Configuration)/netstandard2.0</GeneratorOutputPath>
+    <GeneratorProjectPath>../dotVariant.Generator</GeneratorProjectPath>
     <!-- We have mixed target frameworks and NuGet doesn't understand that -->
     <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <!-- Nuget complains we are adding duplicate license files, no idea what causes it -->
+    <NoWarn>$(NoWarn);NU5118</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +22,10 @@
 
   <ItemGroup>
     <None Include="$(GeneratorOutputPath)/dotVariant.dll" Pack="true" PackagePath="lib/$(TargetFramework)" Link="lib/$(TargetFramework)/%(Filename)%(Extension)" />
-    <None Include="../dotVariant.Generator/licenses/**" Pack="true" PackagePath="licenses" Link="licenses/%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="build/*" Pack="true" PackagePath="build" />
+    <None Include="$(RepositoryRootPath)/LICENSES/**" Pack="true" PackagePath="LICENSES" Link="LICENSES/%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="$(RepositoryRootPath)/AUTHORS.txt" Pack="true" PackagePath="" Link="AUTHORS.txt" />
+    <None Include="$(RepositoryRootPath)/README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
 
   <Target Name="dotVariant-GatherGeneratorDependencies" AfterTargets="Build">
@@ -30,6 +35,14 @@
     <!--<Message Importance="high" Text="%(GeneratorOutputs.Identity)" />-->
     <ItemGroup>
       <None Include="@(GeneratorOutputs)" Pack="true" PackagePath="analyzers/dotnet/cs" Link="analyzers/dotnet/cs/%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="dotVariant-CollectLicenses" AfterTargets="Build" Condition="$(PackageThirdPartyLicenses)">
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)/LICENSES" />
+    <Exec Command='dotnet-project-licenses -i "$(GeneratorProjectPath)" --export-license-texts --convert-html-to-text --output-directory "$(BaseIntermediateOutputPath)/LICENSES"' />
+    <ItemGroup>
+      <None Include="$(BaseIntermediateOutputPath)/LICENSES/**" Pack="true" PackagePath="LICENSES" Link="LICENSES/%(RecursiveDir)%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
 

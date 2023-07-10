@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
+#
+# SPDX-License-Identifier: BSL-1.0
+
+# Make sure all files are properly attributed with copyright and license
+name: reuse
+on: pull_request
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: reuse lint
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install reuse-lint
+        run: |
+          sudo apt-get install -y "reuse"
+
+      - name: Run reuse-lint
+        run: |
+          reuse lint

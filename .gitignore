@@ -1,5 +1,10 @@
+# SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
+#
+# SPDX-License-Identifier: CC0-1.0
+
 .vs/
 bin/
 obj/
 *.user
 nuget.exe
+*.binlog
