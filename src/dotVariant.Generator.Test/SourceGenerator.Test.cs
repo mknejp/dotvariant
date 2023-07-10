@@ -1,8 +1,6 @@
+// SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
 //
-// Copyright Miro Knejp 2021.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
-//
+// SPDX-License-Identifier: BSL-1.0
 
 using NUnit.Framework;
 using System;
@@ -32,7 +30,6 @@ namespace dotVariant.Generator.Test
                     $"{typeof(SourceGenerator).FullName}",
                     $"{typeName}.cs");
             var output = outputs[file];
-            output = _copyrightHeader + output;
 
             if (output != expected)
             {
@@ -94,8 +91,6 @@ namespace dotVariant.Generator.Test
                         LoadSample($"{test.FileName}.in.cs"),
                         LoadSample($"{test.FileName}.out.cs"))
                     .SetName($"{nameof(Translation)}({test.FileName})"));
-
-        private static readonly string _copyrightHeader = LoadSample("copyright.cs");
 
         [TestCaseSource(nameof(DiagnosticsCases))]
         public static void Diagnostics(string input)

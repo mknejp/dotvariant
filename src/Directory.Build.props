@@ -3,17 +3,21 @@
   <PropertyGroup>
     <Author>Miro Knejp</Author>
     <Authors>$(Author)</Authors>
-    <Copyright>Copyright © Miro Knejp $([System.DateTime]::Now.Year)</Copyright>
+    <Copyright>2021 dotVariant Authors (see AUTHORS.txt)</Copyright>
     <PackageDescription>A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)</PackageDescription>
     <PackageLicenseExpression>BSL-1.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>variant;sum-types;functional;union;algebraic-data-types;discriminated-unions</PackageTags>
     <RepositoryUrl>https://github.com/mknejp/dotvariant</RepositoryUrl>
     <Version Condition="'$(Version)' == ''">999.0.0</Version>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <RepositoryRootPath>$(MSBuildThisFileDirectory)../</RepositoryRootPath>
+
     <PackageSelfTest Condition="'$(PackageSelfTest)' == ''">false</PackageSelfTest>
     <DefineConstants Condition="'$(CI)' != ''">$(DefineConstants);CI</DefineConstants>
+    <PackageThirdPartyLicenses Condition="'$(PackageThirdPartyLicenses)' == ''">false</PackageThirdPartyLicenses>
   </PropertyGroup>
 
   <ItemGroup>

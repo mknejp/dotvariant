@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
+
+SPDX-License-Identifier: BSL-1.0
+-->
+
 # dotVariant [![GitHub](https://img.shields.io/github/license/mknejp/dotVariant)](/LICENSE.txt) [![Nuget verion](https://img.shields.io/nuget/v/dotVariant)](https://www.nuget.org/packages/dotVariant/) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mknejp/dotvariant/test-package)](https://github.com/mknejp/dotvariant/actions)
 
 A type-safe and space-efficient sum type for C# (comparable to unions in C or C++)

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 The dotVariant Authors (see AUTHORS.txt)
+#
+# SPDX-License-Identifier: BSL-1.0
+
 name: continuous test
 on: [push, pull_request]
 
