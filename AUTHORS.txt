@@ -4,6 +4,6 @@
 
 This file lists the dotVariant Authors in alphabetical order
 
-Daniel <github.com/TheBlubb14>
+Daniel Henk <github.com/TheBlubb14>
 jvbsl <github.com/jvbsl>
 Miro Knejp <github.com/mknejp>
