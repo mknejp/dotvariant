@@ -20,12 +20,11 @@ namespace dotVariant.Generator.Test
         {
             var compilation = Compile(SupportSources.Add("input", source), version);
             var generator = new SourceGenerator();
-            var driver = CSharpGeneratorDriver.Create(
-                new[] { generator },
-                optionsProvider: new AnalyzerConfigOptionsProvider(msBuildProperties),
-                parseOptions: new CSharpParseOptions(version));
+            var driver = CSharpGeneratorDriver.Create(generator)
+                .WithUpdatedAnalyzerConfigOptions(new AnalyzerConfigOptionsProvider(msBuildProperties))
+                .WithUpdatedParseOptions(new CSharpParseOptions(version));
             _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out var _, out var _);
-            return generator.RenderInfos;
+            return DebugInfoCollector.TakeRenderInfoList().ToImmutableArray();
         }
     }
 }

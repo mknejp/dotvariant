@@ -5,85 +5,96 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 
 namespace dotVariant.Generator
 {
     [Generator]
-    public sealed class SourceGenerator : ISourceGenerator
+    public sealed class SourceGenerator : IIncrementalGenerator
     {
-        public void Execute(GeneratorExecutionContext context)
+        public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
         {
-            var receiver = (SyntaxReceiver)context.SyntaxContextReceiver!;
+            var variantDecls = generatorContext.SyntaxProvider.CreateSyntaxProvider((node, ct) => NodeIsTypeDeclaration(node), TryCreateCompilationInfo)
+                .SelectNotNull()
+                .Diagnose((tuple, ct) => Diagnose.Variant(tuple.decl.Type, ct).ToImmutableArray());
 
-            var decls =
-                receiver
-                .VariantDecls
-                .Select(decl => (decl.Symbol, decl.Syntax, decl.Nullable, Diags: Diagnose.Variant(decl.Symbol, decl.Syntax, context.CancellationToken)))
-                .Memoize();
-
-            decls
-                .SelectMany(desc => desc.Diags)
-                .ForEach(context.ReportDiagnostic);
-
-            Descriptors =
-                decls
-                .Where(decl => !decl.Diags.Any(d => d.Severity == DiagnosticSeverity.Error))
-                .Select(decl => Descriptor.FromDeclaration(decl.Symbol, decl.Syntax, decl.Nullable))
-                .ToImmutableArray();
-
-            RenderInfos =
-                Descriptors
-                .Select(desc => RenderInfo.FromDescriptor(desc, (CSharpCompilation)context.Compilation, context.AnalyzerConfigOptions, context.CancellationToken))
-                .ToImmutableArray();
-
-            Enumerable
-                .Zip(Descriptors, RenderInfos, (desc, ri) => (desc, ri))
-                .ForEach(v => context.AddSource(SanitizeName(v.desc.Type.ToDisplayString()), Renderer.Render(v.ri)));
-
-            static string SanitizeName(string name)
-                => name
-                // If the contains type parameters replace angle brackets as those are not allowed in AddSource()
-                .Replace('<', '{')
-                .Replace('>', '}')
-                // Escaped names like @class or @event aren't supported either
-                .Replace('@', '.');
-        }
-
-        public ImmutableArray<Descriptor> Descriptors { get; private set; }
-        public ImmutableArray<RenderInfo> RenderInfos { get; private set; }
-
-        public void Initialize(GeneratorInitializationContext context)
-        {
-            context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
-        }
-
-        private sealed class SyntaxReceiver : ISyntaxContextReceiver
-        {
-            public List<(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax, NullableContext Nullable)> VariantDecls { get; } = new();
-
-            public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
+            var descriptors = variantDecls.Select((tuple, _) =>
             {
-                if (context.Node is not TypeDeclarationSyntax tds || tds.AttributeLists.IsEmpty())
+                var (decl, compInfo) = tuple;
+                return (desc: Descriptor.FromDeclaration(decl.Type, decl.Nullable), nested: decl.NestingTrace.Select((type, _) => Descriptor.FromDeclaration(type, decl.Nullable)).ToImmutableArray(), compInfo);
+            });
+
+            var renderInfos = descriptors.Combine(generatorContext.AnalyzerConfigOptionsProvider).Select(
+                (tuple, ct) =>
+                {
+                    var (source, analyzerOptionProvider) = tuple;
+                    var (desc, nested, compInfo) = source;
+                    return (desc.HintName, RenderInfo.FromDescriptor(desc, compInfo, analyzerOptionProvider, ct));
+                });
+
+            generatorContext.RegisterSourceOutput(renderInfos, (context, source) =>
+            {
+                source.Diagnostics.ForEach(context.ReportDiagnostic);
+                if (!source.TryGetValue(out var tuple))
                 {
                     return;
                 }
+                var (name, info) = tuple;
+                DebugInfoCollector.AddRenderInfo(info);
+                context.AddSource(name, Renderer.Render(info));
+            });
+        }
 
-                var sema = context.SemanticModel;
-
-                if (sema.GetDeclaredSymbol(tds) is not INamedTypeSymbol symbol)
-                {
-                    return;
-                }
-
-                const string attributeName = nameof(dotVariant) + "." + nameof(VariantAttribute);
-                if (symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName))
-                {
-                    VariantDecls.Add((symbol, tds, sema.GetNullableContext(context.Node.GetLocation().SourceSpan.Start)));
-                }
+        private static (VariantDecl decl, CompilationInfo compInfo)? TryCreateCompilationInfo(GeneratorSyntaxContext context, CancellationToken ct)
+        {
+            var sema = context.SemanticModel;
+            if (context.Node is not TypeDeclarationSyntax syntax)
+            {
+                return default;
             }
+
+            if (sema.GetDeclaredSymbol(syntax, ct) is not { } symbol)
+            {
+                return default;
+            }
+
+            if (sema.Compilation is not CSharpCompilation comp)
+            {
+                return default;
+            }
+
+            if (!symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == VariantDecl.AttributeName))
+            {
+                return default;
+            }
+
+            var type = new SemanticType(symbol, syntax);
+            var decl = new VariantDecl(type, CreateNestingTrace(type, sema),
+                sema.GetNullableContext(syntax.GetLocation().SourceSpan.Start));
+            var compInfo = CompilationInfo.FromCompilation(comp);
+            return (decl, compInfo).AsNullable();
+        }
+
+        private static bool NodeIsTypeDeclaration(SyntaxNode node)
+        {
+            return node.Kind() is SyntaxKind.ClassDeclaration
+                or SyntaxKind.StructDeclaration
+                or SyntaxKind.RecordDeclaration or SyntaxKind.RecordStructDeclaration;
+        }
+
+        private static ImmutableArray<SemanticType> CreateNestingTrace(SemanticType semanticType, SemanticModel semanticModel)
+        {
+            var trace = ImmutableArray.CreateBuilder<SemanticType>();
+            var parent = semanticType.Syntax.Parent;
+            while (parent is TypeDeclarationSyntax current)
+            {
+                trace.Add(new(semanticModel.GetDeclaredSymbol(current)!, current));
+                parent = current.Parent;
+            }
+            trace.Reverse();
+            return trace.ToImmutable();
         }
     }
 }

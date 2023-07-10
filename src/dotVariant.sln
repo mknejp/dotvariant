@@ -28,12 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\.github\workflows\test.yaml = ..\.github\workflows\test.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotVariant.Generator.Function.Test", "dotVariant.Generator.Function.Test\dotVariant.Generator.Function.Test.csproj", "{42329E06-F134-4254-8089-FC4F121BEF82}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		dotVariant.Test\dotVariant.Test.projitems*{1305501c-65ab-4338-848f-3d2b919b7255}*SharedItemsImports = 5
-		dotVariant.Test\dotVariant.Test.projitems*{193d7a79-92bf-46be-bb02-60360da0883d}*SharedItemsImports = 13
-		dotVariant.Test\dotVariant.Test.projitems*{5fa8381b-0576-498a-9968-006a38839d3c}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -63,11 +60,20 @@ Global
 		{1305501C-65AB-4338-848F-3D2B919B7255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1305501C-65AB-4338-848F-3D2B919B7255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1305501C-65AB-4338-848F-3D2B919B7255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42329E06-F134-4254-8089-FC4F121BEF82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5601C60A-02E6-42A8-B802-79FCCC6CD6C3}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		dotVariant.Test\dotVariant.Test.projitems*{1305501c-65ab-4338-848f-3d2b919b7255}*SharedItemsImports = 5
+		dotVariant.Test\dotVariant.Test.projitems*{193d7a79-92bf-46be-bb02-60360da0883d}*SharedItemsImports = 13
+		dotVariant.Test\dotVariant.Test.projitems*{5fa8381b-0576-498a-9968-006a38839d3c}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

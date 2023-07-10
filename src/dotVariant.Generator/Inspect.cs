@@ -62,11 +62,11 @@ namespace dotVariant.Generator
         public static Accessibility EffectiveAccessibility(ITypeSymbol type)
             => type.DeclaredAccessibility;
 
-        public static bool ImplementsDispose(ITypeSymbol type, CSharpCompilation compilation)
+        public static bool ImplementsDispose(ITypeSymbol type, INamedTypeSymbol disposableInterface)
         {
             var dispose =
                 FindMethod(
-                    compilation.GetTypeByMetadataName($"{nameof(System)}.{nameof(IDisposable)}")!,
+                    disposableInterface,
                     m => m.Name == nameof(IDisposable.Dispose));
             return type.FindImplementationForInterfaceMember(dispose!) is not null;
         }
@@ -97,8 +97,8 @@ namespace dotVariant.Generator
 
         public static bool HasImplicitConversionDisabled(IParameterSymbol param)
         {
-            const string attributeName = nameof(dotVariant) + "." + nameof(NoImplicitConversionAttribute);
-            return param.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName);
+            const string AttributeName = nameof(dotVariant) + "." + nameof(NoImplicitConversionAttribute);
+            return param.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == AttributeName);
         }
 
         public static int NumReferenceFields(ITypeSymbol type)

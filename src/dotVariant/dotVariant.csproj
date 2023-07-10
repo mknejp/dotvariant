@@ -30,7 +30,7 @@
 
   <Target Name="dotVariant-GatherGeneratorDependencies" AfterTargets="Build">
     <MSBuild Projects="../dotVariant.Generator/dotVariant.Generator.csproj" Targets="GetTargetPath">
-      <Output TaskParameter="TargetOutputs" ItemName="GeneratorOutputs"/>
+      <Output TaskParameter="TargetOutputs" ItemName="GeneratorOutputs" />
     </MSBuild>
     <!--<Message Importance="high" Text="%(GeneratorOutputs.Identity)" />-->
     <ItemGroup>

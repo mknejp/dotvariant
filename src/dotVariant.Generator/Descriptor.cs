@@ -8,19 +8,25 @@ using System.Collections.Immutable;
 
 namespace dotVariant.Generator
 {
-    public sealed record Descriptor(
+    public readonly record struct Descriptor(
         INamedTypeSymbol Type,
         TypeDeclarationSyntax Syntax,
         ImmutableArray<IParameterSymbol> Options,
         NullableContext NullableContext)
     {
         public static Descriptor FromDeclaration(
-            INamedTypeSymbol type,
-            TypeDeclarationSyntax syntax,
+            SemanticType type,
             NullableContext nullability)
         {
-            var options = Inspect.GetOptions(type);
-            return new(type, syntax, options, nullability);
+            var options = Inspect.GetOptions(type.Symbol);
+            return new(type.Symbol, type.Syntax, options, nullability);
         }
+
+        public string HintName => $"{Type.ToString()
+            // If the type contains type parameters replace angle brackets as those are not allowed in AddSource()
+            .Replace('<', '{')
+            .Replace('>', '}')
+            // Escaped names like @class or @event aren't supported either
+            .Replace('@', '.')}.cs";
     }
 }

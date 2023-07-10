@@ -22,7 +22,7 @@ namespace dotVariant.Generator
     /// <param name="Params">Properties of the parameters provided to <c>VariantOf</c>.</param>
     /// <param name="Runtime">Information about the .NET runtime we are generating code for.</param>
     /// <param name="Variant">Properties of the variant class.</param>
-    public sealed record RenderInfo(
+    public readonly record struct RenderInfo(
         RenderInfo.LanguageInfo Language,
         RenderInfo.OptionsInfo Options,
         ImmutableArray<RenderInfo.ParamInfo> Params,
@@ -35,7 +35,7 @@ namespace dotVariant.Generator
         /// <param name="Version">
         /// Integer of the form ABB where A=major and BB=minor version of the language (i.e. 703 -> 7.3)
         /// </param>
-        public sealed record LanguageInfo(
+        public readonly record struct LanguageInfo(
             string Nullable,
             int Version);
 
@@ -43,7 +43,7 @@ namespace dotVariant.Generator
         /// The namespace in which to generate extension method implementations.
         /// If <see langword="null"/> use the global namespace.
         /// </param>
-        public sealed record OptionsInfo(
+        public readonly record struct OptionsInfo(
             string? ExtensionClassNamespace);
 
         /// <param name="HasHashCode">
@@ -52,7 +52,7 @@ namespace dotVariant.Generator
         /// <param name="HasSystemReactiveLinq">
         /// <see langword="true"/> if <see cref="System.Reactive.Linq"/> namespace is found.
         /// </param>
-        public sealed record RuntimeInfo(
+        public readonly record struct RuntimeInfo(
             bool HasHashCode,
             bool HasSystemReactiveLinq);
 
@@ -100,7 +100,7 @@ namespace dotVariant.Generator
         /// <param name="UserDefined">
         /// Contains info about relevant members the user has defined.
         /// </param>
-        public sealed record VariantInfo(
+        public readonly record struct VariantInfo(
             string? Accessibility,
             bool CanBeNull,
             string DiagType,
@@ -119,7 +119,7 @@ namespace dotVariant.Generator
             /// <param name="Dispose">
             /// <see langword="true"/> if a user-defined <see cref="IDisposable.Dispose()"/> exists.
             /// </param>
-            public sealed record UserDefinitions(
+            public readonly record struct UserDefinitions(
                 bool Dispose);
 
             /// <param name="Constraints">
@@ -128,7 +128,7 @@ namespace dotVariant.Generator
             /// <param name="Identifier">
             /// Identifier of the generic parameter.
             /// </param>
-            public sealed record GenericInfo(
+            public readonly record struct GenericInfo(
                 ImmutableArray<string> Constraints,
                 string Identifier);
         }
@@ -173,7 +173,7 @@ namespace dotVariant.Generator
         /// <param name="Type">
         /// The fully qualified name of the type including type parameter list, without nullability annotation.
         /// </param>
-        public sealed record ParamInfo(
+        public readonly record struct ParamInfo(
             bool CanBeNull,
             string DiagType,
             bool EmitImplicitCast,
@@ -190,14 +190,14 @@ namespace dotVariant.Generator
 
         public static RenderInfo FromDescriptor(
             Descriptor desc,
-            CSharpCompilation compilation,
+            CompilationInfo compilation,
             AnalyzerConfigOptionsProvider options,
             CancellationToken token)
         {
             var maxObjects = desc.Options.Max(NumReferenceFields);
             var type = desc.Type;
             var emitNullable = desc.NullableContext.HasFlag(NullableContext.AnnotationsEnabled);
-            var disposable = compilation.GetTypeByMetadataName(typeof(IDisposable).FullName)!;
+            var disposable = compilation.DisposableInterface;
 
             var paramDescriptors =
                 desc
@@ -227,8 +227,8 @@ namespace dotVariant.Generator
                     ExtensionClassNamespace: ExtensionsNamespace(options, typeNamespace)),
                 Params: paramDescriptors.ToImmutableArray(),
                 Runtime: new(
-                    HasHashCode: compilation.GetTypeByMetadataName("System.HashCode") is not null,
-                    HasSystemReactiveLinq: HasReactive(compilation)),
+                    HasHashCode: compilation.HasHashCode,
+                    HasSystemReactiveLinq: compilation.HasReactive),
                 Variant: new(
                     Accessibility: VariantAccessibility(type),
                     CanBeNull: type.IsReferenceType,
@@ -245,7 +245,7 @@ namespace dotVariant.Generator
                     Type: type.ToDisplayString(TopLevelTypeFormat),
                     UserDefined: new(
                         // If the user defined any method named Dispose() bail out. Too risky!
-                        Dispose: ImplementsDispose(type, compilation) || HasAnyDisposeMethod(type))));
+                        Dispose: ImplementsDispose(type, compilation.DisposableInterface) || HasAnyDisposeMethod(type))));
         }
 
         private static string DetermineOutType(IParameterSymbol p, bool emitNullable, LanguageVersion version)
@@ -348,9 +348,6 @@ namespace dotVariant.Generator
             value = value?.Trim('.');
             return string.IsNullOrWhiteSpace(value) ? typeNamespace : value;
         }
-
-        private static bool HasReactive(CSharpCompilation compilation)
-            => compilation.GetTypeByMetadataName("System.Reactive.Linq.Observable") is not null;
 
         public static readonly SymbolDisplayFormat TopLevelTypeFormat = new(
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
